@@ -128,6 +128,7 @@ const ICON_PATHS = {
   'ColourContrast': '<circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor" stroke="none"/>',
   'UUIDGen': '<rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8.5" cy="8.5" r="1.3" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.3" fill="currentColor" stroke="none"/><circle cx="15.5" cy="15.5" r="1.3" fill="currentColor" stroke="none"/>',
   'TimezoneNow': '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  'TZConvert': '<path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/><circle cx="12" cy="12" r="2.4" fill="currentColor" stroke="none"/>',
   'RegexLab': '<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>',
   'CronLab': '<rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/><path d="M12 13v3l2 1"/>',
 };
@@ -149,6 +150,141 @@ function initFavicon() {
   if (!link) { link = document.createElement('link'); link.rel = 'icon'; document.head.appendChild(link); }
   link.type = 'image/svg+xml';
   link.href = 'data:image/svg+xml,' + encodeURIComponent(svg);
+}
+
+// ── Global search / command palette (click or Cmd+K / Ctrl+K) ───────────────
+// To register a new tool so it's searchable, add one entry here.
+
+const TOOL_REGISTRY = [
+  { name: 'Tools', url: '/', collection: 'tools', desc: 'Home — study, write and dev tools' },
+  { name: 'Study tools', url: '/study/', collection: 'study', desc: 'Citations, flashcards, grades, bias check' },
+  { name: 'Write tools', url: '/write/', collection: 'write', desc: 'Readability, word count, lorem, threads' },
+  { name: 'Dev tools', url: '/dev/', collection: 'dev', desc: 'JSON, JWT, YAML, regex, cron and more' },
+  { name: 'CiteMaker', url: '/study/cite/', collection: 'study', desc: 'APA, MLA, Chicago, Harvard citations' },
+  { name: 'FlashForge', url: '/study/flashcards/', collection: 'study', desc: 'Flashcards with spaced repetition' },
+  { name: 'GradeCalc', url: '/study/grades/', collection: 'study', desc: 'GPA, weighted grade, final exam calculator' },
+  { name: 'BiasCheck', url: '/study/bias/', collection: 'study', desc: 'Media bias & loaded language analyser' },
+  { name: 'ReadScore', url: '/write/readscore/', collection: 'write', desc: 'Flesch-Kincaid readability analysis' },
+  { name: 'WordCount Pro', url: '/write/wordcount/', collection: 'write', desc: 'Word count, keyword density, live' },
+  { name: 'LoremCraft', url: '/write/lorem/', collection: 'write', desc: 'Placeholder text in 10 styles' },
+  { name: 'ThreadCraft', url: '/write/thread/', collection: 'write', desc: 'Split long text into a tweet thread' },
+  { name: 'JSONLab', url: '/dev/json/', collection: 'dev', desc: 'Format, validate, minify, diff JSON' },
+  { name: 'JSONConvert', url: '/dev/jsonconvert/', collection: 'dev', desc: 'JSON to YAML, CSV, XML, TOML' },
+  { name: 'JWTRead', url: '/dev/jwt/', collection: 'dev', desc: 'Decode & inspect JWT tokens' },
+  { name: 'YAMLCheck', url: '/dev/yaml/', collection: 'dev', desc: 'YAML validator & formatter' },
+  { name: 'CSVExplore', url: '/dev/csv/', collection: 'dev', desc: 'Sortable, filterable CSV viewer' },
+  { name: 'MarkdownLive', url: '/dev/markdown/', collection: 'dev', desc: 'Markdown editor with live preview' },
+  { name: 'HTMLPreview', url: '/dev/html/', collection: 'dev', desc: 'Sandboxed HTML renderer' },
+  { name: 'SQLFormat', url: '/dev/sql/', collection: 'dev', desc: 'SQL formatter & beautifier' },
+  { name: 'ColourContrast', url: '/dev/contrast/', collection: 'dev', desc: 'WCAG AA/AAA contrast checker' },
+  { name: 'UUIDGen', url: '/dev/uuid/', collection: 'dev', desc: 'UUID v4/v7, ULID, nanoid generator' },
+  { name: 'TimezoneNow', url: '/dev/timezone/', collection: 'dev', desc: 'World clock & meeting overlap finder' },
+  { name: 'TZConvert', url: '/dev/timeconvert/', collection: 'dev', desc: 'Convert a date & time across timezones' },
+  { name: 'RegexLab', url: '/dev/regex/', collection: 'dev', desc: 'Regex tester with match highlighting' },
+  { name: 'CronLab', url: '/dev/cron/', collection: 'dev', desc: 'Cron expression workbench' },
+  { name: 'Privacy Policy', url: '/privacy.html', collection: 'tools', desc: "What tapdot tools does — and doesn't — collect" },
+];
+
+function initSearch() {
+  const nav = document.querySelector('.ts-nav');
+  if (!nav || document.querySelector('.ts-search-trigger')) return;
+  const toggle = document.getElementById('darkToggle');
+
+  const trigger = document.createElement('button');
+  trigger.className = 'ts-search-trigger';
+  trigger.type = 'button';
+  trigger.setAttribute('aria-label', 'Search tools');
+  trigger.innerHTML =
+    '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>' +
+    '<span class="label">Search tools…</span><span class="ts-search-kbd">Ctrl K</span>';
+  if (toggle) toggle.before(trigger); else nav.appendChild(trigger);
+
+  let backdrop = null, activeIdx = 0, filtered = [];
+
+  function results(query) {
+    const q = query.trim().toLowerCase();
+    if (!q) return TOOL_REGISTRY;
+    return TOOL_REGISTRY
+      .map(item => {
+        const name = item.name.toLowerCase();
+        let score = -1;
+        if (name.startsWith(q)) score = 3;
+        else if (name.includes(q)) score = 2;
+        else if (item.desc.toLowerCase().includes(q) || item.collection.includes(q)) score = 1;
+        return { item, score };
+      })
+      .filter(r => r.score > 0)
+      .sort((a, b) => b.score - a.score)
+      .map(r => r.item);
+  }
+
+  function iconFor(item) {
+    return ICONS[item.name] || ICONS[item.collection] || ICONS.tools;
+  }
+
+  function renderResults() {
+    const list = document.getElementById('tsPaletteResults');
+    if (!filtered.length) { list.innerHTML = '<div class="ts-palette-empty">No tools match that search.</div>'; return; }
+    list.innerHTML = filtered.map((item, i) =>
+      `<a class="ts-palette-item${i === activeIdx ? ' active' : ''}" href="${item.url}" data-i="${i}">
+         <span class="pi-icon" aria-hidden="true">${iconFor(item)}</span>
+         <span class="pi-text"><span class="pi-name">${escapeHtml(item.name)}</span><span class="pi-desc">${escapeHtml(item.desc)}</span></span>
+       </a>`
+    ).join('');
+    const activeEl = list.querySelector('.ts-palette-item.active');
+    if (activeEl) activeEl.scrollIntoView({ block: 'nearest' });
+  }
+
+  function open() {
+    if (backdrop) return;
+    backdrop = document.createElement('div');
+    backdrop.className = 'ts-palette-backdrop';
+    backdrop.innerHTML =
+      '<div class="ts-palette" role="dialog" aria-modal="true" aria-label="Search tools">' +
+        '<div class="ts-palette-input-row">' +
+          '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>' +
+          '<input id="tsPaletteInput" placeholder="Search tools…" autocomplete="off" spellcheck="false" />' +
+        '</div>' +
+        '<div class="ts-palette-results" id="tsPaletteResults"></div>' +
+        '<div class="ts-palette-footer"><span><kbd>↑</kbd><kbd>↓</kbd> navigate</span><span><kbd>↵</kbd> open</span><span><kbd>esc</kbd> close</span></div>' +
+      '</div>';
+    document.body.appendChild(backdrop);
+    document.body.style.overflow = 'hidden';
+
+    filtered = results(''); activeIdx = 0; renderResults();
+    const input = document.getElementById('tsPaletteInput');
+    input.focus();
+
+    input.addEventListener('input', () => { filtered = results(input.value); activeIdx = 0; renderResults(); });
+    document.getElementById('tsPaletteResults').addEventListener('click', (e) => {
+      const a = e.target.closest('.ts-palette-item'); if (a) close();
+    });
+    backdrop.addEventListener('click', (e) => { if (e.target === backdrop) close(); });
+    document.addEventListener('keydown', onKey);
+  }
+
+  function close() {
+    if (!backdrop) return;
+    document.removeEventListener('keydown', onKey);
+    backdrop.remove(); backdrop = null;
+    document.body.style.overflow = '';
+  }
+
+  function onKey(e) {
+    if (e.key === 'Escape') { e.preventDefault(); close(); return; }
+    if (e.key === 'ArrowDown') { e.preventDefault(); activeIdx = Math.min(activeIdx + 1, filtered.length - 1); renderResults(); return; }
+    if (e.key === 'ArrowUp') { e.preventDefault(); activeIdx = Math.max(activeIdx - 1, 0); renderResults(); return; }
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      const item = filtered[activeIdx];
+      if (item) window.location.href = item.url;
+    }
+  }
+
+  trigger.addEventListener('click', open);
+  document.addEventListener('keydown', (e) => {
+    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); backdrop ? close() : open(); }
+  });
 }
 
 // ── Futuristic background ────────────────────────────────────────────────────
@@ -354,9 +490,14 @@ const STEPS = {
     { t: 'Copy or download', d: { k: 'count', to: 100, label: 'at once' } },
   ],
   'TimezoneNow': [
-    { t: 'Add cities', d: { k: 'chips', items: ['NYC', 'London', 'Tokyo'], on: 0 } },
+    { t: 'Click cities on the map', d: { k: 'chips', items: ['NYC', 'London', 'Tokyo'], on: 0 } },
     { t: 'Live clocks', d: { k: 'rows', rows: [['London', '14:30'], ['Tokyo', '22:30']] } },
     { t: 'Find overlap', d: { k: 'chips', items: ['9-6 overlap'], on: 0 } },
+  ],
+  'TZConvert': [
+    { t: 'Pick a date & time', d: { k: 'text', text: 'Jul 4, 2026 · 09:00' } },
+    { t: 'Drag the slider or map', d: { k: 'chips', items: ['NYC', 'London', 'Tokyo'], on: 1 } },
+    { t: 'See every conversion', d: { k: 'rows', rows: [['London', '14:00'], ['Tokyo', '22:00']] } },
   ],
   'RegexLab': [
     { t: 'Write a pattern', d: { k: 'text', text: '[a-z]+\\d+' } },
@@ -535,6 +676,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initFavicon();
   initBackground();
   initBreadcrumb();
+  initSearch();
   initToolIcon();
   initWalkthrough();
   initReveal();

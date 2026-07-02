@@ -20,7 +20,7 @@
   <a href="https://tapdot.org" class="ts-nav-logo"><img src="/assets/tapdot-icon.png" width="22" height="22" alt="tapdot" /><span>tapdot</span></a>
   <button class="ts-dark-toggle" id="darkToggle" aria-label="Toggle dark mode"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg></button>
 </nav>
-<main class="ts-main">
+<main class="ts-main ts-main-wide">
   <div class="ts-tool-header">
     <h1 class="ts-tool-name">JWTRead</h1>
     <p class="ts-tool-desc">Decode and inspect JWT tokens — entirely in your browser.</p>
@@ -38,8 +38,17 @@
       <span class="dev-badge" id="alg"></span>
       <span class="dev-badge" id="expiry"></span>
     </div>
-    <div class="ts-card"><p class="ts-card-label jwt-part-h">Header</p><div class="ts-code-output" id="header"></div></div>
-    <div class="ts-card"><p class="ts-card-label jwt-part-p">Payload</p><div class="ts-code-output" id="payload"></div></div>
+    <div class="ts-workbench">
+      <div class="ts-card"><p class="ts-card-label jwt-part-h">Header</p><div class="ts-code-output" id="header"></div></div>
+      <div class="ts-card"><p class="ts-card-label jwt-part-p">Payload</p><div class="ts-code-output" id="payload"></div></div>
+    </div>
+    <div class="ts-card">
+      <p class="ts-card-label">Claims explained</p>
+      <table class="ts-table" id="claimsTable">
+        <thead><tr><th>Claim</th><th>Value</th><th>Meaning</th></tr></thead>
+        <tbody id="claimsBody"></tbody>
+      </table>
+    </div>
     <div class="ts-card">
       <p class="ts-card-label jwt-part-s">Signature</p>
       <div class="ts-code-output" id="sig" style="white-space:pre-wrap;word-break:break-all"></div>

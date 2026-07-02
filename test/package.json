@@ -3,7 +3,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "regression": "node regression.mjs"
+    "regression": "node regression.mjs",
+    "functional": "node functional.mjs",
+    "test": "npm run regression && npm run functional"
   },
   "devDependencies": {
     "playwright": "^1.48.0"

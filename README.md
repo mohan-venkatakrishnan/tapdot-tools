@@ -1,15 +1,16 @@
 # tapdot Tools
 
-Eight privacy-first web tools hosted at **tools.tapdot.org**. Every tool runs entirely
+Privacy-first web tools hosted at **tools.tapdot.org**. Every tool runs entirely
 in the browser — no server, no accounts, nothing sent anywhere (see [privacy.html](privacy.html)).
 
 Built as static HTML/CSS/JS, deployed free via GitHub Pages under a custom subdomain.
+See [CLAUDE.md](CLAUDE.md) for the full build spec and how to add a new tool.
 
 ## Tools
 
 **Study** — `/study/`
 - CiteMaker `/study/cite/` — APA / MLA / Chicago / Harvard citations
-- FlashForge `/study/flashcards/` — flashcards + spaced repetition (localStorage)
+- FlashForge `/study/flashcards/` — flashcards + spaced repetition, file/AI import
 - GradeCalc `/study/grades/` — GPA, weighted grade, final exam calculators
 - BiasCheck `/study/bias/` — media bias analysis via on-device AI (Gemini Nano) + fallback
 
@@ -19,17 +20,28 @@ Built as static HTML/CSS/JS, deployed free via GitHub Pages under a custom subdo
 - LoremCraft `/write/lorem/` — placeholder text in 10 styles
 - ThreadCraft `/write/thread/` — split long text into a numbered tweet thread
 
+**Dev** — `/dev/`
+- JSONLab, JSONConvert, JWTRead, YAMLCheck, CSVExplore, MarkdownLive, HTMLPreview,
+  SQLFormat, ColourContrast, UUIDGen, TimezoneNow, TZConvert, RegexLab, CronLab —
+  see `/dev/` for the full grid. TimezoneNow and TZConvert share an interactive
+  dot-matrix world map (`dev/libs/tz/`) with a live day/night terminator.
+
+Every page has a global search / command palette — click the search bar in the nav
+or press **Ctrl+K** / **Cmd+K** to jump to any tool.
+
 ## Structure
 
 ```
 CNAME                 tools.tapdot.org
+CLAUDE.md              build spec + "add a new tool" checklist (auto-loaded by Claude Code)
 index.html            root hub
 privacy.html          shared privacy policy
 404.html              branded not-found page
-shared/shared.css     design system
-shared/shared.js      dark mode + utilities
-assets/               tapdot-icon.png
-study/  write/        tool folders (index.html + <tool>.js + <tool>.css each)
+shared/shared.css     design system, themes, search palette, world-map styling
+shared/shared.js      dark mode, breadcrumb, icons, search palette, how-it-works
+assets/               tapdot-icon.png, assets/icons/*.svg
+study/  write/  dev/  tool folders (index.html + <tool>.js + <tool>.css each)
+dev/libs/              bundled libs (js-yaml) + dev/libs/tz/ (cities + world map)
 ```
 
 ## Local preview
@@ -42,17 +54,20 @@ python -m http.server 8080
 # then visit http://localhost:8080/
 ```
 
-## Layout regression tests
+## Tests
 
-A Playwright harness loads every page at mobile/tablet/desktop widths, fails on any
-horizontal overflow / out-of-bounds element, and saves full-page screenshots to
-`test/shots/`. It drives your installed Chrome (no browser download).
+A Playwright suite drives your installed Chrome (no browser download):
 
 ```bash
 cd test
 npm install            # PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 is fine — uses system Chrome
-npm run regression
+npm test                # regression + functional
 ```
+
+- `npm run regression` — loads every page at mobile/tablet/desktop widths, fails on any
+  horizontal overflow / out-of-bounds element, saves full-page screenshots to `test/shots/`.
+- `npm run functional` — exercises real interactions (search palette open/filter/close,
+  world-map marker clicks, TZConvert slider, JWT claims table) and fails on any JS error.
 
 ## Deploy (GitHub Pages)
 

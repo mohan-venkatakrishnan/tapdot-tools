@@ -1,20 +1,6 @@
 // TimezoneNow — world clock + meeting overlap (Intl API, no library)
+// City list + coordinates: /dev/libs/tz/cities.js — map renderer: /dev/libs/tz/worldmap.js
 
-const CITIES = [
-  ['UTC', 'UTC'], ['Honolulu', 'Pacific/Honolulu'], ['Anchorage', 'America/Anchorage'],
-  ['Los Angeles', 'America/Los_Angeles'], ['Denver', 'America/Denver'], ['Chicago', 'America/Chicago'],
-  ['New York', 'America/New_York'], ['Toronto', 'America/Toronto'], ['Mexico City', 'America/Mexico_City'],
-  ['Bogotá', 'America/Bogota'], ['São Paulo', 'America/Sao_Paulo'], ['London', 'Europe/London'],
-  ['Lisbon', 'Europe/Lisbon'], ['Madrid', 'Europe/Madrid'], ['Paris', 'Europe/Paris'],
-  ['Berlin', 'Europe/Berlin'], ['Rome', 'Europe/Rome'], ['Amsterdam', 'Europe/Amsterdam'],
-  ['Stockholm', 'Europe/Stockholm'], ['Athens', 'Europe/Athens'], ['Istanbul', 'Europe/Istanbul'],
-  ['Moscow', 'Europe/Moscow'], ['Nairobi', 'Africa/Nairobi'], ['Cairo', 'Africa/Cairo'],
-  ['Johannesburg', 'Africa/Johannesburg'], ['Dubai', 'Asia/Dubai'], ['Karachi', 'Asia/Karachi'],
-  ['Mumbai / Delhi', 'Asia/Kolkata'], ['Dhaka', 'Asia/Dhaka'], ['Bangkok', 'Asia/Bangkok'],
-  ['Singapore', 'Asia/Singapore'], ['Hong Kong', 'Asia/Hong_Kong'], ['Shanghai', 'Asia/Shanghai'],
-  ['Tokyo', 'Asia/Tokyo'], ['Seoul', 'Asia/Seoul'], ['Sydney', 'Australia/Sydney'],
-  ['Auckland', 'Pacific/Auckland'],
-];
 const LS = 'tapdot-tz-list';
 const $ = (id) => document.getElementById(id);
 
@@ -23,7 +9,6 @@ function getList() {
   return ['UTC', 'America/New_York', 'Europe/London', 'Asia/Tokyo'];
 }
 function setList(l) { localStorage.setItem(LS, JSON.stringify(l)); }
-const cityName = (tz) => (CITIES.find(c => c[1] === tz) || [tz])[0];
 
 function getOffsetMinutes(tz, date) {
   const tzDate = new Date(date.toLocaleString('en-US', { timeZone: tz }));
@@ -45,7 +30,20 @@ function localHour(tz, date) {
 }
 
 function initSelect() {
-  $('tzSelect').innerHTML = CITIES.map(([c, tz]) => `<option value="${tz}">${c} — ${tz}</option>`).join('');
+  $('tzSelect').innerHTML = TZ_CITIES.map(([c, tz]) => `<option value="${tz}">${tzOptionLabel(c, tz)}</option>`).join('');
+}
+
+function renderMap() {
+  renderWorldMap($('map'), {
+    cities: TZ_CITIES,
+    selected: getList(),
+    date: new Date(),
+    onToggle: (tz) => {
+      const list = getList();
+      const next = list.includes(tz) ? list.filter(t => t !== tz) : [...list, tz];
+      if (next.length) { setList(next); renderAll(); }
+    },
+  });
 }
 
 function renderClocks() {
@@ -54,7 +52,7 @@ function renderClocks() {
   const rows = list.map(tz => {
     const time = new Intl.DateTimeFormat('en-GB', { timeZone: tz, hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }).format(now);
     const date = new Intl.DateTimeFormat('en-US', { timeZone: tz, weekday: 'short', month: 'short', day: 'numeric' }).format(now);
-    return `<tr><td>${escapeHtml(cityName(tz))}</td><td>${time}</td><td>${date}</td><td>${getUTCOffset(tz, now)}${isDST(tz, now) ? ' <span class="dev-badge" style="padding:1px 6px">DST</span>' : ''}</td><td><button class="tz-remove" data-tz="${tz}" aria-label="Remove">×</button></td></tr>`;
+    return `<tr><td>${escapeHtml(tzCityName(tz))}</td><td>${time}</td><td>${date}</td><td>${getUTCOffset(tz, now)}${isDST(tz, now) ? ' <span class="dev-badge" style="padding:1px 6px">DST</span>' : ''}</td><td><button class="tz-remove" data-tz="${tz}" aria-label="Remove">×</button></td></tr>`;
   }).join('');
   $('clocks').innerHTML = `<thead><tr><th>City</th><th>Time</th><th>Date</th><th>UTC offset</th><th></th></tr></thead><tbody>${rows}</tbody>`;
 }
@@ -68,7 +66,7 @@ function renderPlanner() {
   head += '</tr>';
   let body = '';
   for (const tz of list) {
-    body += `<tr><td>${escapeHtml(cityName(tz))}</td>`;
+    body += `<tr><td>${escapeHtml(tzCityName(tz))}</td>`;
     for (let h = 0; h < 24; h++) {
       const d = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), h));
       const lh = localHour(tz, d);
@@ -84,18 +82,20 @@ function renderPlanner() {
   $('planner').innerHTML = `<table class="tz-planner"><thead>${head}</thead><tbody>${body}</tbody></table>`;
 }
 
+function renderAll() { renderMap(); renderClocks(); renderPlanner(); }
+
 $('add').addEventListener('click', () => {
   const tz = $('tzSelect').value;
   const list = getList();
-  if (!list.includes(tz)) { list.push(tz); setList(list); renderClocks(); renderPlanner(); }
+  if (!list.includes(tz)) { list.push(tz); setList(list); renderAll(); }
 });
 $('clocks').addEventListener('click', (e) => {
   const b = e.target.closest('.tz-remove'); if (!b) return;
   setList(getList().filter(tz => tz !== b.dataset.tz));
-  renderClocks(); renderPlanner();
+  renderAll();
 });
 
 initSelect();
-renderClocks();
-renderPlanner();
+renderAll();
+setInterval(renderMap, 60000); // day/night terminator drift
 setInterval(renderClocks, 1000);

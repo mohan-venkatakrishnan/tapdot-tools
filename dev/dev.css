@@ -185,6 +185,102 @@ textarea.ts-code-input {
 .dev-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
 .dev-muted { color: var(--color-muted); font-size: 12px; }
 
+/* ── Interactive world map ──────────────────────────────────────────────── */
+.tz-map-wrap {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 0.5px solid var(--color-border);
+  background: color-mix(in srgb, var(--color-accent-soft) 35%, var(--color-bg-soft));
+}
+.tzm-svg { display: block; width: 100%; height: auto; }
+.tzm-sea { fill: transparent; }
+.tzm-land { fill: var(--color-accent); opacity: 0.32; }
+[data-theme="dark"] .tzm-land { opacity: 0.4; }
+.tzm-night { fill: #0B0B18; }
+[data-theme="dark"] .tzm-night { fill: #000004; opacity: 0.55; }
+
+.tzm-sweep {
+  fill: var(--color-accent);
+  opacity: 0.05;
+  animation: tzmSweep 9s linear infinite;
+}
+@keyframes tzmSweep { from { transform: translateX(0); } to { transform: translateX(960px); } }
+
+.tzm-arc {
+  fill: none;
+  stroke: var(--color-accent);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  opacity: 0.55;
+  stroke-dasharray: 4 5;
+  animation: tzmFlow 1.6s linear infinite;
+}
+@keyframes tzmFlow { to { stroke-dashoffset: -18; } }
+
+.tzm-marker { cursor: pointer; }
+.tzm-dot {
+  r: 3.4;
+  fill: var(--color-muted);
+  stroke: var(--color-bg);
+  stroke-width: 1.5;
+  transition: fill var(--transition), r var(--transition);
+}
+.tzm-ring {
+  r: 3.4;
+  fill: none;
+  stroke: var(--color-muted);
+  stroke-width: 1.5;
+  opacity: 0;
+}
+.tzm-marker:hover .tzm-dot { fill: var(--color-accent); r: 5; }
+.tzm-marker.on .tzm-dot { fill: var(--color-accent); r: 4.5; }
+.tzm-marker.on .tzm-ring {
+  stroke: var(--color-accent);
+  animation: tzmPulse 2.2s ease-out infinite;
+  animation-delay: inherit;
+}
+@keyframes tzmPulse {
+  0%   { r: 4.5; opacity: 0.55; }
+  100% { r: 15;  opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tzm-sweep { display: none; }
+  .tzm-arc { animation: none; stroke-dasharray: none; }
+  .tzm-ring { animation: none !important; }
+}
+
+/* Time slider (TZConvert) */
+.tz-slider-wrap { padding: 4px 2px; }
+.tz-slider {
+  -webkit-appearance: none; appearance: none; width: 100%; height: 6px;
+  border-radius: 999px; background: var(--color-bg-soft);
+  border: 0.5px solid var(--color-border); outline: none;
+}
+.tz-slider::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%;
+  background: var(--color-accent); border: 2px solid var(--color-bg); cursor: pointer;
+  box-shadow: 0 0 0 3px var(--color-accent-soft);
+}
+.tz-slider::-moz-range-thumb {
+  width: 18px; height: 18px; border-radius: 50%; background: var(--color-accent);
+  border: 2px solid var(--color-bg); cursor: pointer; box-shadow: 0 0 0 3px var(--color-accent-soft);
+}
+.tz-slider-labels { display: flex; justify-content: space-between; font-size: 10px; color: var(--color-muted); margin-top: 4px; font-family: var(--font-mono); }
+
+/* Convert result rows */
+.tzc-row {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 10px 12px; border-radius: var(--radius-md); background: var(--color-bg-soft);
+  border: 0.5px solid var(--color-border); margin-bottom: 8px;
+}
+.tzc-row .tzc-name { font-size: 13px; font-weight: 500; color: var(--color-text); }
+.tzc-row .tzc-off { font-size: 11px; color: var(--color-muted); font-family: var(--font-mono); }
+.tzc-row .tzc-time { font-family: var(--font-mono); font-size: 18px; font-weight: 600; color: var(--color-accent); }
+.tzc-row .tzc-day { font-size: 10px; color: var(--color-muted); margin-left: 6px; }
+.tzc-remove { background: none; border: none; color: var(--color-muted); cursor: pointer; font-size: 16px; padding: 2px 6px; }
+.tzc-remove:hover { color: var(--color-danger); }
+
 /* Timezone meeting planner */
 .tz-planner { border-collapse: collapse; font-family: var(--font-mono); font-size: 11px; }
 .tz-planner th, .tz-planner td { border: 0.5px solid var(--color-border); text-align: center; padding: 4px 6px; color: var(--color-muted); }

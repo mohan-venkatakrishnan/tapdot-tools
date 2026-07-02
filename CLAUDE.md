@@ -43,18 +43,33 @@ and the How-it-works walkthrough.
   only while their step is `.playing`. Each demo shows **real sample text** — never reuse
   a generic abstract animation across tools.
 - **Scroll reveal** (`initReveal`) and **prerender** (`initSpeculation`).
+- **Global search / command palette** (`initSearch`) — a search-bar button is injected
+  into every nav (before the dark toggle); click it or press **Ctrl+K / Cmd+K** to open
+  a Spotlight-style overlay that fuzzy-searches `TOOL_REGISTRY` and navigates via normal
+  `<a href>` (so prerender/view-transitions still apply). **Every new tool/hub page MUST
+  be added to `TOOL_REGISTRY` in shared.js** or it won't be searchable.
 - **On-device AI**: `tapdotAI.availability()` → `available|downloadable|downloading|unavailable`
   and `tapdotAI.createSession(onProgress)`. Handles modern (`self.LanguageModel`) and legacy
-  (`window.ai.languageModel`) APIs. Used by BiasCheck & FlashForge. **Never** create a
+  (`window.ai.languageModel`) APIs. Used by BiasCheck, FlashForge & CronLab. **Never** create a
   throwaway session just to detect — only read `availability()` on load; create the real
   session on a user gesture (that's what lets the model download).
 - Utilities: `copyText`, `escapeHtml`, `showOutput`/`hideOutput`. Tool scripts rely on these.
 
-Shared components in `shared/shared.css`: `.ts-nav`, `.ts-main` (max-width 680),
-`.ts-card`, `.ts-btn(-primary/secondary/ghost)`, `.ts-input/.ts-textarea/.ts-select`,
+Shared components in `shared/shared.css`: `.ts-nav` (search trigger + breadcrumb +
+dark toggle), `.ts-main` (max-width 760; add `.ts-main-wide` — max-width 1180 — for hub
+grids and workbench/table-heavy tools so wide screens don't force excess vertical
+scrolling), `.ts-card`, `.ts-btn(-primary/secondary/ghost)`, `.ts-input/.ts-textarea/.ts-select`,
 `.ts-segment` (tabs), `.ts-stats-grid/.ts-stat`, `.ts-table`, `.ts-mono-output`,
-`.ts-hub-grid/.ts-hub-card/.ts-hub-icon`, `.ts-privacy-strip`, `.ts-callout`, `.ts-footer`.
-Reuse these; avoid bespoke styles unless necessary.
+`.ts-hub-grid/.ts-hub-card/.ts-hub-icon`, `.ts-privacy-strip`, `.ts-callout`, `.ts-footer`,
+`.ts-palette-*` (search overlay). Reuse these; avoid bespoke styles unless necessary.
+
+**Interactive world map** (`dev/libs/tz/cities.js` + `dev/libs/tz/worldmap.js`, styled in
+`dev/dev.css`): a themeable dot-matrix world map with a land mask rasterized once from a
+public-domain SVG (see git history for the one-off script, since removed) and embedded as
+a JS array — no runtime image requests. `renderWorldMap(container, {cities, selected, date,
+onToggle})` draws land dots, a day/night terminator computed from `date`, pulsing markers,
+and connecting arcs between selected cities. Shared by TimezoneNow and TZConvert; reuse it
+for any future map-based tool rather than re-deriving a land mask.
 
 ## How to add a NEW tool (checklist)
 
@@ -74,17 +89,26 @@ Reuse these; avoid bespoke styles unless necessary.
 5. Add the tool's card (with icon) to its collection hub `index.html`.
    If it's a new collection, create `<collection>/index.html`, add it to the root `index.html`,
    add the collection to `initBreadcrumb`, theme tokens in shared.css, and the favicon color map.
-6. Add the Cloudflare beacon `<script>` (placeholder `YOUR_CLOUDFLARE_TOKEN`) before `</body>`.
-7. Run the regression harness (below). Fix any overflow. Then commit + push.
+6. Add an entry to `TOOL_REGISTRY` in shared.js so it's found by the Ctrl+K search palette.
+7. Use `class="ts-main ts-main-wide"` instead of `class="ts-main"` if the tool has a
+   workbench/table/grid layout that benefits from extra width (most dev tools do).
+8. Add the Cloudflare beacon `<script>` (placeholder `YOUR_CLOUDFLARE_TOKEN`) before `</body>`.
+9. Add the new route to `ROUTES` in `test/regression.mjs`, then run the test suite (below).
+   Fix any overflow or JS errors. Then commit + push.
 
-## Regression harness (`test/`)
+## Test suite (`test/`)
 
-Playwright driving the system Chrome (no browser download). Loads every page at
-mobile/tablet/desktop, fails on horizontal overflow / out-of-bounds elements, saves
-screenshots to `test/shots/`. Add new routes to the `ROUTES` array in `test/regression.mjs`.
+Playwright driving the system Chrome (no browser download).
 ```
-cd test && npm install && npm run regression
+cd test && npm install && npm test        # regression + functional
+npm run regression                        # layout: mobile/tablet/desktop overflow checks,
+                                           # screenshots to test/shots/
+npm run functional                        # real interactions: search palette, world-map
+                                           # clicks, sliders, JS-error checks — catches bugs
+                                           # regression alone can't (see CronLab fix in v5)
 ```
+Add new routes to `ROUTES` in `regression.mjs`; add new interaction checks to `functional.mjs`
+when a tool has meaningful client-side behavior (not just static layout).
 `test/node_modules` and `test/shots` are gitignored.
 
 ## Deploy
@@ -112,3 +136,13 @@ DNS on GoDaddy. See README.md for the one-time setup.
   ColourContrast, UUIDGen, TimezoneNow, RegexLab, CronLab). Shared `dev/dev.css`;
   js-yaml bundled locally at `dev/libs/`. Dev inherits the purple accent (no theme
   override). CronLab uses `tapdotAI` for NL→cron with a rule-based fallback.
+- v6: **TZConvert** (14th dev tool) — pick a date/time + source zone, drag a slider or
+  click cities on an interactive world map to see conversions live, with per-day-offset
+  badges. Built a reusable **world map component** (`dev/libs/tz/`) — dot-matrix land
+  mask rasterized once from a public-domain SVG, day/night terminator, pulsing markers,
+  connecting arcs — shared by TimezoneNow (which also gained the map). Added a global
+  **Ctrl+K / Cmd+K search palette** (`TOOL_REGISTRY` in shared.js) reachable from every
+  page's nav. Widened hub grids and workbench-heavy dev tools via `.ts-main-wide`
+  (1180px) to cut vertical scrolling; bumped the default `.ts-main` to 760px. JWTRead
+  gained a claims-explained table + a live expiry countdown. Added `test/functional.mjs`
+  (Playwright interaction tests) alongside the layout regression — `npm test` runs both.
