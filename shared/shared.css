@@ -709,50 +709,68 @@ body {
 @keyframes vtIn  { from { opacity: 0; transform: translateY(14px); } }
 
 /* ── How it works card ───────────────────────────────────────────────────── */
-.ts-hiw {
-  background: color-mix(in srgb, var(--color-surface) 88%, transparent);
+/* Bottom "How it works" walkthrough: Step 1 → 2 → 3, each animated w/ sample text */
+.hiw2 {
+  margin-top: 40px;
+  padding-top: 28px;
+  border-top: 0.5px solid var(--color-border);
+  clear: both;
+}
+.hiw2-title {
+  font-size: 12px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.06em; color: var(--color-accent);
+  display: flex; align-items: center; gap: 7px; margin-bottom: 18px;
+}
+.hiw2-steps {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 14px;
+  align-items: stretch;
+}
+.hiw2-step {
+  position: relative;
+  min-width: 0;               /* allow grid track to shrink below content width */
+  background: color-mix(in srgb, var(--color-surface) 90%, transparent);
   border: 0.5px solid var(--color-border);
   border-radius: var(--radius-lg);
   padding: 16px;
-  margin-bottom: 20px;
   backdrop-filter: blur(6px);
   box-shadow: var(--shadow-sm);
+  display: flex; flex-direction: column;
 }
-@media (min-width: 900px) {
-  .ts-main { max-width: 840px; }
-  .ts-hiw {
-    float: right;
-    width: 288px;
-    margin: 0 0 20px 28px;
-  }
+.hiw2-num {
+  width: 26px; height: 26px; border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-family: var(--font-mono); font-size: 13px; font-weight: 600;
+  color: #fff; background: linear-gradient(135deg, var(--grad-a), var(--grad-b));
+  margin-bottom: 10px;
 }
-.ts-hiw-head {
-  display: flex; align-items: center; justify-content: space-between;
-  cursor: pointer; user-select: none;
+.hiw2-step-title {
+  font-size: 13px; font-weight: 600; color: var(--color-text); margin-bottom: 12px;
 }
-.ts-hiw-title {
-  font-size: 12px; font-weight: 600; text-transform: uppercase;
-  letter-spacing: 0.06em; color: var(--color-accent);
-  display: flex; align-items: center; gap: 7px;
+.hiw2-sample {
+  margin-top: auto;
+  font-family: var(--font-mono); font-size: 11.5px;
+  color: var(--color-muted); background: var(--color-bg-soft);
+  border: 0.5px solid var(--color-border); border-radius: var(--radius-sm);
+  padding: 7px 9px; overflow: hidden; white-space: nowrap;
+  border-right: 2px solid var(--color-accent);
+  width: fit-content; max-width: 100%;
+  animation: hiwCaret 1s step-end infinite, hiwType2 3s ease-in-out infinite;
 }
-.ts-hiw-chev { transition: transform var(--transition); color: var(--color-muted); }
-.ts-hiw.collapsed .ts-hiw-chev { transform: rotate(-90deg); }
-.ts-hiw-body {
-  margin-top: 14px;
-  max-height: 600px; overflow: hidden;
-  transition: max-height 0.4s ease, opacity 0.3s ease, margin 0.3s ease;
+.hiw2-step:nth-child(2) .hiw2-sample { animation-delay: 0s, .35s; }
+.hiw2-step:nth-child(3) .hiw2-sample { animation-delay: 0s, .7s; }
+@keyframes hiwType2 {
+  0% { max-width: 0; }
+  40%, 82% { max-width: 100%; }
+  100% { max-width: 0; }
 }
-.ts-hiw.collapsed .ts-hiw-body { max-height: 0; opacity: 0; margin-top: 0; }
-.ts-hiw-steps {
-  margin: 14px 0 0; padding-left: 18px;
-  font-size: 13px; line-height: 1.7; color: var(--color-text);
-}
-.ts-hiw-steps li { margin-bottom: 4px; }
+@keyframes hiwCaret { 50% { border-color: transparent; } }
 
-/* Demo stage */
+/* Demo stage (compact, sits above the sample line) */
 .ts-hiw-demo {
   position: relative;
-  height: 132px;
+  height: 92px; margin-bottom: 12px;
   border-radius: var(--radius-md);
   background: linear-gradient(135deg,
     color-mix(in srgb, var(--color-accent-soft) 80%, var(--color-surface)),
@@ -760,6 +778,10 @@ body {
   border: 0.5px solid var(--color-border);
   display: flex; align-items: center; justify-content: center;
   overflow: hidden;
+}
+@media (max-width: 720px) {
+  .hiw2-steps { grid-template-columns: 1fr; }
+  .hiw2-sample { animation-delay: 0s, 0s !important; }
 }
 
 /* demo: flip card */
@@ -864,12 +886,46 @@ body {
 .bc-flag-set { font-size: 11px; color: var(--color-muted); white-space: nowrap; }
 .bc-flag-copy { flex-shrink: 0; }
 .bc-flags-steps { font-size: 13px; line-height: 1.8; color: var(--color-text); padding-left: 18px; margin: 12px 0 0; }
+.bc-flags-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  margin-top: 10px; padding: 0;
+  background: none; border: none; cursor: pointer;
+  font-family: var(--font-body); font-size: 12px; color: var(--color-accent);
+  transition: opacity var(--transition);
+}
+.bc-flags-link:hover { opacity: 0.75; text-decoration: underline; }
+
+/* ── Icons (categories + tools) ──────────────────────────────────────────── */
+.ts-hub-icon {
+  width: 40px; height: 40px; border-radius: var(--radius-md);
+  display: inline-flex; align-items: center; justify-content: center;
+  margin-bottom: 12px;
+  color: var(--color-accent);
+  background: var(--color-accent-soft);
+  border: 0.5px solid var(--color-border);
+}
+.ts-hub-icon svg { width: 22px; height: 22px; }
+
+.ts-tool-icon {
+  width: 30px; height: 30px; flex: 0 0 auto;
+  display: inline-flex; align-items: center; justify-content: center;
+  color: var(--color-accent);
+  vertical-align: middle;
+}
+.ts-tool-icon svg { width: 26px; height: 26px; }
+.ts-tool-head-row { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
+.ts-tool-head-row .ts-tool-name { margin-bottom: 0; }
+
+/* Compact demos inside walkthrough cards */
+.ts-hiw-demo .hiw-flip { width: 128px; height: 68px; }
+.ts-hiw-demo .hiw-face { font-size: 12px; }
 
 /* ── Reduced motion ──────────────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   .ts-bg-orb { display: none; }
   .reveal { opacity: 1; transform: none; transition: none; }
   .hiw-flip-i, .hiw-type span, .hiw-meter-fill, .hiw-mark mark { animation: none !important; }
+  .hiw2-sample { animation: none !important; max-width: 100%; border-right: none; }
   .hiw-type span { width: var(--w, 100%); }
   .hiw-meter-fill { width: 60%; }
   .hiw-mark mark { background-size: 100% 100%; }

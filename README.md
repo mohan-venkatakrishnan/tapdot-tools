@@ -42,6 +42,18 @@ python -m http.server 8080
 # then visit http://localhost:8080/
 ```
 
+## Layout regression tests
+
+A Playwright harness loads every page at mobile/tablet/desktop widths, fails on any
+horizontal overflow / out-of-bounds element, and saves full-page screenshots to
+`test/shots/`. It drives your installed Chrome (no browser download).
+
+```bash
+cd test
+npm install            # PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 is fine — uses system Chrome
+npm run regression
+```
+
 ## Deploy (GitHub Pages)
 
 This is a **separate repo** from the main `tapdot` site — GitHub Pages allows one custom

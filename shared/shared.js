@@ -59,6 +59,21 @@ function escapeHtml(str) {
     .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 }
 
+// ── Icon set (categories + tools) ───────────────────────────────────────────
+
+const ICONS = {
+  study:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1 3 3 6 3s6-2 6-3v-5"/></svg>',
+  write:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>',
+  'CiteMaker':     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 17h3l2-4V7H5v6h3z"/><path d="M16 17h3l2-4V7h-6v6h3z"/></svg>',
+  'FlashForge':    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="13" height="12" rx="2"/><path d="M8 8V6a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"/></svg>',
+  'GradeCalc':     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 7h6M9 11h.01M12 11h.01M15 11h.01M9 15h.01M12 15h.01M15 15h.01"/></svg>',
+  'BiasCheck':     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M6 21h12M5 7h14"/><path d="M5 7l-3 6a3 3 0 0 0 6 0zM19 7l-3 6a3 3 0 0 0 6 0z"/></svg>',
+  'ReadScore':     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20a8 8 0 0 1 16 0"/><path d="M12 20l4-6"/></svg>',
+  'WordCount Pro': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h16M4 15h16M10 3L8 21M16 3l-2 18"/></svg>',
+  'LoremCraft':    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>',
+  'ThreadCraft':   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-12.4 7.4L3 21l2.1-5.6A8.5 8.5 0 1 1 21 11.5z"/></svg>',
+};
+
 // ── Futuristic background ────────────────────────────────────────────────────
 
 function initBackground() {
@@ -78,8 +93,8 @@ function initBackground() {
 function initParallax(bg) {
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const orbs = [...bg.querySelectorAll('.ts-bg-orb')];
-  const depths = [0.020, -0.028, 0.016];       // mouse parallax strength
-  const scrollDepths = [0.06, -0.04, 0.08];    // scroll parallax strength
+  const depths = [0.020, -0.028, 0.016];
+  const scrollDepths = [0.06, -0.04, 0.08];
   const drift = [
     { x: 26, y: 20, s: 0.00021 },
     { x: -30, y: 24, s: 0.00017 },
@@ -117,7 +132,6 @@ function initBreadcrumb() {
   const toggle = document.getElementById('darkToggle');
   if (!logo) return;
 
-  // Remove any existing static crumb nodes between logo and toggle.
   let node = logo.nextSibling;
   while (node && node !== toggle) {
     const next = node.nextSibling;
@@ -156,17 +170,66 @@ function initBreadcrumb() {
   logo.after(frag);
 }
 
-// ── How it works ─────────────────────────────────────────────────────────────
+// ── Tool icon beside the page title ─────────────────────────────────────────
 
-const HOW_IT_WORKS = {
-  'CiteMaker': { demo: 'flip', steps: ['Pick a style — APA, MLA, Chicago or Harvard', 'Paste a URL to auto-fill, or type the details', 'Copy your formatted citation'] },
-  'FlashForge': { demo: 'flip', steps: ['Paste notes (Q:/A:, term — definition, or lines)', 'Cards generate automatically', 'Study & rate — spaced repetition schedules the rest'] },
-  'GradeCalc': { demo: 'meter', steps: ['Choose GPA, weighted or final-exam mode', 'Add your courses or scores', 'See your result update instantly'] },
-  'BiasCheck': { demo: 'mark', steps: ['Paste a news excerpt', 'On-device AI reads the language patterns', 'See loaded words, framing & questions to ask'] },
-  'ReadScore': { demo: 'meter', steps: ['Paste your writing', 'Press Analyse', 'Read grade level, passive voice & long sentences'] },
-  'WordCount Pro': { demo: 'type', steps: ['Type or paste your text', 'Counts update live as you write', 'Check keyword density & a character limit'] },
-  'LoremCraft': { demo: 'type', steps: ['Pick a style and amount', 'Choose plain, HTML or Markdown', 'Generate & copy your placeholder text'] },
-  'ThreadCraft': { demo: 'type', steps: ['Paste your long text', 'Set the limit & numbering', 'Copy each tweet or the whole thread'] },
+function initToolIcon() {
+  const tool = document.documentElement.dataset.tool || '';
+  const icon = ICONS[tool];
+  const h1 = document.querySelector('.ts-tool-header .ts-tool-name');
+  if (!icon || !h1 || h1.parentElement.classList.contains('ts-tool-head-row')) return;
+  const row = document.createElement('div');
+  row.className = 'ts-tool-head-row';
+  const span = document.createElement('span');
+  span.className = 'ts-tool-icon'; span.setAttribute('aria-hidden', 'true');
+  span.innerHTML = icon;
+  h1.replaceWith(row);
+  row.appendChild(span);
+  row.appendChild(h1);
+}
+
+// ── How it works — bottom walkthrough (Step 1 → 2 → 3, animated) ─────────────
+
+const STEPS = {
+  'CiteMaker': [
+    { t: 'Pick a style', s: 'APA · MLA · Chicago', d: 'type' },
+    { t: 'Add the source', s: 'Smith, J. — Deep Work — 2026', d: 'type' },
+    { t: 'Copy the citation', s: 'Smith, J. (2026). Deep Work.', d: 'type' },
+  ],
+  'FlashForge': [
+    { t: 'Paste your notes', s: 'Mitochondria — the powerhouse', d: 'type' },
+    { t: 'Cards generate', s: 'Front → Back ready', d: 'flip' },
+    { t: 'Study & rate', s: 'Easy · Medium · Hard', d: 'flip' },
+  ],
+  'GradeCalc': [
+    { t: 'Enter courses', s: 'Biology — A — 3 cr', d: 'type' },
+    { t: 'Add more grades', s: 'Math — B+ — 4 cr', d: 'type' },
+    { t: 'See your GPA', s: '3.85', d: 'meter' },
+  ],
+  'BiasCheck': [
+    { t: 'Paste an excerpt', s: 'The alarming crisis shocked…', d: 'type' },
+    { t: 'AI reads patterns', s: 'alarming · crisis · shocked', d: 'mark' },
+    { t: 'See the analysis', s: 'Framing + questions to ask', d: 'mark' },
+  ],
+  'ReadScore': [
+    { t: 'Paste your writing', s: 'It was a bright cold day…', d: 'type' },
+    { t: 'Press Analyse', s: 'Scanning sentences…', d: 'type' },
+    { t: 'Read your score', s: 'Grade 8.2', d: 'meter' },
+  ],
+  'WordCount Pro': [
+    { t: 'Type or paste', s: 'The quick brown fox…', d: 'type' },
+    { t: 'Counts update live', s: '128 words · 642 chars', d: 'type' },
+    { t: 'Keyword density', s: 'fox · 3.1%', d: 'type' },
+  ],
+  'LoremCraft': [
+    { t: 'Pick style & amount', s: '3 paragraphs · startup', d: 'type' },
+    { t: 'Choose a format', s: 'Plain · HTML · Markdown', d: 'type' },
+    { t: 'Generate & copy', s: 'We disrupt the paradigm…', d: 'type' },
+  ],
+  'ThreadCraft': [
+    { t: 'Paste long text', s: 'A long post to split…', d: 'type' },
+    { t: 'Set limit & numbers', s: '280 chars · 1/n', d: 'type' },
+    { t: 'Copy your thread', s: '1/3   2/3   3/3', d: 'type' },
+  ],
 };
 
 function demoMarkup(type) {
@@ -176,51 +239,42 @@ function demoMarkup(type) {
       '<div class="hiw-face hiw-back">Answer</div></div></div>';
     case 'type': return '<div class="hiw-type"><span></span><span></span><span></span><span></span></div>';
     case 'meter': return '<div class="hiw-meter-wrap"><div class="hiw-meter"><div class="hiw-meter-fill"></div></div><div class="hiw-meter-num">A</div></div>';
-    case 'mark': return '<div class="hiw-mark"><mark>alarming</mark> claims about the <mark>crisis</mark> stunned <mark>ordinary people</mark></div>';
+    case 'mark': return '<div class="hiw-mark"><mark>alarming</mark> <mark>crisis</mark> <mark>shocked</mark></div>';
     default: return '';
   }
 }
 
-function initHowItWorks() {
+function initWalkthrough() {
   const tool = document.documentElement.dataset.tool || '';
-  const cfg = HOW_IT_WORKS[tool];
-  const header = document.querySelector('.ts-tool-header');
-  if (!cfg || !header || document.querySelector('.ts-hiw')) return;
+  const steps = STEPS[tool];
+  const main = document.querySelector('.ts-main');
+  if (!steps || !main || document.querySelector('.hiw2')) return;
 
-  const collapsed = window.innerWidth < 900; // start collapsed on mobile
-  const card = document.createElement('section');
-  card.className = 'ts-hiw reveal' + (collapsed ? ' collapsed' : '');
-  card.innerHTML =
-    '<div class="ts-hiw-head" role="button" tabindex="0" aria-expanded="' + (!collapsed) + '">' +
-      '<span class="ts-hiw-title">' +
-        '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>' +
-        'How it works</span>' +
-      '<svg class="ts-hiw-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>' +
-    '</div>' +
-    '<div class="ts-hiw-body">' +
-      '<div class="ts-hiw-demo" data-demo="' + cfg.demo + '">' + demoMarkup(cfg.demo) + '</div>' +
-      '<ol class="ts-hiw-steps">' + cfg.steps.map(s => '<li>' + escapeHtml(s) + '</li>').join('') + '</ol>' +
+  const section = document.createElement('section');
+  section.className = 'hiw2 reveal';
+  section.innerHTML =
+    '<div class="hiw2-title">' +
+      '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>' +
+      'How it works</div>' +
+    '<div class="hiw2-steps">' +
+      steps.map((st, i) =>
+        '<div class="hiw2-step">' +
+          '<span class="hiw2-num">' + (i + 1) + '</span>' +
+          '<div class="hiw2-step-title">' + escapeHtml(st.t) + '</div>' +
+          '<div class="ts-hiw-demo" data-demo="' + st.d + '">' + demoMarkup(st.d) + '</div>' +
+          '<div class="hiw2-sample">' + escapeHtml(st.s) + '</div>' +
+        '</div>'
+      ).join('') +
     '</div>';
-
-  header.after(card);
-
-  const head = card.querySelector('.ts-hiw-head');
-  const toggle = () => {
-    card.classList.toggle('collapsed');
-    head.setAttribute('aria-expanded', String(!card.classList.contains('collapsed')));
-  };
-  head.addEventListener('click', toggle);
-  head.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
-  });
+  main.appendChild(section);
 }
 
 // ── Scroll reveal ─────────────────────────────────────────────────────────
 
 function initReveal() {
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  const sel = '.ts-tool-header, .ts-card, .ts-hub-card, .ts-stats-grid, .ts-privacy-strip, .ts-callout, .gc-tab, .ts-hiw';
-  const els = [...document.querySelectorAll(sel)].filter(el => !el.classList.contains('reveal') || true);
+  const sel = '.ts-tool-header, .ts-card, .ts-hub-card, .ts-stats-grid, .ts-privacy-strip, .ts-callout, .gc-tab, .hiw2';
+  const els = [...document.querySelectorAll(sel)];
   const io = new IntersectionObserver((entries) => {
     entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
   }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
@@ -256,7 +310,8 @@ document.addEventListener('DOMContentLoaded', () => {
   initDarkToggle();
   initBackground();
   initBreadcrumb();
-  initHowItWorks();
+  initToolIcon();
+  initWalkthrough();
   initReveal();
   initSpeculation();
 });

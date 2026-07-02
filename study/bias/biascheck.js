@@ -189,4 +189,10 @@ document.getElementById('flagsGuide').addEventListener('click', (e) => {
   if (btn) copyText(btn.dataset.copy, btn);
 });
 
+document.getElementById('flagsLink').addEventListener('click', () => {
+  const g = flagsEl();
+  g.classList.toggle('ts-hidden');
+  if (!g.classList.contains('ts-hidden')) g.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+});
+
 detectEngine();
