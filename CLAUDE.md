@@ -284,7 +284,8 @@ DNS on GoDaddy. See README.md for the one-time setup.
   - `test/regression.mjs` grew to 219 checks, `test/functional.mjs` to 103 — both
     suites pass with 0 failures.
 - v14: **Productivity collection** (`productivity/`) — 6 tools, completing all 10
-  planned collections (~74 tools total). FocusTimer (Pomodoro 25/5/15, browser
+  planned collections (68 tools total: 4 study + 4 write + 14 dev + 8 marketing +
+  8 finance + 6 legal + 6 hr + 6 health + 6 design + 6 productivity). FocusTimer (Pomodoro 25/5/15, browser
   notifications, session log), QuickNote (up to 10 autosaving notes, 500ms debounce,
   .txt/.md export), DecisionMatrix (weighted criteria × options, CSV/Markdown
   export), MeetingTimer (live per-second cost from attendee salaries, budget alert,
@@ -295,3 +296,15 @@ DNS on GoDaddy. See README.md for the one-time setup.
   collision class of bug from v13 didn't recur since no tool declared those names.
   `test/regression.mjs` grew to 240 checks, `test/functional.mjs` to 118 — both
   suites pass with 0 failures.
+- v15: **Final integration pass** — all 10 collections (68 tools) now live on the
+  hub. Root `index.html` got 7 new collection cards (Marketing/Finance/Legal/HR/
+  Health/Design/Productivity) alongside Study/Write/Dev, plus updated hero copy and
+  meta description reflecting the full tool count. `privacy.html` rewritten to
+  cover all collections: the CurrencyConvert exchange-rate fetch is now disclosed
+  as the second (and last) network exception alongside CiteMaker's URL lookup; the
+  on-device-AI section now lists every `tapdotAI`-using tool, not just BiasCheck;
+  added dedicated Health-data and Legal/HR-data sections since those collections
+  handle unusually sensitive information. Ran the full `test/regression.mjs` (240
+  checks) and `test/functional.mjs` (118 checks) across the entire site — both pass
+  with 0 failures, confirming no regressions from the last five collections' worth
+  of shared.js/shared.css changes.

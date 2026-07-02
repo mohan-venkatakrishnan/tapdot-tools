@@ -38,7 +38,7 @@
 <main class="ts-main">
   <div class="ts-tool-header">
     <h1 class="ts-tool-name">Privacy Policy</h1>
-    <p class="ts-tool-desc">Last updated: July 2026</p>
+    <p class="ts-tool-desc">Last updated: July 2026 — covers all 10 tool collections</p>
   </div>
 
   <div class="ts-card">
@@ -54,9 +54,10 @@
     <p class="ts-card-label">What we collect</p>
     <p style="font-size:14px;line-height:1.7;color:var(--color-text);margin-bottom:12px">
       <strong>Nothing from the tools themselves.</strong> All processing happens
-      locally in your browser using JavaScript. Text you paste into CiteMaker,
-      FlashForge, GradeCalc, BiasCheck, ReadScore, WordCount Pro, LoremCraft, or
-      ThreadCraft is never transmitted anywhere. It never leaves your device.
+      locally in your browser using JavaScript, across every collection — Study,
+      Write, Dev, Marketing, Finance, Legal, HR, Health, Design, and Productivity.
+      Text, numbers, dates, and files you enter into any tool are never transmitted
+      anywhere. They never leave your device.
     </p>
     <p style="font-size:14px;line-height:1.7;color:var(--color-text)">
       <strong>Anonymous visit counts only.</strong> We use Cloudflare Web Analytics
@@ -68,13 +69,21 @@
   </div>
 
   <div class="ts-card">
-    <p class="ts-card-label">One exception — CiteMaker URL lookup</p>
+    <p class="ts-card-label">Two exceptions — the only network requests any tool makes</p>
+    <p style="font-size:14px;line-height:1.7;color:var(--color-text);margin-bottom:12px">
+      <strong>CiteMaker URL lookup.</strong> CiteMaker has an optional feature that
+      fetches a webpage's title and author when you paste a URL. To read that page,
+      the URL you paste is sent through a public proxy service (allorigins.win). This
+      only happens when you choose the URL lookup feature — manual citation entry
+      sends nothing anywhere. Use the Manual tab and no network request is ever made.
+    </p>
     <p style="font-size:14px;line-height:1.7;color:var(--color-text)">
-      CiteMaker has an optional feature that fetches a webpage's title and author when
-      you paste a URL. To read that page, the URL you paste is sent through a public
-      proxy service (allorigins.win). This only happens when you choose the URL lookup
-      feature — manual citation entry sends nothing anywhere. If you prefer, use the
-      Manual tab and no network request is ever made.
+      <strong>CurrencyConvert exchange rates.</strong> Finance's CurrencyConvert tool
+      fetches live exchange rates from a public rates API (open.er-api.com) so
+      conversions are accurate. Only the request for rates is made — the amounts
+      and currencies you're converting are never sent, since the conversion math
+      happens locally after the rates are loaded. Rates are cached in your browser
+      for the day to minimise requests.
     </p>
   </div>
 
@@ -95,20 +104,49 @@
   <div class="ts-card">
     <p class="ts-card-label">Local storage</p>
     <p style="font-size:14px;line-height:1.7;color:var(--color-text)">
-      Some tools (FlashForge) save your data to your browser's localStorage so your
-      flashcards persist between sessions. Your dark-mode preference is also stored
-      locally. This data never leaves your device and can be cleared at any time
-      through your browser settings.
+      Many tools save your data to your browser's localStorage so it persists between
+      sessions — flashcards, notes, habits, budgets, medication logs, saved palettes,
+      and similar. Your dark-mode preference is also stored locally. None of this data
+      ever leaves your device, and it can be cleared at any time through your browser
+      settings or by clearing your browser's site data for tools.tapdot.org.
     </p>
   </div>
 
   <div class="ts-card">
-    <p class="ts-card-label">On-device AI (BiasCheck)</p>
+    <p class="ts-card-label">On-device AI</p>
     <p style="font-size:14px;line-height:1.7;color:var(--color-text)">
-      BiasCheck uses your browser's built-in on-device AI (Gemini Nano) when available.
-      The AI model runs entirely on your own machine — the text you analyse is never
-      uploaded. If on-device AI is unavailable, BiasCheck falls back to a simple local
-      word-pattern analysis. Either way, nothing is sent to a server.
+      Several tools — including BiasCheck, FlashForge, CronLab, HeadlineScore,
+      EmailSubjectTester, AdCopyWriter, PersonaBuilder, JobDescriptionWriter,
+      InterviewKit, ContractRead, SymptomDiary, and SleepLog — can use your browser's
+      built-in on-device AI (Gemini Nano, via Chrome's Prompt API) when available.
+      The AI model runs entirely on your own machine — text you enter is never
+      uploaded to any AI provider. If on-device AI is unavailable, each tool falls
+      back to a plain template or simple local rule-based logic. Either way, nothing
+      is sent to a server.
+    </p>
+  </div>
+
+  <div class="ts-card">
+    <p class="ts-card-label">Health tools</p>
+    <p style="font-size:14px;line-height:1.7;color:var(--color-text)">
+      BMICalc, MedicationLog, SymptomDiary, CycleTracker, WaterIntake, and SleepLog
+      handle information that can be unusually sensitive — body measurements,
+      medications, symptoms, and cycle dates. This data is stored only in your
+      browser's localStorage and is never transmitted anywhere, including to us.
+      These tools are informational only and are not a substitute for professional
+      medical advice.
+    </p>
+  </div>
+
+  <div class="ts-card">
+    <p class="ts-card-label">Legal and HR tools</p>
+    <p style="font-size:14px;line-height:1.7;color:var(--color-text)">
+      ContractRead, NDAGenerator, PrivacyPolicyGen, TermsBuilder, CopyrightChecker,
+      SalaryBand, JobDescriptionWriter, InterviewKit, OfferLetterBuilder, and
+      OnboardingChecklist process documents and compensation data that can be
+      confidential. All generation and analysis — including the on-device AI used
+      by ContractRead, JobDescriptionWriter, and InterviewKit — happens locally.
+      Outputs from these tools are templates and starting points, not legal advice.
     </p>
   </div>
 
