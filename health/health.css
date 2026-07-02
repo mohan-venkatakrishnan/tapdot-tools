@@ -1,0 +1,41 @@
+/* health/health.css — imported by all health tools in addition to shared.css */
+
+.biz-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; min-width: 0; }
+.biz-muted { color: var(--color-muted); font-size: 12px; }
+.biz-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 480px) { .biz-grid-2 { grid-template-columns: 1fr; } }
+
+.biz-ai-status { font-size: 12px; color: var(--color-muted); }
+.biz-ai-status.working { color: var(--color-accent); }
+.biz-ai-status.fallback { color: var(--color-warning); }
+.biz-ai-status.ok { color: var(--color-success); }
+
+.health-sensitive-note {
+  display: flex; gap: 10px; align-items: flex-start;
+  padding: 12px 14px; background: var(--color-accent-soft);
+  border-radius: var(--radius-md); font-size: 12px; color: var(--color-accent); line-height: 1.6; margin-bottom: 20px;
+}
+.health-sensitive-note svg { flex-shrink: 0; margin-top: 1px; }
+
+/* Progress ring (water intake) */
+.ring-wrap { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.ring-num { font-family: var(--font-mono); font-size: 13px; fill: var(--color-text); }
+
+/* Log list */
+.log-item { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 0; border-bottom: 0.5px solid var(--color-border); }
+.log-item:last-child { border-bottom: none; }
+.log-main { font-size: 14px; color: var(--color-text); }
+.log-meta { font-size: 12px; color: var(--color-muted); }
+.biz-rm { background: none; border: none; color: var(--color-muted); cursor: pointer; font-size: 15px; flex-shrink: 0; }
+.biz-rm:hover { color: var(--color-danger); }
+
+/* Calendar heatmap grid (symptoms/cycle) */
+.health-cal { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+.health-cal-head { font-size: 10px; text-transform: uppercase; color: var(--color-muted); text-align: center; padding: 4px 0; }
+.health-cal-cell { aspect-ratio: 1; border-radius: var(--radius-sm); background: var(--color-bg-soft); border: 0.5px solid var(--color-border); display: flex; align-items: center; justify-content: center; font-size: 11px; color: var(--color-muted); cursor: pointer; }
+.health-cal-cell.empty { background: transparent; border-color: transparent; cursor: default; }
+.health-cal-cell.logged { background: var(--color-accent-soft); color: var(--color-accent); font-weight: 600; border-color: var(--color-accent); }
+.health-cal-cell.period { background: var(--color-accent); color: #fff; }
+.health-cal-cell.predicted { background: color-mix(in srgb, var(--color-accent) 25%, var(--color-bg-soft)); border-style: dashed; }
+
+.severity-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }

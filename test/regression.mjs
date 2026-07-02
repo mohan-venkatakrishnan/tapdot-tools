@@ -48,6 +48,8 @@ const ROUTES = [
   '/legal/terms/', '/legal/copyright/', '/legal/glossary/',
   '/hr/', '/hr/salary/', '/hr/jd/', '/hr/interview/', '/hr/offer/',
   '/hr/onboarding/', '/hr/leave/',
+  '/health/', '/health/bmi/', '/health/medication/', '/health/symptoms/',
+  '/health/cycle/', '/health/water/', '/health/sleep/',
   '/privacy.html',
 ];
 const VIEWPORTS = [

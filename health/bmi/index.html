@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" data-collection="health" data-tool="BMICalc">
+<head>
+  <meta charset="UTF-8" />
+  <script>(function(){try{var t=localStorage.getItem('tapdot-theme');var d=matchMedia('(prefers-color-scheme: dark)').matches;if(t==='dark'||(!t&&d))document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BMICalc — BMI &amp; Body Metrics Calculator | tapdot</title>
+  <meta name="description" content="Calculate BMI, BMR, TDEE, and ideal weight range. Your body measurements stay in your browser." />
+  <meta property="og:title" content="BMICalc — BMI & Body Metrics Calculator | tapdot" />
+  <meta property="og:description" content="BMI, BMR, TDEE and healthy weight range — all local." />
+  <link rel="canonical" href="https://tools.tapdot.org/health/bmi/" />
+  <link rel="icon" type="image/png" href="/assets/tapdot-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/shared/shared.css" />
+  <link rel="stylesheet" href="/health/health.css" />
+</head>
+<body>
+<nav class="ts-nav">
+  <a href="https://tapdot.org" class="ts-nav-logo"><img src="/assets/tapdot-icon.png" width="22" height="22" alt="tapdot" /><span>tapdot</span></a>
+  <button class="ts-dark-toggle" id="darkToggle" aria-label="Toggle dark mode"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg></button>
+</nav>
+<main class="ts-main">
+  <div class="ts-tool-header">
+    <h1 class="ts-tool-name">BMICalc</h1>
+    <p class="ts-tool-desc">BMI, BMR, TDEE and healthy weight range.</p>
+  </div>
+  <div class="health-sensitive-note">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+    Health data stays in your browser only — nothing is sent anywhere, ever
+  </div>
+
+  <div class="ts-card">
+    <div class="biz-grid-2">
+      <div><label class="ts-label" for="weight">Weight (kg)</label><input class="ts-input" id="weight" type="number" value="70" /></div>
+      <div><label class="ts-label" for="height">Height (cm)</label><input class="ts-input" id="height" type="number" value="175" /></div>
+      <div><label class="ts-label" for="age">Age</label><input class="ts-input" id="age" type="number" value="30" /></div>
+      <div><label class="ts-label" for="sex">Sex (for BMR formula)</label>
+        <select class="ts-select" id="sex" style="width:100%"><option value="male">Male</option><option value="female">Female</option></select>
+      </div>
+    </div>
+    <label class="ts-label ts-mt-md" for="activity">Activity level</label>
+    <select class="ts-select" id="activity" style="width:100%">
+      <option value="sedentary">Sedentary (little or no exercise)</option>
+      <option value="light">Light (1-3 days/week)</option>
+      <option value="moderate" selected>Moderate (3-5 days/week)</option>
+      <option value="active">Active (6-7 days/week)</option>
+      <option value="very_active">Very active (physical job + training)</option>
+    </select>
+  </div>
+
+  <div class="ts-stats-grid">
+    <div class="ts-stat"><span class="ts-stat-num" id="bmi">—</span><span class="ts-stat-label" id="bmiCategory">BMI</span></div>
+    <div class="ts-stat"><span class="ts-stat-num" id="bmr">—</span><span class="ts-stat-label">BMR (cal/day)</span></div>
+    <div class="ts-stat"><span class="ts-stat-num" id="tdee">—</span><span class="ts-stat-label">TDEE (cal/day)</span></div>
+    <div class="ts-stat"><span class="ts-stat-num" id="healthyRange">—</span><span class="ts-stat-label">Healthy weight range</span></div>
+  </div>
+</main>
+<footer class="ts-footer">
+  <span>Built by <a href="https://tapdot.org">tapdot</a></span><span class="ts-footer-dot">·</span>
+  <a href="/privacy.html">Privacy</a><span class="ts-footer-dot">·</span><span>All processing happens in your browser</span>
+</footer>
+<script src="/shared/shared.js"></script>
+<script src="bmi.js" defer></script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "YOUR_CLOUDFLARE_TOKEN"}'></script>
+</body>
+</html>

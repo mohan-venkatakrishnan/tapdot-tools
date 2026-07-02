@@ -160,6 +160,12 @@ const ICON_PATHS = {
   'OfferLetterBuilder': '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v5h5"/>',
   'OnboardingChecklist': '<path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>',
   'LeaveCalculator': '<rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/>',
+  'BMICalc': '<path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/>',
+  'MedicationLog': '<path d="M10.5 20.5L3.5 13.5a5 5 0 0 1 7-7l7 7a5 5 0 0 1-7 7z"/><path d="M8.5 8.5l7 7"/>',
+  'SymptomDiary': '<rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/><circle cx="9" cy="15" r="1.4"/><circle cx="15" cy="13" r="1.4"/>',
+  'CycleTracker': '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/>',
+  'WaterIntake': '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',
+  'SleepLog': '<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>',
   'JSONLab': '<path d="M8 3H7a2 2 0 0 0-2 2v5a2 2 0 0 1-2 2 2 2 0 0 1 2 2v5a2 2 0 0 0 2 2h1"/><path d="M16 3h1a2 2 0 0 1 2 2v5a2 2 0 0 0 2 2 2 2 0 0 0-2 2v5a2 2 0 0 1-2 2h-1"/>',
   'JSONConvert': '<polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/>',
   'JWTRead': '<circle cx="7.5" cy="15.5" r="4.5"/><path d="M10.7 12.3L20 3M17 6l2 2M14 9l2 2"/>',
@@ -372,6 +378,13 @@ const TOOL_REGISTRY = [
   { name: 'OfferLetterBuilder', url: '/hr/offer/', collection: 'hr', desc: 'Professional offer letter from a template' },
   { name: 'OnboardingChecklist', url: '/hr/onboarding/', collection: 'hr', desc: 'Day 1 / Week 1 / Month 1 checklist, saved locally' },
   { name: 'LeaveCalculator', url: '/hr/leave/', collection: 'hr', desc: 'Accrual, balance, and carry-forward' },
+  { name: 'Health tools', url: '/health/', collection: 'health', desc: 'BMI, medication log, symptom diary, cycle, water, sleep' },
+  { name: 'BMICalc', url: '/health/bmi/', collection: 'health', desc: 'BMI, BMR, TDEE and healthy weight range' },
+  { name: 'MedicationLog', url: '/health/medication/', collection: 'health', desc: 'Medications, doses and adherence rate' },
+  { name: 'SymptomDiary', url: '/health/symptoms/', collection: 'health', desc: 'Log symptoms and severity on a calendar' },
+  { name: 'CycleTracker', url: '/health/cycle/', collection: 'health', desc: 'Predict next period and fertile window' },
+  { name: 'WaterIntake', url: '/health/water/', collection: 'health', desc: 'One-tap hydration logging and streaks' },
+  { name: 'SleepLog', url: '/health/sleep/', collection: 'health', desc: 'Sleep duration, quality and AI pattern analysis' },
   { name: 'Privacy Policy', url: '/privacy.html', collection: 'tools', desc: "What tapdot tools does — and doesn't — collect" },
 ];
 
@@ -882,6 +895,36 @@ const STEPS = {
     { t: 'Set the policy', d: { k: 'fields', rows: [['Entitlement', '20 days'], ['Carry limit', '5 days']] } },
     { t: 'Enter leave taken', d: { k: 'text', text: '4 days taken' } },
     { t: 'See the balance', d: { k: 'count', to: 16, label: 'days available' } },
+  ],
+  'BMICalc': [
+    { t: 'Enter your measurements', d: { k: 'fields', rows: [['Weight', '70 kg'], ['Height', '175 cm']] } },
+    { t: 'Instant BMI', d: { k: 'count', to: 22.9, label: 'BMI · Normal weight' } },
+    { t: 'See BMR & TDEE', d: { k: 'stats', items: [['1,687', 'BMR cal/day'], ['2,614', 'TDEE cal/day']] } },
+  ],
+  'MedicationLog': [
+    { t: 'Add a medication', d: { k: 'fields', rows: [['Medication', 'Metformin 500mg'], ['Times/day', '2']] } },
+    { t: 'Mark doses taken', d: { k: 'chips', items: ['Dose 1 ✓', 'Dose 2 ✓'], on: 0 } },
+    { t: 'Track adherence', d: { k: 'count', to: 94, label: '7-day adherence %' } },
+  ],
+  'SymptomDiary': [
+    { t: 'Log a symptom', d: { k: 'fields', rows: [['Symptom', 'Headache'], ['Severity', '3/5']] } },
+    { t: 'See it on the calendar', d: { k: 'table', rows: [['Jun 2', 'Headache'], ['Jun 5', 'Fatigue']] } },
+    { t: 'Get an AI summary', d: { k: 'result', text: 'Headaches cluster on weekday mornings' } },
+  ],
+  'CycleTracker': [
+    { t: 'Log your last period', d: { k: 'fields', rows: [['Last period', 'Jun 3'], ['Cycle length', '28 days']] } },
+    { t: 'Predicts your next one', d: { k: 'text', text: 'Predicted next: Jul 1' } },
+    { t: 'See your fertile window', d: { k: 'stats', items: [['Jun 17–23', 'Fertile window'], ['Jun 20', 'Ovulation']] } },
+  ],
+  'WaterIntake': [
+    { t: 'Tap to log', d: { k: 'chips', items: ['+250ml', '+500ml'], on: 1 } },
+    { t: 'Watch the ring fill', d: { k: 'count', to: 1750, label: 'ml of 2,500 goal' } },
+    { t: 'Build a streak', d: { k: 'stats', items: [['70%', 'of daily goal'], ['5', 'day streak']] } },
+  ],
+  'SleepLog': [
+    { t: 'Log bed & wake time', d: { k: 'fields', rows: [['Bedtime', '11:00 PM'], ['Wake time', '7:00 AM']] } },
+    { t: 'See your duration', d: { k: 'count', to: 8, label: 'hours of sleep' } },
+    { t: 'AI spots the pattern', d: { k: 'result', text: 'Bedtime consistency: High' } },
   ],
 };
 

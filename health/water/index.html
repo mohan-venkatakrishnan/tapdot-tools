@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" data-collection="health" data-tool="WaterIntake">
+<head>
+  <meta charset="UTF-8" />
+  <script>(function(){try{var t=localStorage.getItem('tapdot-theme');var d=matchMedia('(prefers-color-scheme: dark)').matches;if(t==='dark'||(!t&&d))document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WaterIntake — Hydration Tracker | tapdot</title>
+  <meta name="description" content="Log water intake, track your daily goal, and see your streak. One tap to log. Browser notifications. Fully offline." />
+  <meta property="og:title" content="WaterIntake — Hydration Tracker | tapdot" />
+  <meta property="og:description" content="One-tap hydration logging with a daily goal and streak — fully offline." />
+  <link rel="canonical" href="https://tools.tapdot.org/health/water/" />
+  <link rel="icon" type="image/png" href="/assets/tapdot-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/shared/shared.css" />
+  <link rel="stylesheet" href="/health/health.css" />
+</head>
+<body>
+<nav class="ts-nav">
+  <a href="https://tapdot.org" class="ts-nav-logo"><img src="/assets/tapdot-icon.png" width="22" height="22" alt="tapdot" /><span>tapdot</span></a>
+  <button class="ts-dark-toggle" id="darkToggle" aria-label="Toggle dark mode"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg></button>
+</nav>
+<main class="ts-main">
+  <div class="ts-tool-header">
+    <h1 class="ts-tool-name">WaterIntake</h1>
+    <p class="ts-tool-desc">One-tap hydration logging — fully offline.</p>
+  </div>
+  <div class="health-sensitive-note">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+    Health data stays in your browser only — nothing is sent anywhere, ever
+  </div>
+
+  <div class="ts-card ring-wrap">
+    <svg width="180" height="180" viewBox="0 0 180 180" id="ring"></svg>
+    <div class="biz-row">
+      <button class="ts-btn ts-btn-secondary" data-amt="200">+200ml</button>
+      <button class="ts-btn ts-btn-secondary" data-amt="250">+250ml</button>
+      <button class="ts-btn ts-btn-secondary" data-amt="500">+500ml</button>
+      <input class="ts-input" id="customAmt" type="number" placeholder="Custom ml" style="max-width:110px" />
+      <button class="ts-btn ts-btn-primary" id="addCustom">Add</button>
+    </div>
+    <button class="ts-btn ts-btn-ghost" id="undoBtn">Undo last</button>
+  </div>
+
+  <div class="ts-card">
+    <div class="biz-grid-2">
+      <div><label class="ts-label" for="goal">Daily goal (ml)</label><input class="ts-input" id="goal" type="number" value="2500" /></div>
+      <div><label class="ts-label" for="reminderMins">Remind me every (minutes, 0 = off)</label><input class="ts-input" id="reminderMins" type="number" value="0" /></div>
+    </div>
+    <p class="biz-muted ts-mt-sm" id="notifStatus"></p>
+  </div>
+
+  <div class="ts-stats-grid">
+    <div class="ts-stat"><span class="ts-stat-num" id="streak">0</span><span class="ts-stat-label">Day streak</span></div>
+  </div>
+</main>
+<footer class="ts-footer">
+  <span>Built by <a href="https://tapdot.org">tapdot</a></span><span class="ts-footer-dot">·</span>
+  <a href="/privacy.html">Privacy</a><span class="ts-footer-dot">·</span><span>All processing happens in your browser</span>
+</footer>
+<script src="/shared/shared.js"></script>
+<script src="water.js" defer></script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "YOUR_CLOUDFLARE_TOKEN"}'></script>
+</body>
+</html>

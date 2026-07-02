@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" data-collection="health" data-tool="SymptomDiary">
+<head>
+  <meta charset="UTF-8" />
+  <script>(function(){try{var t=localStorage.getItem('tapdot-theme');var d=matchMedia('(prefers-color-scheme: dark)').matches;if(t==='dark'||(!t&&d))document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SymptomDiary — Symptom Tracker &amp; Calendar | tapdot</title>
+  <meta name="description" content="Log symptoms and severity on a calendar, get an AI-written summary for your doctor. All data stays in your browser." />
+  <meta property="og:title" content="SymptomDiary — Symptom Tracker & Calendar | tapdot" />
+  <meta property="og:description" content="Log symptoms on a calendar with severity — fully offline." />
+  <link rel="canonical" href="https://tools.tapdot.org/health/symptoms/" />
+  <link rel="icon" type="image/png" href="/assets/tapdot-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/shared/shared.css" />
+  <link rel="stylesheet" href="/health/health.css" />
+</head>
+<body>
+<nav class="ts-nav">
+  <a href="https://tapdot.org" class="ts-nav-logo"><img src="/assets/tapdot-icon.png" width="22" height="22" alt="tapdot" /><span>tapdot</span></a>
+  <button class="ts-dark-toggle" id="darkToggle" aria-label="Toggle dark mode"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg></button>
+</nav>
+<main class="ts-main">
+  <div class="ts-tool-header">
+    <h1 class="ts-tool-name">SymptomDiary</h1>
+    <p class="ts-tool-desc">Log symptoms and severity on a calendar.</p>
+  </div>
+  <div class="health-sensitive-note">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+    Health data stays in your browser only — nothing is sent anywhere, ever. Not a substitute for medical advice.
+  </div>
+
+  <div class="ts-card">
+    <h2 class="ts-card-title">Log a symptom</h2>
+    <div class="biz-grid-2">
+      <div><label class="ts-label" for="symDate">Date</label><input class="ts-input" id="symDate" type="date" /></div>
+      <div><label class="ts-label" for="symName">Symptom</label><input class="ts-input" id="symName" placeholder="e.g. Headache" /></div>
+    </div>
+    <label class="ts-label ts-mt-md" for="symSeverity">Severity: <span id="severityVal">3</span>/5</label>
+    <input type="range" id="symSeverity" min="1" max="5" value="3" style="width:100%" />
+    <label class="ts-label ts-mt-md" for="symNotes">Notes (optional)</label>
+    <textarea class="ts-input" id="symNotes" rows="2" placeholder="Any additional detail..."></textarea>
+    <button class="ts-btn ts-btn-primary ts-mt-md" id="addSymptom">Log symptom</button>
+  </div>
+
+  <div class="ts-card">
+    <div class="biz-row" style="justify-content: space-between">
+      <h2 class="ts-card-title" id="calTitle">This month</h2>
+      <div class="biz-row">
+        <button class="ts-btn ts-btn-ghost" id="prevMonth">‹</button>
+        <button class="ts-btn ts-btn-ghost" id="nextMonth">›</button>
+      </div>
+    </div>
+    <div class="health-cal" id="calendar"></div>
+  </div>
+
+  <div class="ts-card">
+    <div class="biz-row" style="justify-content: space-between">
+      <h2 class="ts-card-title">Entries</h2>
+      <button class="ts-btn ts-btn-secondary" id="aiSummary">AI summary for doctor</button>
+    </div>
+    <p class="biz-ai-status" id="aiStatus"></p>
+    <div id="entryList"></div>
+  </div>
+</main>
+<footer class="ts-footer">
+  <span>Built by <a href="https://tapdot.org">tapdot</a></span><span class="ts-footer-dot">·</span>
+  <a href="/privacy.html">Privacy</a><span class="ts-footer-dot">·</span><span>All processing happens in your browser</span>
+</footer>
+<script src="/shared/shared.js"></script>
+<script src="symptoms.js" defer></script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "YOUR_CLOUDFLARE_TOKEN"}'></script>
+</body>
+</html>

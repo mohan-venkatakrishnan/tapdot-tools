@@ -203,3 +203,49 @@ DNS on GoDaddy. See README.md for the one-time setup.
   - `test/functional.mjs` grew to 28 checks (was 14) — covers the FOUC fix, back
     button targets, icon swap, palette grouping, searchable-select interaction, and
     the CiteMaker style/type matrix. All 81 layout + 28 functional checks pass.
+- v8: **Marketing collection** (`marketing/`) — 8 tools: UTMBuilder, HeadlineScore,
+  EmailSubjectTester, AdCopyWriter, SocialCalendar, PersonaBuilder, CompetitorMatrix,
+  ROICalculator. Rose pastel theme. AdCopyWriter/PersonaBuilder/HeadlineScore/
+  EmailSubjectTester use `tapdotAI` with rule-based fallbacks; the rest are pure JS
+  (URL building, ROI/ROAS math, comparison tables, calendar CRUD in localStorage).
+- v9: **Finance collection** (`finance/`) — 8 tools: CompoundCalc, BudgetPlanner,
+  MortgageCalc, InvestmentTracker, TaxEstimate, CurrencyConvert, EquityCalc,
+  NetWorthTracker. Sage pastel theme. Added `finance/libs/chart.js` (shared hand-rolled
+  SVG line/donut chart, no dependency). **CurrencyConvert is the one tool site-wide
+  that makes a network request** (open.er-api.com, cached daily in localStorage),
+  disclosed prominently in-page. Bug fixed: TaxEstimate's regime tabs were hidden on
+  load because the toggle only ran inside a click handler that never fires for the
+  default-active tab — now also called once at init. Bug fixed: searchable-select
+  label didn't sync after CurrencyConvert's async-populated `<select>` — see the
+  general `enhanceSearchableSelects` fix below (applies site-wide, not just here).
+- v10: **Legal collection** (`legal/`) — 6 tools: ContractRead (AI summarization,
+  "not legal advice" disclaimer), NDAGenerator, PrivacyPolicyGen, TermsBuilder,
+  CopyrightChecker, LegalGlossary (128 curated real terms in `legal/glossary/
+  terms.js`, deliberately quality-over-quantity vs. the plan's "500+" — instant
+  search + fuzzy-prefix typo tolerance + `#hash` deep-linking). Indigo pastel theme.
+  Bug fixed: LegalGlossary's fuzzy matcher compared a typo against a whole
+  multi-syllable word instead of a same-length prefix, so realistic typos never
+  matched — fixed to compare same-length prefixes, matching how users type
+  incrementally.
+- v11: **HR collection** (`hr/`) — 6 tools: SalaryBand, JobDescriptionWriter (AI +
+  exclusionary-language scan), InterviewKit (AI questions + rubric), OfferLetterBuilder,
+  OnboardingChecklist (Day1/Week1/Month1, localStorage templates, CSV/Markdown export),
+  LeaveCalculator. Plum pastel theme. Bug fixed: OnboardingChecklist's task-text input
+  had `flex:1` but no `min-width:0`, overflowing mobile — another instance of the
+  systemic min-width:0 pattern from v7, now also applied to `.checklist-item`.
+  General fix (not HR-specific): `enhanceSearchableSelects` now listens for `change`
+  on the underlying `<select>` so its label re-syncs after async population (surfaced
+  by CurrencyConvert in v9, but applies to any future async-populated searchable select).
+- v12: **Health collection** (`health/`) — 6 tools: BMICalc (BMI/BMR via Mifflin-St
+  Jeor/TDEE/healthy range), MedicationLog (adherence % over trailing 7/30 days),
+  SymptomDiary (calendar heatmap by severity + `tapdotAI` doctor-visit summary),
+  CycleTracker (period/fertile-window/ovulation prediction), WaterIntake (SVG progress
+  ring, tap-to-log, streak, optional `Notification` reminders), SleepLog (duration +
+  bedtime-consistency stat + `tapdotAI` pattern analysis). Sky-blue pastel theme.
+  Every page carries a `.health-sensitive-note` disclosure banner (this data is
+  unusually sensitive — still 100% local, never transmitted) plus a "not a substitute
+  for medical advice" line on tools that could be read as diagnostic. All 6 tools use
+  the same localStorage-array-of-entries pattern with a per-tool key
+  (`tapdot-<tool>-log`) — no shared storage module, kept intentionally simple since
+  each tool's entry shape differs. `test/regression.mjs` grew to 198 checks,
+  `test/functional.mjs` to 86 — both suites pass with 0 failures.

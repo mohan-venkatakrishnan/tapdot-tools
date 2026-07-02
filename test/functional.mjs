@@ -470,6 +470,104 @@ const check = (name, ok) => { console.log((ok ? 'PASS' : 'FAIL') + '  ' + name);
   await page.close();
 }
 
+// 31. BMICalc: default 70kg/175cm computes BMI 22.9, Normal weight.
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/health/bmi/', { waitUntil: 'networkidle' });
+  await page.waitForTimeout(100);
+  const bmi = await page.$eval('#bmi', el => el.textContent);
+  const category = await page.$eval('#bmiCategory', el => el.textContent);
+  check('BMICalc computes BMI 22.9 for 70kg/175cm', bmi === '22.9');
+  check('BMICalc categorizes as Normal weight', category === 'Normal weight');
+  check('no JS errors on BMICalc', errs.length === 0);
+  await page.close();
+}
+
+// 32. MedicationLog: adding a medication and marking a dose updates today's count.
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/health/medication/', { waitUntil: 'networkidle' });
+  await page.fill('#medName', 'Metformin 500mg');
+  await page.fill('#medTimes', '2');
+  await page.click('#addMed');
+  await page.waitForTimeout(100);
+  await page.click('[data-take]');
+  await page.waitForTimeout(100);
+  const today = await page.$eval('#todayList', el => el.textContent);
+  check('MedicationLog marks a dose taken (1/2)', today.includes('1/2 taken today'));
+  check('no JS errors on MedicationLog', errs.length === 0);
+  await page.close();
+}
+
+// 33. SymptomDiary: logging a symptom marks the calendar day and lists the entry.
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/health/symptoms/', { waitUntil: 'networkidle' });
+  const today = new Date().toISOString().slice(0, 10);
+  await page.fill('#symDate', today);
+  await page.fill('#symName', 'Headache');
+  await page.click('#addSymptom');
+  await page.waitForTimeout(100);
+  const entries = await page.$eval('#entryList', el => el.textContent);
+  const loggedCells = await page.$$eval('.health-cal-cell.logged', els => els.length);
+  check('SymptomDiary lists the logged entry', entries.includes('Headache'));
+  check('SymptomDiary marks the calendar day as logged', loggedCells >= 1);
+  check('no JS errors on SymptomDiary', errs.length === 0);
+  await page.close();
+}
+
+// 34. CycleTracker: logging a period start predicts a next period date.
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/health/cycle/', { waitUntil: 'networkidle' });
+  await page.fill('#cycleLen', '28');
+  await page.fill('#logDate', '2026-06-01');
+  await page.click('#logStart');
+  await page.waitForTimeout(100);
+  const next = await page.$eval('#nextPeriod', el => el.textContent);
+  check('CycleTracker predicts a next-period date', next !== '—' && next.length > 0);
+  check('no JS errors on CycleTracker', errs.length === 0);
+  await page.close();
+}
+
+// 35. WaterIntake: logging an amount updates the progress ring toward the goal.
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/health/water/', { waitUntil: 'networkidle' });
+  await page.fill('#goal', '1000');
+  await page.click('[data-amt="500"]');
+  await page.waitForTimeout(100);
+  const ringText = await page.$eval('#ring', el => el.textContent);
+  check('WaterIntake logs 500ml toward a 1000ml goal (50%)', ringText.includes('50%'));
+  await page.click('#undoBtn');
+  await page.waitForTimeout(100);
+  const ringAfterUndo = await page.$eval('#ring', el => el.textContent);
+  check('WaterIntake undo removes the last log', ringAfterUndo.includes('0%'));
+  check('no JS errors on WaterIntake', errs.length === 0);
+  await page.close();
+}
+
+// 36. SleepLog: logging a night computes correct duration (23:00-07:00 = 8h).
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/health/sleep/', { waitUntil: 'networkidle' });
+  await page.fill('#sleepDate', '2026-06-30');
+  await page.fill('#bedTime', '23:00');
+  await page.fill('#wakeTime', '07:00');
+  await page.click('#addSleep');
+  await page.waitForTimeout(100);
+  const avg = await page.$eval('#avgDuration', el => el.textContent);
+  check('SleepLog computes 8.0h duration for 23:00-07:00', avg === '8.0h');
+  check('no JS errors on SleepLog', errs.length === 0);
+  await page.close();
+}
+
 await browser.close(); srv.close();
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);
