@@ -39,7 +39,7 @@ function fallbackAnalysis(text) {
   const found = LOADED_WORDS_LIST.filter(w => lower.includes(w));
   return {
     loadedWords: found,
-    framing: 'On-device AI is not available in this browser, so this is a basic word-level analysis only. For the full framing analysis, use Chrome with the built-in AI (Gemini Nano) enabled.',
+    framing: 'On-device AI is not available in this browser, so this is a basic word-level analysis only. Enable Chrome’s built-in AI (see the guide above) for the full framing analysis.',
     patterns: [],
     questions: [
       'Who is the source and what perspective might they represent?',
@@ -49,46 +49,76 @@ function fallbackAnalysis(text) {
   };
 }
 
-// ── On-device AI detection (supports old and new Chrome APIs) ───────────────
+// ── On-device AI: availability + session (new + legacy APIs) ────────────────
 
-async function getModelSession() {
-  // New API: self.LanguageModel
-  if (typeof self !== 'undefined' && self.LanguageModel) {
-    const avail = await self.LanguageModel.availability();
-    if (avail === 'available' || avail === 'downloadable' || avail === 'downloading') {
-      return await self.LanguageModel.create();
-    }
-    return null;
-  }
-  // Legacy API: window.ai.languageModel / window.ai.assistant
-  const ai = (typeof window !== 'undefined') ? window.ai : null;
-  const ns = ai && (ai.languageModel || ai.assistant);
-  if (ns && ns.capabilities) {
-    const caps = await ns.capabilities();
-    if (caps && caps.available && caps.available !== 'no') {
-      return await ns.create();
-    }
-  }
-  return null;
-}
-
-let aiAvailable = false;
-
-async function detectEngine() {
-  const status = document.getElementById('engineStatus');
+// Returns 'available' | 'downloadable' | 'downloading' | 'unavailable'
+async function aiAvailability() {
   try {
-    const session = await getModelSession();
-    if (session) {
-      aiAvailable = true;
-      if (session.destroy) session.destroy();
-      status.className = 'bc-status ready';
-      status.textContent = 'On-device AI ready';
-      return;
+    // Modern Prompt API: global LanguageModel
+    if (typeof self !== 'undefined' && self.LanguageModel && self.LanguageModel.availability) {
+      const a = await self.LanguageModel.availability();
+      if (a === 'available' || a === 'readily') return 'available';
+      if (a === 'downloadable' || a === 'after-download') return 'downloadable';
+      if (a === 'downloading') return 'downloading';
+      return 'unavailable';
+    }
+    // Legacy: window.ai.languageModel / window.ai.assistant
+    const ai = (typeof window !== 'undefined') ? window.ai : null;
+    const ns = ai && (ai.languageModel || ai.assistant);
+    if (ns && ns.capabilities) {
+      const caps = await ns.capabilities();
+      const v = caps && caps.available;
+      if (v === 'readily') return 'available';
+      if (v === 'after-download') return 'downloadable';
+      if (v && v !== 'no') return 'downloading';
     }
   } catch (e) { /* fall through */ }
-  aiAvailable = false;
-  status.className = 'bc-status fallback';
-  status.textContent = 'On-device AI unavailable — basic analysis mode';
+  return 'unavailable';
+}
+
+// Create a session (triggers a one-time model download if needed).
+async function createSession(onProgress) {
+  const monitor = (m) => {
+    if (m && m.addEventListener) {
+      m.addEventListener('downloadprogress', (e) => {
+        const pct = e.total ? e.loaded / e.total : e.loaded; // 0..1
+        if (onProgress) onProgress(Math.round(Math.min(1, pct || 0) * 100));
+      });
+    }
+  };
+  if (typeof self !== 'undefined' && self.LanguageModel && self.LanguageModel.create) {
+    return await self.LanguageModel.create({ monitor });
+  }
+  const ai = (typeof window !== 'undefined') ? window.ai : null;
+  const ns = ai && (ai.languageModel || ai.assistant);
+  if (ns && ns.create) return await ns.create({ monitor });
+  throw new Error('No on-device AI API');
+}
+
+// ── State + UI ──────────────────────────────────────────────────────────────
+
+let aiState = 'unavailable';
+const statusEl = () => document.getElementById('engineStatus');
+const flagsEl  = () => document.getElementById('flagsGuide');
+
+function setStatus(cls, text) {
+  const s = statusEl();
+  s.className = 'bc-status ' + cls;
+  s.textContent = text;
+}
+
+async function detectEngine() {
+  aiState = await aiAvailability();
+  if (aiState === 'available') {
+    setStatus('ready', 'On-device AI ready');
+    flagsEl().classList.add('ts-hidden');
+  } else if (aiState === 'downloadable' || aiState === 'downloading') {
+    setStatus('ready', 'On-device AI available — the model downloads once, on your first analysis');
+    flagsEl().classList.add('ts-hidden');
+  } else {
+    setStatus('fallback', 'On-device AI unavailable — using basic analysis');
+    flagsEl().classList.remove('ts-hidden');
+  }
 }
 
 // ── Analyse ─────────────────────────────────────────────────────────────────
@@ -96,34 +126,34 @@ async function detectEngine() {
 async function analyse() {
   const text = document.getElementById('input').value.trim();
   if (!text) return;
-  const status = document.getElementById('engineStatus');
   const btn = document.getElementById('analyzeBtn');
 
   let result;
-  if (aiAvailable) {
+  if (aiState !== 'unavailable') {
     btn.disabled = true;
-    status.className = 'bc-status working';
-    status.textContent = 'Analysing on-device…';
+    setStatus('working', 'Analysing on-device…');
     try {
-      const session = await getModelSession();
+      const session = await createSession((pct) =>
+        setStatus('working', `Downloading model… ${pct}%`));
+      setStatus('working', 'Analysing on-device…');
       const raw = await session.prompt(BIAS_PROMPT(text));
       if (session.destroy) session.destroy();
       result = parseBiasResponse(raw);
-      // If parsing produced nothing useful, fall back gracefully.
       if (!result.framing && !result.loadedWords.length) result = fallbackAnalysis(text);
-      status.className = 'bc-status ready';
-      status.textContent = 'On-device AI ready';
+      aiState = 'available';
+      setStatus('ready', 'On-device AI ready');
+      flagsEl().classList.add('ts-hidden');
     } catch (e) {
       result = fallbackAnalysis(text);
-      status.className = 'bc-status fallback';
-      status.textContent = 'AI error — showing basic analysis';
+      aiState = 'unavailable';
+      setStatus('fallback', 'On-device AI unavailable — showing basic analysis');
+      flagsEl().classList.remove('ts-hidden');
     } finally {
       btn.disabled = false;
     }
   } else {
     result = fallbackAnalysis(text);
   }
-
   render(result);
 }
 
@@ -150,5 +180,13 @@ function render(r) {
   showOutput('output');
 }
 
+// ── Wire up ───────────────────────────────────────────────────────────────
+
 document.getElementById('analyzeBtn').addEventListener('click', analyse);
+
+document.getElementById('flagsGuide').addEventListener('click', (e) => {
+  const btn = e.target.closest('.bc-flag-copy');
+  if (btn) copyText(btn.dataset.copy, btn);
+});
+
 detectEngine();

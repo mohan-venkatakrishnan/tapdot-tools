@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-collection="study" data-tool="BiasCheck">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -63,6 +63,27 @@
       <span class="bc-status" id="engineStatus">Checking for on-device AI…</span>
       <button class="ts-btn ts-btn-primary" id="analyzeBtn">Analyse</button>
     </div>
+  </div>
+
+  <div class="bc-flags ts-hidden" id="flagsGuide">
+    <h3>Turn on your browser's built-in AI</h3>
+    <p>BiasCheck's full analysis runs on Chrome's on-device model (Gemini Nano). Enable
+       these two flags, then relaunch Chrome. Use Chrome 128+ on desktop with ~22&nbsp;GB free.</p>
+    <div class="bc-flag-row">
+      <code class="bc-flag-code">chrome://flags/#prompt-api-for-gemini-nano</code>
+      <span class="bc-flag-set">→ Enabled</span>
+      <button class="ts-btn ts-btn-ghost bc-flag-copy" data-copy="chrome://flags/#prompt-api-for-gemini-nano" style="height:32px;padding:0 12px">Copy</button>
+    </div>
+    <div class="bc-flag-row">
+      <code class="bc-flag-code">chrome://flags/#optimization-guide-on-device-model</code>
+      <span class="bc-flag-set">→ Enabled BypassPerfRequirement</span>
+      <button class="ts-btn ts-btn-ghost bc-flag-copy" data-copy="chrome://flags/#optimization-guide-on-device-model" style="height:32px;padding:0 12px">Copy</button>
+    </div>
+    <ol class="bc-flags-steps">
+      <li>Paste each flag address into your address bar (browsers block links to <code>chrome://</code>, so copy &amp; paste).</li>
+      <li>Set them as shown above, then click <strong>Relaunch</strong>.</li>
+      <li>Come back and press <strong>Analyse</strong> — the model downloads once, then runs offline.</li>
+    </ol>
   </div>
 
   <div class="ts-output" id="output">
