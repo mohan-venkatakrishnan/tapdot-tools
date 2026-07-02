@@ -140,6 +140,14 @@ const ICON_PATHS = {
   'PersonaBuilder': '<path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/>',
   'CompetitorMatrix': '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/>',
   'ROICalculator': '<circle cx="12" cy="12" r="9"/><path d="M12 7v10M9.5 9.3c0-1.1 1-2 2.5-2s2.5.9 2.5 1.7c0 2-5 1-5 3 0 .8 1 1.7 2.5 1.7s2.5-.9 2.5-2"/>',
+  'CompoundCalc': '<path d="M3 3v18h18"/><path d="M18 9l-5 5-4-4-4 4"/>',
+  'BudgetPlanner': '<circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 3"/>',
+  'MortgageCalc': '<path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/>',
+  'InvestmentTracker': '<path d="M3 3v18h18"/><rect x="7" y="13" width="3" height="5"/><rect x="12" y="9" width="3" height="9"/><rect x="17" y="6" width="3" height="12"/>',
+  'TaxEstimate': '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/>',
+  'CurrencyConvert': '<path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/>',
+  'EquityCalc': '<circle cx="7" cy="7" r="4"/><circle cx="17" cy="17" r="4"/><path d="M10 10l4 4"/>',
+  'NetWorthTracker': '<path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/>',
   'JSONLab': '<path d="M8 3H7a2 2 0 0 0-2 2v5a2 2 0 0 1-2 2 2 2 0 0 1 2 2v5a2 2 0 0 0 2 2h1"/><path d="M16 3h1a2 2 0 0 1 2 2v5a2 2 0 0 0 2 2 2 2 0 0 0-2 2v5a2 2 0 0 1-2 2h-1"/>',
   'JSONConvert': '<polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/>',
   'JWTRead': '<circle cx="7.5" cy="15.5" r="4.5"/><path d="M10.7 12.3L20 3M17 6l2 2M14 9l2 2"/>',
@@ -214,6 +222,10 @@ function enhanceSearchableSelects() {
       labelSpan.textContent = opt ? opt.textContent : '';
     };
     syncLabel();
+    // Tool scripts sometimes populate/select options asynchronously (e.g. after
+    // a fetch) — re-sync the visible label whenever the underlying select
+    // changes from ANY source, not just our own panel.
+    sel.addEventListener('change', syncLabel);
 
     let panel = null;
     function close() {
@@ -325,6 +337,15 @@ const TOOL_REGISTRY = [
   { name: 'PersonaBuilder', url: '/marketing/persona/', collection: 'marketing', desc: 'AI-assisted customer personas, saved locally' },
   { name: 'CompetitorMatrix', url: '/marketing/competitor/', collection: 'marketing', desc: 'Feature comparison matrix — export CSV or Markdown' },
   { name: 'ROICalculator', url: '/marketing/roi/', collection: 'marketing', desc: 'ROI, ROAS, CPA, CLV and payback period' },
+  { name: 'Finance tools', url: '/finance/', collection: 'finance', desc: 'Compound interest, mortgage, tax, budget, and more' },
+  { name: 'CompoundCalc', url: '/finance/compound/', collection: 'finance', desc: 'Compound interest with monthly contributions' },
+  { name: 'BudgetPlanner', url: '/finance/budget/', collection: 'finance', desc: '50/30/20 budget split with a donut chart' },
+  { name: 'MortgageCalc', url: '/finance/mortgage/', collection: 'finance', desc: 'EMI, amortisation schedule, overpayment savings' },
+  { name: 'InvestmentTracker', url: '/finance/investments/', collection: 'finance', desc: 'Portfolio holdings, returns, and allocation' },
+  { name: 'TaxEstimate', url: '/finance/tax/', collection: 'finance', desc: 'Income tax for India, US or UK' },
+  { name: 'CurrencyConvert', url: '/finance/currency/', collection: 'finance', desc: '170+ currencies — rates cached daily' },
+  { name: 'EquityCalc', url: '/finance/equity/', collection: 'finance', desc: 'Cap table dilution across funding rounds' },
+  { name: 'NetWorthTracker', url: '/finance/networth/', collection: 'finance', desc: 'Assets minus liabilities, tracked monthly' },
   { name: 'Privacy Policy', url: '/privacy.html', collection: 'tools', desc: "What tapdot tools does — and doesn't — collect" },
 ];
 
@@ -735,6 +756,46 @@ const STEPS = {
     { t: 'Enter spend & revenue', d: { k: 'fields', rows: [['Spend', '$1,000'], ['Revenue', '$3,000']] } },
     { t: 'See ROI & ROAS', d: { k: 'count', to: 200, label: '% ROI' } },
     { t: 'Compare campaigns', d: { k: 'table', rows: [['Campaign A', '200%'], ['Campaign B', '140%']] } },
+  ],
+  'CompoundCalc': [
+    { t: 'Enter principal & rate', d: { k: 'fields', rows: [['Principal', '$10,000'], ['Rate', '7%']] } },
+    { t: 'Add contributions', d: { k: 'fields', rows: [['Monthly', '$200'], ['Years', '20']] } },
+    { t: 'See the growth', d: { k: 'count', to: 108000, label: 'final value' } },
+  ],
+  'BudgetPlanner': [
+    { t: 'Enter your income', d: { k: 'text', text: '$5,000 / month' } },
+    { t: 'Add expense categories', d: { k: 'rows', rows: [['Rent', '$1,500'], ['Dining', '$250']] } },
+    { t: 'See your 50/30/20 split', d: { k: 'chips', items: ['Needs 45%', 'Wants 15%'], on: 0 } },
+  ],
+  'MortgageCalc': [
+    { t: 'Enter loan & rate', d: { k: 'fields', rows: [['Loan', '$300,000'], ['Rate', '6.5%']] } },
+    { t: 'See your EMI', d: { k: 'count', to: 1517, label: 'monthly EMI' } },
+    { t: 'Try an overpayment', d: { k: 'chips', items: ['4.2 yrs saved'], on: 0 } },
+  ],
+  'InvestmentTracker': [
+    { t: 'Add a holding', d: { k: 'fields', rows: [['Name', 'Index Fund'], ['Qty', '20']] } },
+    { t: 'Enter current price', d: { k: 'text', text: '$120 / share' } },
+    { t: 'Track gain & allocation', d: { k: 'count', to: 400, label: '$ gain' } },
+  ],
+  'TaxEstimate': [
+    { t: 'Pick your country', d: { k: 'chips', items: ['India', 'US', 'UK'], on: 0 } },
+    { t: 'Enter income', d: { k: 'text', text: '$1,200,000 / year' } },
+    { t: 'See estimated tax', d: { k: 'count', to: 18, label: '% effective rate' } },
+  ],
+  'CurrencyConvert': [
+    { t: 'Enter an amount', d: { k: 'text', text: '100 USD' } },
+    { t: 'Pick currencies', d: { k: 'chips', items: ['USD', 'EUR'], on: 0 } },
+    { t: 'See the conversion', d: { k: 'result', text: '92.40 EUR' } },
+  ],
+  'EquityCalc': [
+    { t: 'Enter existing shares', d: { k: 'fields', rows: [['Shares', '8,000,000'], ['Option pool', '1,000,000']] } },
+    { t: 'Enter the round', d: { k: 'fields', rows: [['Investment', '$2M'], ['Pre-money', '$8M']] } },
+    { t: 'See the dilution', d: { k: 'count', to: 25, label: '% diluted' } },
+  ],
+  'NetWorthTracker': [
+    { t: 'List your assets', d: { k: 'rows', rows: [['Cash', '$5,000'], ['Investments', '$20,000']] } },
+    { t: 'List your liabilities', d: { k: 'rows', rows: [['Credit card', '$1,500']] } },
+    { t: 'Track your trend', d: { k: 'count', to: 23500, label: 'net worth' } },
   ],
 };
 

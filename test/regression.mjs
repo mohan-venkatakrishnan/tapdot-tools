@@ -41,6 +41,9 @@ const ROUTES = [
   '/marketing/', '/marketing/utm/', '/marketing/headline/', '/marketing/emailsubject/',
   '/marketing/adcopy/', '/marketing/calendar/', '/marketing/persona/',
   '/marketing/competitor/', '/marketing/roi/',
+  '/finance/', '/finance/compound/', '/finance/budget/', '/finance/mortgage/',
+  '/finance/investments/', '/finance/tax/', '/finance/currency/',
+  '/finance/equity/', '/finance/networth/',
   '/privacy.html',
 ];
 const VIEWPORTS = [

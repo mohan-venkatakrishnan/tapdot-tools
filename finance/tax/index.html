@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" data-collection="finance" data-tool="TaxEstimate">
+<head>
+  <meta charset="UTF-8" />
+  <script>(function(){try{var t=localStorage.getItem('tapdot-theme');var d=matchMedia('(prefers-color-scheme: dark)').matches;if(t==='dark'||(!t&&d))document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TaxEstimate — Income Tax Estimator | tapdot</title>
+  <meta name="description" content="Estimate your income tax liability for India, US, or UK. Your income and deduction data stays in your browser." />
+  <meta property="og:title" content="TaxEstimate — Income Tax Estimator | tapdot" />
+  <meta property="og:description" content="Estimate tax liability for India, US or UK — all local." />
+  <link rel="canonical" href="https://tools.tapdot.org/finance/tax/" />
+  <link rel="icon" type="image/png" href="/assets/tapdot-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/shared/shared.css" />
+  <link rel="stylesheet" href="/finance/finance.css" />
+</head>
+<body>
+<nav class="ts-nav">
+  <a href="https://tapdot.org" class="ts-nav-logo"><img src="/assets/tapdot-icon.png" width="22" height="22" alt="tapdot" /><span>tapdot</span></a>
+  <button class="ts-dark-toggle" id="darkToggle" aria-label="Toggle dark mode"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg></button>
+</nav>
+<main class="ts-main">
+  <div class="ts-tool-header">
+    <h1 class="ts-tool-name">TaxEstimate</h1>
+    <p class="ts-tool-desc">Estimate income tax liability for India, US or UK.</p>
+  </div>
+  <div class="ts-privacy-strip"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Everything runs in your browser — nothing is sent anywhere</div>
+
+  <div class="ts-card">
+    <p class="ts-card-label">Country</p>
+    <div class="ts-segment" id="countryTabs">
+      <button class="ts-segment-btn active" data-c="in">India</button>
+      <button class="ts-segment-btn" data-c="us">United States</button>
+      <button class="ts-segment-btn" data-c="uk">United Kingdom</button>
+    </div>
+    <div class="ts-segment ts-mt-md ts-hidden" id="regimeTabs">
+      <button class="ts-segment-btn active" data-r="new">New regime</button>
+      <button class="ts-segment-btn" data-r="old">Old regime</button>
+    </div>
+    <div class="biz-grid-2 ts-mt-md">
+      <div><label class="ts-label" for="income">Annual income</label><input class="ts-input" id="income" type="number" value="1200000" /></div>
+      <div><label class="ts-label" for="deductions">Deductions</label><input class="ts-input" id="deductions" type="number" value="0" /></div>
+    </div>
+  </div>
+
+  <div class="ts-stats-grid">
+    <div class="ts-stat"><span class="ts-stat-num" id="taxOwed">—</span><span class="ts-stat-label">Estimated tax</span></div>
+    <div class="ts-stat"><span class="ts-stat-num" id="effRate">—</span><span class="ts-stat-label">Effective rate</span></div>
+    <div class="ts-stat"><span class="ts-stat-num" id="takeHome">—</span><span class="ts-stat-label">Take-home</span></div>
+  </div>
+
+  <div class="ts-card">
+    <p class="ts-card-label">Bracket breakdown</p>
+    <div class="ts-table-scroll"><table class="ts-table" id="table"></table></div>
+  </div>
+  <p class="biz-muted">Estimates only — not tax advice. Rates are simplified and may not reflect every deduction, credit, or local surcharge.</p>
+</main>
+<footer class="ts-footer">
+  <span>Built by <a href="https://tapdot.org">tapdot</a></span><span class="ts-footer-dot">·</span>
+  <a href="/privacy.html">Privacy</a><span class="ts-footer-dot">·</span><span>All processing happens in your browser</span>
+</footer>
+<script src="/shared/shared.js"></script>
+<script src="tax.js" defer></script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "YOUR_CLOUDFLARE_TOKEN"}'></script>
+</body>
+</html>

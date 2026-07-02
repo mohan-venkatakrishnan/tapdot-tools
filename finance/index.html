@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" data-collection="finance" data-tool="">
+<head>
+  <meta charset="UTF-8" />
+  <script>(function(){try{var t=localStorage.getItem('tapdot-theme');var d=matchMedia('(prefers-color-scheme: dark)').matches;if(t==='dark'||(!t&&d))document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Finance Tools — Compound Interest, Mortgage, Tax, Budget & more | tapdot</title>
+  <meta name="description" content="Eight privacy-first finance tools: compound interest, mortgage calculator, tax estimator, budget planner, investment tracker, currency converter, equity dilution, net worth tracker." />
+  <meta property="og:title" content="Finance Tools | tapdot" />
+  <meta property="og:description" content="Privacy-first finance tools — your numbers never leave your browser." />
+  <link rel="canonical" href="https://tools.tapdot.org/finance/" />
+  <link rel="icon" type="image/png" href="/assets/tapdot-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/shared/shared.css" />
+  <link rel="stylesheet" href="/finance/finance.css" />
+</head>
+<body>
+<nav class="ts-nav">
+  <a href="https://tapdot.org" class="ts-nav-logo"><img src="/assets/tapdot-icon.png" width="22" height="22" alt="tapdot" /><span>tapdot</span></a>
+  <button class="ts-dark-toggle" id="darkToggle" aria-label="Toggle dark mode"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg></button>
+</nav>
+<main class="ts-main ts-main-wide">
+  <div class="ts-tool-header">
+    <h1 class="ts-tool-name">Finance tools</h1>
+    <p class="ts-tool-desc">Eight tools for personal and startup finance — your numbers never leave your browser.</p>
+  </div>
+  <div class="ts-privacy-strip"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Income, spend, and cap table data stay private — only currency rates use a network request</div>
+
+  <div class="ts-hub-grid">
+    <a class="ts-hub-card" href="/finance/compound/"><span class="ts-hub-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 9l-5 5-4-4-4 4"/></svg></span><div class="ts-hub-card-title">CompoundCalc</div><div class="ts-hub-card-desc">Compound interest with monthly contributions.</div><div class="ts-hub-card-link">Open tool →</div></a>
+    <a class="ts-hub-card" href="/finance/budget/"><span class="ts-hub-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 3"/></svg></span><div class="ts-hub-card-title">BudgetPlanner</div><div class="ts-hub-card-desc">50/30/20 budget split with a donut chart.</div><div class="ts-hub-card-link">Open tool →</div></a>
+    <a class="ts-hub-card" href="/finance/mortgage/"><span class="ts-hub-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/></svg></span><div class="ts-hub-card-title">MortgageCalc</div><div class="ts-hub-card-desc">EMI, amortisation schedule, overpayment savings.</div><div class="ts-hub-card-link">Open tool →</div></a>
+    <a class="ts-hub-card" href="/finance/investments/"><span class="ts-hub-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><rect x="7" y="13" width="3" height="5"/><rect x="12" y="9" width="3" height="9"/><rect x="17" y="6" width="3" height="12"/></svg></span><div class="ts-hub-card-title">InvestmentTracker</div><div class="ts-hub-card-desc">Portfolio holdings, returns, and allocation.</div><div class="ts-hub-card-link">Open tool →</div></a>
+    <a class="ts-hub-card" href="/finance/tax/"><span class="ts-hub-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg></span><div class="ts-hub-card-title">TaxEstimate</div><div class="ts-hub-card-desc">Income tax for India, US or UK.</div><div class="ts-hub-card-link">Open tool →</div></a>
+    <a class="ts-hub-card" href="/finance/currency/"><span class="ts-hub-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg></span><div class="ts-hub-card-title">CurrencyConvert</div><div class="ts-hub-card-desc">170+ currencies — rates cached daily.</div><div class="ts-hub-card-link">Open tool →</div></a>
+    <a class="ts-hub-card" href="/finance/equity/"><span class="ts-hub-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="7" r="4"/><circle cx="17" cy="17" r="4"/><path d="M10 10l4 4"/></svg></span><div class="ts-hub-card-title">EquityCalc</div><div class="ts-hub-card-desc">Cap table dilution across funding rounds.</div><div class="ts-hub-card-link">Open tool →</div></a>
+    <a class="ts-hub-card" href="/finance/networth/"><span class="ts-hub-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span><div class="ts-hub-card-title">NetWorthTracker</div><div class="ts-hub-card-desc">Assets minus liabilities, tracked monthly.</div><div class="ts-hub-card-link">Open tool →</div></a>
+  </div>
+</main>
+<footer class="ts-footer">
+  <span>Built by <a href="https://tapdot.org">tapdot</a></span><span class="ts-footer-dot">·</span>
+  <a href="/privacy.html">Privacy</a><span class="ts-footer-dot">·</span><span>All processing happens in your browser</span>
+</footer>
+<script src="/shared/shared.js"></script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "YOUR_CLOUDFLARE_TOKEN"}'></script>
+</body>
+</html>

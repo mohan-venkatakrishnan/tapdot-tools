@@ -250,6 +250,79 @@ const check = (name, ok) => { console.log((ok ? 'PASS' : 'FAIL') + '  ' + name);
   await page.close();
 }
 
+// 16. MortgageCalc: EMI matches the standard formula for a known input.
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/finance/mortgage/', { waitUntil: 'networkidle' });
+  await page.fill('#loanAmount', '300000'); await page.fill('#downPayment', '0');
+  await page.fill('#rate', '6'); await page.fill('#years', '30');
+  await page.dispatchEvent('#rate', 'input');
+  await page.waitForTimeout(150);
+  const emiText = await page.$eval('#emi', el => el.textContent);
+  const emi = parseFloat(emiText.replace(/[^0-9.]/g, ''));
+  // Standard EMI for 300k @ 6%/30yr ~= $1798.65
+  check('MortgageCalc EMI matches standard formula (~$1799)', Math.abs(emi - 1799) < 3);
+  check('no JS errors on MortgageCalc', errs.length === 0);
+  await page.close();
+}
+
+// 17. TaxEstimate: India new vs old regime both compute, and differ.
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/finance/tax/', { waitUntil: 'networkidle' });
+  await page.fill('#income', '1200000');
+  await page.waitForTimeout(100);
+  const newTax = await page.$eval('#taxOwed', el => el.textContent);
+  await page.click('#regimeTabs [data-r="old"]');
+  await page.waitForTimeout(100);
+  const oldTax = await page.$eval('#taxOwed', el => el.textContent);
+  check('TaxEstimate India new vs old regime produce different results', newTax !== oldTax);
+  check('no JS errors on TaxEstimate', errs.length === 0);
+  await page.close();
+}
+
+// 18. EquityCalc: dilution + ownership rows sum to 100%.
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/finance/equity/', { waitUntil: 'networkidle' });
+  await page.waitForTimeout(100);
+  const pcts = await page.$$eval('#table tbody tr td:nth-child(3)', els => els.map(e => parseFloat(e.textContent)));
+  const sum = pcts.slice(0, 3).reduce((a, b) => a + b, 0);
+  check('EquityCalc ownership percentages sum to ~100%', Math.abs(sum - 100) < 0.5);
+  check('no JS errors on EquityCalc', errs.length === 0);
+  await page.close();
+}
+
+// 19. CurrencyConvert: searchable selects populate after the async rate fetch,
+// and the label-sync fix keeps the button in sync with programmatic changes.
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/finance/currency/', { waitUntil: 'networkidle' });
+  await page.waitForTimeout(600); // allow the rate fetch (or its failure) to settle
+  const fromOptions = await page.$eval('#from', el => el.options.length);
+  check('CurrencyConvert populates currency options', fromOptions > 10);
+  const btnLabel = await page.$eval('.ts-ssel-btn .ts-ssel-label', el => el.textContent).catch(() => null);
+  check('searchable dropdown label reflects async-populated value', !!btnLabel && btnLabel.length > 0);
+  check('no JS errors on CurrencyConvert', errs.length === 0);
+  await page.close();
+}
+
+// 20. BudgetPlanner: 50/30/20 classification + savings rate.
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/finance/budget/', { waitUntil: 'networkidle' });
+  await page.waitForTimeout(100);
+  const rate = await page.$eval('#savingsRate', el => el.textContent);
+  check('BudgetPlanner computes a savings rate', /%$/.test(rate));
+  check('no JS errors on BudgetPlanner', errs.length === 0);
+  await page.close();
+}
+
 await browser.close(); srv.close();
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);
