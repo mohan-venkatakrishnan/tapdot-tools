@@ -748,119 +748,128 @@ body {
 .hiw2-step-title {
   font-size: 13px; font-weight: 600; color: var(--color-text); margin-bottom: 12px;
 }
-.hiw2-sample {
-  margin-top: auto;
-  font-family: var(--font-mono); font-size: 11.5px;
-  color: var(--color-muted); background: var(--color-bg-soft);
-  border: 0.5px solid var(--color-border); border-radius: var(--radius-sm);
-  padding: 7px 9px; overflow: hidden; white-space: nowrap;
-  border-right: 2px solid var(--color-accent);
-  width: fit-content; max-width: 100%;
-  animation: hiwCaret 1s step-end infinite, hiwType2 3s ease-in-out infinite;
+/* Steps play one at a time (JS toggles .playing); inactive steps dim */
+.hiw2-step { opacity: 0.5; transition: opacity .45s ease, border-color .45s ease, box-shadow .45s ease; }
+.hiw2-step.playing {
+  opacity: 1;
+  border-color: color-mix(in srgb, var(--color-accent) 45%, var(--color-border));
+  box-shadow: 0 8px 22px rgba(0,0,0,0.06);
 }
-.hiw2-step:nth-child(2) .hiw2-sample { animation-delay: 0s, .35s; }
-.hiw2-step:nth-child(3) .hiw2-sample { animation-delay: 0s, .7s; }
-@keyframes hiwType2 {
-  0% { max-width: 0; }
-  40%, 82% { max-width: 100%; }
-  100% { max-width: 0; }
-}
-@keyframes hiwCaret { 50% { border-color: transparent; } }
+.hiw2-step.playing .hiw2-num { box-shadow: 0 0 0 4px var(--color-accent-soft); }
 
-/* Demo stage (compact, sits above the sample line) */
+/* Demo stage */
 .ts-hiw-demo {
   position: relative;
-  height: 92px; margin-bottom: 12px;
+  height: 104px;
   border-radius: var(--radius-md);
   background: linear-gradient(135deg,
     color-mix(in srgb, var(--color-accent-soft) 80%, var(--color-surface)),
     var(--color-surface));
   border: 0.5px solid var(--color-border);
   display: flex; align-items: center; justify-content: center;
-  overflow: hidden;
+  overflow: hidden; padding: 10px;
 }
 @media (max-width: 720px) {
   .hiw2-steps { grid-template-columns: 1fr; }
-  .hiw2-sample { animation-delay: 0s, 0s !important; }
+  .hiw2-step { opacity: 1; }   /* stacked: show all clearly on mobile */
 }
 
-/* demo: flip card */
-.hiw-flip { width: 150px; height: 84px; perspective: 600px; }
-.hiw-flip-i {
-  position: relative; width: 100%; height: 100%;
-  transform-style: preserve-3d;
-  animation: hiwFlip 4.2s infinite;
-}
-.hiw-face {
-  position: absolute; inset: 0; backface-visibility: hidden;
-  display: flex; align-items: center; justify-content: center;
-  border-radius: 10px; font-size: 13px; font-weight: 500;
-  border: 0.5px solid var(--color-border);
-  background: var(--color-surface); color: var(--color-text);
-  box-shadow: var(--shadow-sm);
-}
-.hiw-back { transform: rotateY(180deg); background: var(--color-accent-soft); color: var(--color-accent); }
-@keyframes hiwFlip {
-  0%, 38% { transform: rotateY(0deg); }
-  50%, 90% { transform: rotateY(180deg); }
-  100% { transform: rotateY(0deg); }
-}
+/* ── Unique per-step demos (animate only while the step is .playing) ──────── */
+.d-scr { width: 100%; display: flex; flex-direction: column; align-items: center;
+         justify-content: center; gap: 6px; font-family: var(--font-mono); }
 
-/* demo: typing lines */
-.hiw-type { width: 78%; display: flex; flex-direction: column; gap: 9px; }
-.hiw-type span {
-  height: 9px; border-radius: 5px;
-  background: linear-gradient(90deg, var(--grad-a), var(--grad-b));
-  width: 0; animation: hiwType 3.6s infinite;
+/* typewriter reveal — --len set inline = character count (monospace) */
+.d-type {
+  display: inline-block; white-space: nowrap; overflow: hidden; max-width: 100%;
+  width: 0; font-size: 11.5px; color: var(--color-text);
 }
-.hiw-type span:nth-child(2) { animation-delay: .25s; }
-.hiw-type span:nth-child(3) { animation-delay: .5s; }
-.hiw-type span:nth-child(4) { animation-delay: .75s; width: 0; }
-@keyframes hiwType {
-  0% { width: 0; opacity: .4; }
-  30% { opacity: 1; }
-  55%, 80% { width: var(--w, 100%); opacity: 1; }
-  100% { width: var(--w, 100%); opacity: .4; }
+.hiw2-step.playing .d-type {
+  animation: dType calc(var(--len,20) * 0.05s) linear forwards;
+  border-right: 2px solid var(--color-accent);
 }
-.hiw-type span:nth-child(1) { --w: 92%; }
-.hiw-type span:nth-child(2) { --w: 100%; }
-.hiw-type span:nth-child(3) { --w: 78%; }
-.hiw-type span:nth-child(4) { --w: 55%; }
+@keyframes dType { to { width: calc(var(--len,20) * 1ch); } }
 
-/* demo: meter */
-.hiw-meter-wrap { width: 76%; text-align: center; }
-.hiw-meter {
-  height: 12px; border-radius: 8px; overflow: hidden;
-  background: var(--color-bg-soft); border: 0.5px solid var(--color-border);
-}
-.hiw-meter-fill {
-  height: 100%; border-radius: 8px;
-  background: linear-gradient(90deg, var(--grad-a), var(--grad-b));
-  animation: hiwMeter 3.4s ease-in-out infinite;
-}
-@keyframes hiwMeter { 0%,100% { width: 18%; } 50% { width: 88%; } }
-.hiw-meter-num {
-  margin-top: 10px; font-family: var(--font-mono);
-  font-size: 26px; font-weight: 600; color: var(--color-accent);
-}
+/* pop-in with per-item delay (--d) */
+.d-in { opacity: 0; transform: translateY(7px); }
+.hiw2-step.playing .d-in { animation: dIn .45s cubic-bezier(.16,1,.3,1) forwards; animation-delay: var(--d,0s); }
+@keyframes dIn { to { opacity: 1; transform: none; } }
 
-/* demo: highlight words */
-.hiw-mark {
-  width: 82%; font-size: 13px; line-height: 1.9; color: var(--color-text); text-align: center;
-}
-.hiw-mark mark {
-  background: linear-gradient(var(--color-accent-soft), var(--color-accent-soft)) no-repeat;
-  background-size: 0% 100%; color: var(--color-accent);
-  border-radius: 4px; padding: 0 2px;
-  animation: hiwMark 3.8s infinite;
-}
-.hiw-mark mark:nth-of-type(2) { animation-delay: .5s; }
-.hiw-mark mark:nth-of-type(3) { animation-delay: 1s; }
-@keyframes hiwMark {
-  0%, 10% { background-size: 0% 100%; }
-  40%, 85% { background-size: 100% 100%; }
-  100% { background-size: 0% 100%; }
-}
+/* label: value rows (CiteMaker) */
+.d-fields { align-items: stretch; gap: 5px; width: 100%; }
+.d-field { display: flex; align-items: baseline; gap: 6px; font-size: 11px; }
+.d-field .d-k { color: var(--color-muted); min-width: 46px; }
+.d-field .d-v { color: var(--color-text); }
+
+/* result line with check (CiteMaker) */
+.d-result { flex-direction: row; gap: 8px; }
+.d-check { color: var(--color-success); font-weight: 700; opacity: 0; }
+.hiw2-step.playing .d-check { animation: dIn .3s ease forwards; animation-delay: 1s; }
+
+/* course rows (GradeCalc) */
+.d-rows { width: 100%; gap: 5px; }
+.d-row { display: flex; justify-content: space-between; gap: 8px; font-size: 11px;
+         background: var(--color-bg-soft); border: 0.5px solid var(--color-border);
+         border-radius: var(--radius-sm); padding: 4px 8px; }
+.d-row span:nth-child(2) { color: var(--color-accent); font-weight: 600; }
+
+/* counting number (GradeCalc / ReadScore) */
+.d-count .d-num { font-size: 30px; font-weight: 700; color: var(--color-accent); letter-spacing: -0.02em; }
+.d-count .d-clabel { font-size: 10px; color: var(--color-muted); text-transform: uppercase; letter-spacing: .06em; }
+
+/* flip card (FlashForge) */
+.d-flip { width: 140px; height: 74px; perspective: 600px; }
+.d-flip-i { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; }
+.hiw2-step.playing .d-flip-i { animation: dFlip 2.4s ease forwards .4s; }
+.d-face { position: absolute; inset: 0; backface-visibility: hidden; display: flex;
+          align-items: center; justify-content: center; text-align: center; padding: 8px;
+          border-radius: 10px; font-size: 11.5px; border: 0.5px solid var(--color-border);
+          background: var(--color-surface); color: var(--color-text); box-shadow: var(--shadow-sm); }
+.d-back { transform: rotateY(180deg); background: var(--color-accent-soft); color: var(--color-accent); }
+@keyframes dFlip { 0%,35% { transform: rotateY(0); } 65%,100% { transform: rotateY(180deg); } }
+
+/* rating pills (FlashForge) */
+.d-rate { flex-direction: row; gap: 6px; }
+.d-pill { font-size: 11px; padding: 3px 10px; border-radius: 999px;
+          border: 0.5px solid var(--color-border); background: var(--color-surface); color: var(--color-muted); }
+.d-pill.on { background: var(--color-accent); color: #fff; border-color: transparent; }
+
+/* highlight sweep of words (BiasCheck) */
+.d-hl { font-size: 12px; line-height: 1.8; color: var(--color-text); text-align: center; }
+.d-mk { background: linear-gradient(var(--color-accent-soft), var(--color-accent-soft)) no-repeat;
+        background-size: 0% 100%; color: var(--color-accent); border-radius: 3px; padding: 0 2px; }
+.hiw2-step.playing .d-mk { animation: dMk .5s ease forwards; animation-delay: var(--d,0s); }
+@keyframes dMk { to { background-size: 100% 100%; } }
+
+/* output chips (BiasCheck) */
+.d-chips { flex-direction: row; flex-wrap: wrap; gap: 6px; }
+.d-chip { font-size: 11px; padding: 3px 9px; border-radius: 999px;
+          background: var(--color-accent-soft); color: var(--color-accent); border: 0.5px solid var(--color-border); }
+.d-chip.on { background: var(--color-accent); color: #fff; border-color: transparent; }
+
+/* scan sweep (ReadScore) */
+.d-scan { position: relative; overflow: hidden; width: 90%; text-align: center;
+          font-size: 11.5px; color: var(--color-text); padding: 6px 0; }
+.d-sweep { position: absolute; top: 0; bottom: 0; width: 45%; left: -45%;
+           background: linear-gradient(90deg, transparent, var(--color-accent-soft), transparent); }
+.hiw2-step.playing .d-sweep { animation: dSweep 1.3s ease forwards .2s; }
+@keyframes dSweep { to { left: 100%; } }
+
+/* stat numbers (WordCount) */
+.d-stats { flex-direction: row; gap: 14px; }
+.d-stat { text-align: center; }
+.d-stat b { display: block; font-size: 20px; color: var(--color-text); }
+.d-stat small { font-size: 10px; color: var(--color-muted); }
+
+/* mini table (WordCount) */
+.d-tbl { width: 80%; gap: 3px; }
+.d-trow { display: flex; justify-content: space-between; font-size: 11px; color: var(--color-text);
+          border-bottom: 0.5px solid var(--color-border); padding: 2px 0; }
+.d-trow span:last-child { color: var(--color-accent); }
+
+/* tweet bubbles (ThreadCraft) */
+.d-tweets { gap: 5px; width: 82%; }
+.d-tweet { font-size: 11px; background: var(--color-surface); border: 0.5px solid var(--color-border);
+           border-radius: 10px; padding: 4px 9px; color: var(--color-text); align-self: flex-start; }
 
 /* ── On-device AI flags guide (BiasCheck) ────────────────────────────────── */
 .bc-flags {
@@ -916,18 +925,15 @@ body {
 .ts-tool-head-row { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
 .ts-tool-head-row .ts-tool-name { margin-bottom: 0; }
 
-/* Compact demos inside walkthrough cards */
-.ts-hiw-demo .hiw-flip { width: 128px; height: 68px; }
-.ts-hiw-demo .hiw-face { font-size: 12px; }
-
 /* ── Reduced motion ──────────────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   .ts-bg-orb { display: none; }
   .reveal { opacity: 1; transform: none; transition: none; }
-  .hiw-flip-i, .hiw-type span, .hiw-meter-fill, .hiw-mark mark { animation: none !important; }
-  .hiw2-sample { animation: none !important; max-width: 100%; border-right: none; }
-  .hiw-type span { width: var(--w, 100%); }
-  .hiw-meter-fill { width: 60%; }
-  .hiw-mark mark { background-size: 100% 100%; }
+  .hiw2-step * { animation: none !important; }
+  .hiw2-step .d-type { width: auto !important; border-right: none; }
+  .hiw2-step .d-in, .hiw2-step .d-check { opacity: 1 !important; transform: none !important; }
+  .hiw2-step .d-mk { background-size: 100% 100% !important; }
+  .hiw2-step .d-flip-i { transform: rotateY(180deg); }
+  .hiw2-step .d-sweep { display: none; }
   ::view-transition-old(root), ::view-transition-new(root) { animation: none; }
 }

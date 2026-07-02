@@ -79,8 +79,11 @@ for (const route of ROUTES) {
     if (!ok) failures++;
     rows.push({ route, vp: vp.name, docW: res.docW, vw: vp.w, ok, offenders: res.offenders });
     const safe = (route.replace(/\//g, '_') || 'root').replace(/^_|_$/g, '') || 'root';
-    await page.evaluate(() => document.querySelectorAll('.reveal').forEach((e) => e.classList.add('in')));
-    await page.waitForTimeout(120);
+    await page.evaluate(() => {
+      document.querySelectorAll('.reveal').forEach((e) => e.classList.add('in'));
+      document.querySelectorAll('.hiw2-step').forEach((s) => s.classList.add('playing')); // fill demos for review shots
+    });
+    await page.waitForTimeout(1700);
     await page.screenshot({ path: path.join(shotsDir, `${safe}__${vp.name}.png`), fullPage: true });
     await page.close();
   }

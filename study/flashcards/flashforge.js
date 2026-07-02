@@ -83,14 +83,87 @@ function show(view) {
 
 document.getElementById('createBtn').addEventListener('click', () => {
   const text = document.getElementById('notesInput').value;
+  buildFromText(text);
+});
+
+// ── Import: attach a file, or auto-format arbitrary content with on-device AI ─
+
+const FLASH_PROMPT = (t) => `You convert study material into flashcards.
+Read the content and write clear question/answer flashcards covering the key facts.
+Output ONLY lines in exactly this format and nothing else:
+Q: <question>
+A: <answer>
+
+Content: """${t.slice(0, 4000)}"""`;
+
+function buildFromText(text) {
   const parsed = parseNotes(text);
-  if (!parsed.length) return;
+  if (!parsed.length) return false;
   cards = parsed;
   setName = document.getElementById('setName').value.trim() || 'My cards';
   save();
   renderGrid();
   show('viewGrid');
+  return true;
+}
+
+document.getElementById('attachBtn').addEventListener('click', () =>
+  document.getElementById('fileInput').click());
+
+document.getElementById('fileInput').addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    document.getElementById('notesInput').value = String(reader.result || '');
+    const s = document.getElementById('aiStatus');
+    s.className = 'ff-ai-status ok';
+    s.textContent = `Loaded ${file.name} — review, then Create cards or Auto-format.`;
+  };
+  reader.readAsText(file);
 });
+
+document.getElementById('aiBtn').addEventListener('click', aiConvert);
+
+async function aiConvert() {
+  const text = document.getElementById('notesInput').value.trim();
+  const status = document.getElementById('aiStatus');
+  const btn = document.getElementById('aiBtn');
+  if (!text) {
+    status.className = 'ff-ai-status fallback';
+    status.textContent = 'Add, paste, or attach some content first.';
+    return;
+  }
+  const avail = await tapdotAI.availability();
+  if (avail === 'unavailable') {
+    status.className = 'ff-ai-status fallback';
+    status.textContent = 'On-device AI unavailable — creating cards from your text as-is.';
+    buildFromText(text);
+    return;
+  }
+  btn.disabled = true;
+  status.className = 'ff-ai-status working';
+  status.textContent = 'Formatting with on-device AI…';
+  try {
+    const session = await tapdotAI.createSession((pct) => {
+      status.textContent = `Downloading model… ${pct}%`;
+    });
+    status.textContent = 'Formatting with on-device AI…';
+    const raw = await session.prompt(FLASH_PROMPT(text));
+    if (session.destroy) session.destroy();
+    document.getElementById('notesInput').value = raw.trim();
+    if (!buildFromText(raw)) {
+      status.className = 'ff-ai-status fallback';
+      status.textContent = 'Could not format that — try “Create cards”.';
+    }
+  } catch (e) {
+    status.className = 'ff-ai-status fallback';
+    status.textContent = 'AI error — creating cards from your text as-is.';
+    buildFromText(text);
+  } finally {
+    btn.disabled = false;
+  }
+}
 
 // ── Grid ────────────────────────────────────────────────────────────────────
 

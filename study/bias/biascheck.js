@@ -49,51 +49,8 @@ function fallbackAnalysis(text) {
   };
 }
 
-// ── On-device AI: availability + session (new + legacy APIs) ────────────────
-
-// Returns 'available' | 'downloadable' | 'downloading' | 'unavailable'
-async function aiAvailability() {
-  try {
-    // Modern Prompt API: global LanguageModel
-    if (typeof self !== 'undefined' && self.LanguageModel && self.LanguageModel.availability) {
-      const a = await self.LanguageModel.availability();
-      if (a === 'available' || a === 'readily') return 'available';
-      if (a === 'downloadable' || a === 'after-download') return 'downloadable';
-      if (a === 'downloading') return 'downloading';
-      return 'unavailable';
-    }
-    // Legacy: window.ai.languageModel / window.ai.assistant
-    const ai = (typeof window !== 'undefined') ? window.ai : null;
-    const ns = ai && (ai.languageModel || ai.assistant);
-    if (ns && ns.capabilities) {
-      const caps = await ns.capabilities();
-      const v = caps && caps.available;
-      if (v === 'readily') return 'available';
-      if (v === 'after-download') return 'downloadable';
-      if (v && v !== 'no') return 'downloading';
-    }
-  } catch (e) { /* fall through */ }
-  return 'unavailable';
-}
-
-// Create a session (triggers a one-time model download if needed).
-async function createSession(onProgress) {
-  const monitor = (m) => {
-    if (m && m.addEventListener) {
-      m.addEventListener('downloadprogress', (e) => {
-        const pct = e.total ? e.loaded / e.total : e.loaded; // 0..1
-        if (onProgress) onProgress(Math.round(Math.min(1, pct || 0) * 100));
-      });
-    }
-  };
-  if (typeof self !== 'undefined' && self.LanguageModel && self.LanguageModel.create) {
-    return await self.LanguageModel.create({ monitor });
-  }
-  const ai = (typeof window !== 'undefined') ? window.ai : null;
-  const ns = ai && (ai.languageModel || ai.assistant);
-  if (ns && ns.create) return await ns.create({ monitor });
-  throw new Error('No on-device AI API');
-}
+// On-device AI detection/session lives in shared.js as `tapdotAI`
+// (availability() + createSession()), shared with FlashForge.
 
 // ── State + UI ──────────────────────────────────────────────────────────────
 
@@ -108,7 +65,7 @@ function setStatus(cls, text) {
 }
 
 async function detectEngine() {
-  aiState = await aiAvailability();
+  aiState = await tapdotAI.availability();
   if (aiState === 'available') {
     setStatus('ready', 'On-device AI ready');
     flagsEl().classList.add('ts-hidden');
@@ -133,7 +90,7 @@ async function analyse() {
     btn.disabled = true;
     setStatus('working', 'Analysing on-device…');
     try {
-      const session = await createSession((pct) =>
+      const session = await tapdotAI.createSession((pct) =>
         setStatus('working', `Downloading model… ${pct}%`));
       setStatus('working', 'Analysing on-device…');
       const raw = await session.prompt(BIAS_PROMPT(text));

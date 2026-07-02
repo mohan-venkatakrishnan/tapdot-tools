@@ -2,6 +2,12 @@
 
 .ff-sub { font-size: 13px; color: var(--color-muted); }
 
+.ff-import { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.ff-ai-status { font-size: 12px; color: var(--color-muted); }
+.ff-ai-status.working  { color: var(--color-accent); }
+.ff-ai-status.fallback { color: var(--color-warning); }
+.ff-ai-status.ok       { color: var(--color-success); }
+
 /* ── Card grid ─────────────────────────────────────────────── */
 
 .ff-grid {
