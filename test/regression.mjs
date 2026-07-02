@@ -44,6 +44,8 @@ const ROUTES = [
   '/finance/', '/finance/compound/', '/finance/budget/', '/finance/mortgage/',
   '/finance/investments/', '/finance/tax/', '/finance/currency/',
   '/finance/equity/', '/finance/networth/',
+  '/legal/', '/legal/contract/', '/legal/nda/', '/legal/privacy-policy/',
+  '/legal/terms/', '/legal/copyright/', '/legal/glossary/',
   '/privacy.html',
 ];
 const VIEWPORTS = [

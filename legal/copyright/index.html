@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" data-collection="legal" data-tool="CopyrightChecker">
+<head>
+  <meta charset="UTF-8" />
+  <script>(function(){try{var t=localStorage.getItem('tapdot-theme');var d=matchMedia('(prefers-color-scheme: dark)').matches;if(t==='dark'||(!t&&d))document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CopyrightChecker — Copyright Duration Calculator | tapdot</title>
+  <meta name="description" content="Calculate whether a work is in the public domain based on publication date, author death date, and jurisdiction. Fully local." />
+  <meta property="og:title" content="CopyrightChecker — Copyright Duration Calculator | tapdot" />
+  <meta property="og:description" content="Estimate public-domain status by jurisdiction — US, UK, EU, India." />
+  <link rel="canonical" href="https://tools.tapdot.org/legal/copyright/" />
+  <link rel="icon" type="image/png" href="/assets/tapdot-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/shared/shared.css" />
+  <link rel="stylesheet" href="/legal/legal.css" />
+</head>
+<body>
+<nav class="ts-nav">
+  <a href="https://tapdot.org" class="ts-nav-logo"><img src="/assets/tapdot-icon.png" width="22" height="22" alt="tapdot" /><span>tapdot</span></a>
+  <button class="ts-dark-toggle" id="darkToggle" aria-label="Toggle dark mode"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg></button>
+</nav>
+<main class="ts-main">
+  <div class="ts-tool-header">
+    <h1 class="ts-tool-name">CopyrightChecker</h1>
+    <p class="ts-tool-desc">Estimate public-domain status by jurisdiction.</p>
+  </div>
+  <div class="legal-disclaimer">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    This is a simplified estimate, not legal advice. Copyright law has many exceptions (works for hire, anonymous works, renewals, treaties). Consult a qualified lawyer for anything that matters.
+  </div>
+
+  <div class="ts-card">
+    <p class="ts-card-label">Jurisdiction</p>
+    <div class="ts-segment" id="jurisTabs">
+      <button class="ts-segment-btn active" data-j="us">United States</button>
+      <button class="ts-segment-btn" data-j="uk">United Kingdom</button>
+      <button class="ts-segment-btn" data-j="eu">European Union</button>
+      <button class="ts-segment-btn" data-j="in">India</button>
+    </div>
+    <div class="biz-grid-2 ts-mt-md">
+      <div><label class="ts-label" for="pubYear">Publication year</label><input class="ts-input" id="pubYear" type="number" value="1965" /></div>
+      <div><label class="ts-label" for="deathYear">Author's death year (if known)</label><input class="ts-input" id="deathYear" type="number" placeholder="Leave blank if unknown" /></div>
+    </div>
+  </div>
+
+  <div class="ts-card" id="resultCard" style="text-align:center">
+    <div id="statusBadge" class="ts-badge" style="font-size:14px;padding:8px 20px"></div>
+    <p class="ts-mt-md" id="reason"></p>
+  </div>
+</main>
+<footer class="ts-footer">
+  <span>Built by <a href="https://tapdot.org">tapdot</a></span><span class="ts-footer-dot">·</span>
+  <a href="/privacy.html">Privacy</a><span class="ts-footer-dot">·</span><span>All processing happens in your browser</span>
+</footer>
+<script src="/shared/shared.js"></script>
+<script src="copyright.js" defer></script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "YOUR_CLOUDFLARE_TOKEN"}'></script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" data-collection="legal" data-tool="PrivacyPolicyGen">
+<head>
+  <meta charset="UTF-8" />
+  <script>(function(){try{var t=localStorage.getItem('tapdot-theme');var d=matchMedia('(prefers-color-scheme: dark)').matches;if(t==='dark'||(!t&&d))document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PrivacyPolicyGen — Privacy Policy Generator | tapdot</title>
+  <meta name="description" content="Generate a GDPR and CCPA-aware privacy policy for your website or app. Fills a template based on your inputs. Fully local." />
+  <meta property="og:title" content="PrivacyPolicyGen — Privacy Policy Generator | tapdot" />
+  <meta property="og:description" content="GDPR/CCPA-aware privacy policy from a template — generated locally." />
+  <link rel="canonical" href="https://tools.tapdot.org/legal/privacy-policy/" />
+  <link rel="icon" type="image/png" href="/assets/tapdot-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/shared/shared.css" />
+  <link rel="stylesheet" href="/legal/legal.css" />
+</head>
+<body>
+<nav class="ts-nav">
+  <a href="https://tapdot.org" class="ts-nav-logo"><img src="/assets/tapdot-icon.png" width="22" height="22" alt="tapdot" /><span>tapdot</span></a>
+  <button class="ts-dark-toggle" id="darkToggle" aria-label="Toggle dark mode"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg></button>
+</nav>
+<main class="ts-main ts-main-wide">
+  <div class="ts-tool-header">
+    <h1 class="ts-tool-name">PrivacyPolicyGen</h1>
+    <p class="ts-tool-desc">Generate a GDPR/CCPA-aware privacy policy from a template.</p>
+  </div>
+  <div class="legal-disclaimer">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    This template is provided for reference only. It is not legal advice. Privacy law varies by jurisdiction — have a qualified lawyer review your final policy.
+  </div>
+
+  <div class="ts-workbench">
+    <div class="ts-card">
+      <div class="biz-grid-2">
+        <div><label class="ts-label" for="company">Company / product name</label><input class="ts-input" id="company" placeholder="tapdot" /></div>
+        <div><label class="ts-label" for="website">Website URL</label><input class="ts-input" id="website" placeholder="tapdot.org" /></div>
+        <div><label class="ts-label" for="contact">Contact email</label><input class="ts-input" id="contact" placeholder="privacy@tapdot.org" /></div>
+        <div><label class="ts-label" for="updated">Last updated</label><input class="ts-input" id="updated" type="date" /></div>
+      </div>
+      <p class="ts-card-label ts-mt-md">What data do you collect?</p>
+      <div class="biz-row" id="dataChecks">
+        <label class="ts-row"><input type="checkbox" data-d="email" checked /> Email address</label>
+        <label class="ts-row"><input type="checkbox" data-d="name" /> Name</label>
+        <label class="ts-row"><input type="checkbox" data-d="usage" checked /> Usage / analytics data</label>
+        <label class="ts-row"><input type="checkbox" data-d="payment" /> Payment information</label>
+        <label class="ts-row"><input type="checkbox" data-d="location" /> Location data</label>
+      </div>
+      <p class="ts-card-label ts-mt-md">Do you use cookies?</p>
+      <div class="ts-segment" id="cookieTabs">
+        <button class="ts-segment-btn active" data-c="yes">Yes</button>
+        <button class="ts-segment-btn" data-c="no">No</button>
+      </div>
+      <label class="ts-label ts-mt-md" for="thirdParty">Third-party services used</label>
+      <input class="ts-input" id="thirdParty" placeholder="Google Analytics, Stripe, Cloudflare" />
+      <button class="ts-btn ts-btn-primary ts-mt-md" id="genBtn">Generate policy</button>
+    </div>
+    <div class="ts-card">
+      <div class="biz-row" style="justify-content:space-between">
+        <p class="ts-card-label" style="margin-bottom:0">Preview</p>
+        <div class="biz-row"><button class="ts-copy-btn" id="copyBtn">Copy</button><button class="ts-btn ts-btn-ghost" id="downloadBtn" style="height:30px;padding:0 12px">Download .txt</button></div>
+      </div>
+      <div class="legal-doc" id="preview"></div>
+    </div>
+  </div>
+</main>
+<footer class="ts-footer">
+  <span>Built by <a href="https://tapdot.org">tapdot</a></span><span class="ts-footer-dot">·</span>
+  <a href="/privacy.html">Privacy</a><span class="ts-footer-dot">·</span><span>All processing happens in your browser</span>
+</footer>
+<script src="/shared/shared.js"></script>
+<script src="privacy-policy.js" defer></script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "YOUR_CLOUDFLARE_TOKEN"}'></script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" data-collection="legal" data-tool="ContractRead">
+<head>
+  <meta charset="UTF-8" />
+  <script>(function(){try{var t=localStorage.getItem('tapdot-theme');var d=matchMedia('(prefers-color-scheme: dark)').matches;if(t==='dark'||(!t&&d))document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ContractRead — Plain English Contract Summariser | tapdot</title>
+  <meta name="description" content="Paste a contract or terms of service. Get a plain-English summary of what you are agreeing to. On-device AI. Nothing sent anywhere." />
+  <meta property="og:title" content="ContractRead — Plain English Contract Summariser | tapdot" />
+  <meta property="og:description" content="Plain-English contract summary via on-device AI — your document never leaves your browser." />
+  <link rel="canonical" href="https://tools.tapdot.org/legal/contract/" />
+  <link rel="icon" type="image/png" href="/assets/tapdot-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/shared/shared.css" />
+  <link rel="stylesheet" href="/legal/legal.css" />
+</head>
+<body>
+<nav class="ts-nav">
+  <a href="https://tapdot.org" class="ts-nav-logo"><img src="/assets/tapdot-icon.png" width="22" height="22" alt="tapdot" /><span>tapdot</span></a>
+  <button class="ts-dark-toggle" id="darkToggle" aria-label="Toggle dark mode"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg></button>
+</nav>
+<main class="ts-main">
+  <div class="ts-tool-header">
+    <h1 class="ts-tool-name">ContractRead</h1>
+    <p class="ts-tool-desc">Paste a contract, get a plain-English summary — via on-device AI.</p>
+  </div>
+  <div class="legal-disclaimer">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    ContractRead provides a plain-English summary to help you understand a document. It is not legal advice. Consult a qualified lawyer before signing any contract.
+  </div>
+  <div class="ts-privacy-strip"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>On-device AI — the contract text you paste never leaves your browser</div>
+
+  <div class="ts-card">
+    <p class="ts-card-label">Contract or terms of service text</p>
+    <textarea class="ts-textarea" id="input" style="min-height:220px" placeholder="Paste the full text here…"></textarea>
+    <button class="ts-btn ts-btn-primary ts-mt-md" id="summarizeBtn">Summarise</button>
+    <p class="biz-ai-status" id="aiStatus"></p>
+  </div>
+
+  <div class="ts-output" id="output">
+    <div class="ts-card"><p class="ts-card-label">Summary</p><div id="summary" style="font-size:14px;line-height:1.7;white-space:pre-wrap"></div></div>
+  </div>
+</main>
+<footer class="ts-footer">
+  <span>Built by <a href="https://tapdot.org">tapdot</a></span><span class="ts-footer-dot">·</span>
+  <a href="/privacy.html">Privacy</a><span class="ts-footer-dot">·</span><span>All processing happens in your browser</span>
+</footer>
+<script src="/shared/shared.js"></script>
+<script src="contract.js" defer></script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "YOUR_CLOUDFLARE_TOKEN"}'></script>
+</body>
+</html>

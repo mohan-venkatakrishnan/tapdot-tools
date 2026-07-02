@@ -148,6 +148,12 @@ const ICON_PATHS = {
   'CurrencyConvert': '<path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/>',
   'EquityCalc': '<circle cx="7" cy="7" r="4"/><circle cx="17" cy="17" r="4"/><path d="M10 10l4 4"/>',
   'NetWorthTracker': '<path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/>',
+  'ContractRead': '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v5h5"/><path d="M9 13h6M9 17h6"/>',
+  'NDAGenerator': '<rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
+  'PrivacyPolicyGen': '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',
+  'TermsBuilder': '<path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>',
+  'CopyrightChecker': '<circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/>',
+  'LegalGlossary': '<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>',
   'JSONLab': '<path d="M8 3H7a2 2 0 0 0-2 2v5a2 2 0 0 1-2 2 2 2 0 0 1 2 2v5a2 2 0 0 0 2 2h1"/><path d="M16 3h1a2 2 0 0 1 2 2v5a2 2 0 0 0 2 2 2 2 0 0 0-2 2v5a2 2 0 0 1-2 2h-1"/>',
   'JSONConvert': '<polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/>',
   'JWTRead': '<circle cx="7.5" cy="15.5" r="4.5"/><path d="M10.7 12.3L20 3M17 6l2 2M14 9l2 2"/>',
@@ -346,6 +352,13 @@ const TOOL_REGISTRY = [
   { name: 'CurrencyConvert', url: '/finance/currency/', collection: 'finance', desc: '170+ currencies — rates cached daily' },
   { name: 'EquityCalc', url: '/finance/equity/', collection: 'finance', desc: 'Cap table dilution across funding rounds' },
   { name: 'NetWorthTracker', url: '/finance/networth/', collection: 'finance', desc: 'Assets minus liabilities, tracked monthly' },
+  { name: 'Legal tools', url: '/legal/', collection: 'legal', desc: 'Contract reader, NDA generator, privacy policy, terms' },
+  { name: 'ContractRead', url: '/legal/contract/', collection: 'legal', desc: 'Plain-English contract summary — on-device AI' },
+  { name: 'NDAGenerator', url: '/legal/nda/', collection: 'legal', desc: 'Mutual or one-way NDA from a template' },
+  { name: 'PrivacyPolicyGen', url: '/legal/privacy-policy/', collection: 'legal', desc: 'GDPR/CCPA-aware privacy policy generator' },
+  { name: 'TermsBuilder', url: '/legal/terms/', collection: 'legal', desc: 'Terms of Service from a template' },
+  { name: 'CopyrightChecker', url: '/legal/copyright/', collection: 'legal', desc: 'Estimate public-domain status by jurisdiction' },
+  { name: 'LegalGlossary', url: '/legal/glossary/', collection: 'legal', desc: '130+ legal terms explained in plain English' },
   { name: 'Privacy Policy', url: '/privacy.html', collection: 'tools', desc: "What tapdot tools does — and doesn't — collect" },
 ];
 
@@ -796,6 +809,36 @@ const STEPS = {
     { t: 'List your assets', d: { k: 'rows', rows: [['Cash', '$5,000'], ['Investments', '$20,000']] } },
     { t: 'List your liabilities', d: { k: 'rows', rows: [['Credit card', '$1,500']] } },
     { t: 'Track your trend', d: { k: 'count', to: 23500, label: 'net worth' } },
+  ],
+  'ContractRead': [
+    { t: 'Paste the contract', d: { k: 'text', text: 'This Agreement is entered into...' } },
+    { t: 'AI reads it', d: { k: 'chips', items: ['Obligations', 'Payment terms'], on: 0 } },
+    { t: 'Get a plain summary', d: { k: 'result', text: 'You must pay within 30 days.' } },
+  ],
+  'NDAGenerator': [
+    { t: 'Pick mutual or one-way', d: { k: 'chips', items: ['Mutual', 'One-way'], on: 0 } },
+    { t: 'Fill in the parties', d: { k: 'fields', rows: [['Party A', 'Acme Inc.'], ['Duration', '2 yrs']] } },
+    { t: 'Download the NDA', d: { k: 'result', text: 'NON-DISCLOSURE AGREEMENT' } },
+  ],
+  'PrivacyPolicyGen': [
+    { t: 'Describe your data use', d: { k: 'chips', items: ['Email', 'Analytics'], on: 0 } },
+    { t: 'Add cookies & vendors', d: { k: 'fields', rows: [['Cookies', 'Yes'], ['Vendors', 'Stripe']] } },
+    { t: 'Get a GDPR-aware policy', d: { k: 'result', text: 'PRIVACY POLICY' } },
+  ],
+  'TermsBuilder': [
+    { t: 'Enter your product', d: { k: 'fields', rows: [['Company', 'tapdot'], ['Min age', '13']] } },
+    { t: 'Set jurisdiction', d: { k: 'text', text: 'State of Delaware' } },
+    { t: 'Get your Terms', d: { k: 'result', text: 'TERMS OF SERVICE' } },
+  ],
+  'CopyrightChecker': [
+    { t: 'Pick a jurisdiction', d: { k: 'chips', items: ['US', 'UK', 'EU', 'India'], on: 0 } },
+    { t: 'Enter the dates', d: { k: 'fields', rows: [['Published', '1965'], ['Author died', '1980']] } },
+    { t: 'See the status', d: { k: 'chips', items: ['Public domain ✓'], on: 0 } },
+  ],
+  'LegalGlossary': [
+    { t: 'Search a term', d: { k: 'text', text: 'indemnify' } },
+    { t: 'Read it in plain English', d: { k: 'result', text: 'Compensate for loss or damage' } },
+    { t: 'Share a direct link', d: { k: 'chips', items: ['#indemnification'], on: 0 } },
   ],
 };
 

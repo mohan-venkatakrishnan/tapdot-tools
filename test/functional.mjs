@@ -323,6 +323,79 @@ const check = (name, ok) => { console.log((ok ? 'PASS' : 'FAIL') + '  ' + name);
   await page.close();
 }
 
+// 21. LegalGlossary: instant search + fuzzy fallback for a misspelling.
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/legal/glossary/', { waitUntil: 'networkidle' });
+  await page.fill('#search', 'indemnif');
+  await page.waitForTimeout(100);
+  const terms = await page.$$eval('.glossary-term dt', els => els.map(e => e.textContent));
+  check('LegalGlossary substring search finds Indemnification', terms.some(t => t.includes('Indemnif')));
+  await page.fill('#search', 'idemnify'); // misspelled — missing an 'n'
+  await page.waitForTimeout(100);
+  const fuzzyTerms = await page.$$eval('.glossary-term dt', els => els.map(e => e.textContent));
+  check('LegalGlossary fuzzy search tolerates a misspelling', fuzzyTerms.some(t => t.includes('Indemnif')));
+  check('no JS errors on LegalGlossary', errs.length === 0);
+  await page.close();
+}
+
+// 22. CopyrightChecker: pre-1928 US work is always public domain.
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/legal/copyright/', { waitUntil: 'networkidle' });
+  await page.fill('#pubYear', '1900');
+  await page.waitForTimeout(100);
+  const badge = await page.$eval('#statusBadge', el => el.textContent);
+  check('CopyrightChecker: pre-1928 US work is public domain', badge.includes('public domain'));
+  check('no JS errors on CopyrightChecker', errs.length === 0);
+  await page.close();
+}
+
+// 23. NDAGenerator: generated text includes party names and mutual/one-way framing.
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/legal/nda/', { waitUntil: 'networkidle' });
+  await page.fill('#partyA', 'Acme Inc.');
+  await page.fill('#partyB', 'Beta LLC');
+  await page.click('#genBtn');
+  await page.waitForTimeout(100);
+  const doc = await page.$eval('#preview', el => el.textContent);
+  check('NDAGenerator includes both party names', doc.includes('Acme Inc.') && doc.includes('Beta LLC'));
+  check('no JS errors on NDAGenerator', errs.length === 0);
+  await page.close();
+}
+
+// 24. TermsBuilder + PrivacyPolicyGen: templates fill in the company name.
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/legal/terms/', { waitUntil: 'networkidle' });
+  await page.fill('#company', 'tapdot');
+  await page.click('#genBtn');
+  await page.waitForTimeout(100);
+  const doc = await page.$eval('#preview', el => el.textContent);
+  check('TermsBuilder fills in the company name', doc.includes('tapdot'));
+  check('no JS errors on TermsBuilder', errs.length === 0);
+  await page.close();
+}
+
+// 25. ContractRead: graceful message when on-device AI is unavailable.
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/legal/contract/', { waitUntil: 'networkidle' });
+  await page.fill('#input', 'This Agreement is entered into by and between the parties.');
+  await page.click('#summarizeBtn');
+  await page.waitForTimeout(300);
+  const status = await page.$eval('#aiStatus', el => el.textContent);
+  check('ContractRead shows a clear message when AI is unavailable', status.toLowerCase().includes('not available') || status.toLowerCase().includes('unavailable'));
+  check('no JS errors on ContractRead', errs.length === 0);
+  await page.close();
+}
+
 await browser.close(); srv.close();
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

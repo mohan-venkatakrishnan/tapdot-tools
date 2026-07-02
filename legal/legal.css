@@ -1,0 +1,32 @@
+/* legal/legal.css — imported by all legal tools in addition to shared.css */
+
+.biz-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; min-width: 0; }
+.biz-muted { color: var(--color-muted); font-size: 12px; }
+.biz-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 480px) { .biz-grid-2 { grid-template-columns: 1fr; } }
+
+.biz-ai-status { font-size: 12px; color: var(--color-muted); }
+.biz-ai-status.working { color: var(--color-accent); }
+.biz-ai-status.fallback { color: var(--color-warning); }
+.biz-ai-status.ok { color: var(--color-success); }
+
+.legal-disclaimer {
+  display: flex; gap: 10px; align-items: flex-start;
+  padding: 12px 14px; background: color-mix(in srgb, var(--color-warning) 10%, var(--color-bg-soft));
+  border: 0.5px solid var(--color-border); border-left: 3px solid var(--color-warning);
+  border-radius: var(--radius-md); font-size: 13px; color: var(--color-text); line-height: 1.6; margin-bottom: 20px;
+}
+.legal-disclaimer svg { flex-shrink: 0; color: var(--color-warning); margin-top: 1px; }
+
+.legal-doc {
+  font-family: var(--font-mono); font-size: 13px; line-height: 1.8; color: var(--color-text);
+  background: var(--color-bg-soft); border: 0.5px solid var(--color-border); border-radius: var(--radius-md);
+  padding: 20px; white-space: pre-wrap; word-break: break-word; max-height: 600px; overflow-y: auto;
+}
+
+/* Glossary */
+.glossary-list { max-height: 560px; overflow-y: auto; }
+.glossary-term { padding: 12px 0; border-bottom: 0.5px solid var(--color-border); scroll-margin-top: 70px; }
+.glossary-term dt { font-size: 15px; font-weight: 600; color: var(--color-accent); margin-bottom: 4px; }
+.glossary-term dd { font-size: 14px; color: var(--color-text); line-height: 1.6; }
+.glossary-term dd .ex { display: block; margin-top: 4px; font-size: 13px; color: var(--color-muted); font-style: italic; }

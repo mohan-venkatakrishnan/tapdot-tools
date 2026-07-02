@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" data-collection="legal" data-tool="NDAGenerator">
+<head>
+  <meta charset="UTF-8" />
+  <script>(function(){try{var t=localStorage.getItem('tapdot-theme');var d=matchMedia('(prefers-color-scheme: dark)').matches;if(t==='dark'||(!t&&d))document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NDAGenerator — Non-Disclosure Agreement Builder | tapdot</title>
+  <meta name="description" content="Generate a basic mutual or one-way NDA from a template. Download as plain text. No account, no cloud. Your agreement stays private." />
+  <meta property="og:title" content="NDAGenerator — Non-Disclosure Agreement Builder | tapdot" />
+  <meta property="og:description" content="Mutual or one-way NDA from a template — generated entirely in your browser." />
+  <link rel="canonical" href="https://tools.tapdot.org/legal/nda/" />
+  <link rel="icon" type="image/png" href="/assets/tapdot-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/shared/shared.css" />
+  <link rel="stylesheet" href="/legal/legal.css" />
+</head>
+<body>
+<nav class="ts-nav">
+  <a href="https://tapdot.org" class="ts-nav-logo"><img src="/assets/tapdot-icon.png" width="22" height="22" alt="tapdot" /><span>tapdot</span></a>
+  <button class="ts-dark-toggle" id="darkToggle" aria-label="Toggle dark mode"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg></button>
+</nav>
+<main class="ts-main ts-main-wide">
+  <div class="ts-tool-header">
+    <h1 class="ts-tool-name">NDAGenerator</h1>
+    <p class="ts-tool-desc">Build a mutual or one-way NDA from a template.</p>
+  </div>
+  <div class="legal-disclaimer">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    This template is provided for reference only. It is not legal advice. Have a qualified lawyer review any agreement before signing.
+  </div>
+
+  <div class="ts-workbench">
+    <div class="ts-card">
+      <p class="ts-card-label">Type</p>
+      <div class="ts-segment" id="typeTabs">
+        <button class="ts-segment-btn active" data-t="mutual">Mutual</button>
+        <button class="ts-segment-btn" data-t="oneway">One-way</button>
+      </div>
+      <div class="biz-grid-2 ts-mt-md">
+        <div><label class="ts-label" for="partyA">Party A (Disclosing, if one-way)</label><input class="ts-input" id="partyA" placeholder="Acme Inc." /></div>
+        <div><label class="ts-label" for="partyB">Party B (Receiving, if one-way)</label><input class="ts-input" id="partyB" placeholder="Jane Doe" /></div>
+        <div><label class="ts-label" for="ndaDate">Effective date</label><input class="ts-input" id="ndaDate" type="date" /></div>
+        <div><label class="ts-label" for="duration">Duration (years)</label><input class="ts-input" id="duration" type="number" value="2" /></div>
+        <div><label class="ts-label" for="jurisdiction">Governing jurisdiction</label><input class="ts-input" id="jurisdiction" placeholder="State of Delaware" /></div>
+      </div>
+      <label class="ts-label ts-mt-md" for="scope">Scope of confidential information</label>
+      <textarea class="ts-textarea" id="scope" style="min-height:80px">all technical, business, and financial information disclosed in connection with a potential business relationship</textarea>
+      <button class="ts-btn ts-btn-primary ts-mt-md" id="genBtn">Generate NDA</button>
+    </div>
+    <div class="ts-card">
+      <div class="biz-row" style="justify-content:space-between">
+        <p class="ts-card-label" style="margin-bottom:0">Preview</p>
+        <div class="biz-row"><button class="ts-copy-btn" id="copyBtn">Copy</button><button class="ts-btn ts-btn-ghost" id="downloadBtn" style="height:30px;padding:0 12px">Download .txt</button></div>
+      </div>
+      <div class="legal-doc" id="preview"></div>
+    </div>
+  </div>
+</main>
+<footer class="ts-footer">
+  <span>Built by <a href="https://tapdot.org">tapdot</a></span><span class="ts-footer-dot">·</span>
+  <a href="/privacy.html">Privacy</a><span class="ts-footer-dot">·</span><span>All processing happens in your browser</span>
+</footer>
+<script src="/shared/shared.js"></script>
+<script src="nda.js" defer></script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "YOUR_CLOUDFLARE_TOKEN"}'></script>
+</body>
+</html>
