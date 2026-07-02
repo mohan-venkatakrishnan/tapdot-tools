@@ -577,6 +577,18 @@ body {
 
 .ts-table tr:last-child td { border-bottom: none; }
 
+/* Wrap any wide table in this so it scrolls internally instead of blowing
+   out the page on mobile. Lives in shared.css (not dev.css) since every
+   collection needs it, not just dev tools. */
+.ts-table-scroll {
+  width: 100%;
+  min-width: 0;
+  max-height: 460px;
+  overflow: auto;
+  border: 0.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
 /* ── Mono output (citations, threads) ───────────────────────────────────── */
 
 .ts-mono-output {
@@ -785,6 +797,146 @@ body {
   --glow-2: rgba(200, 120, 80, 0.14);
   --grad-a: #F0A07A;
   --grad-b: #E9C08F;
+}
+
+/* ── Marketing (rose) ──────────────────────────────────────────────────── */
+[data-collection="marketing"] {
+  --color-accent:       #D6537E;
+  --color-accent-soft:  #FBEAF1;
+  --color-accent-dark:  #B84571;
+  --glow-1: rgba(214, 83, 126, 0.24);
+  --glow-2: rgba(235, 150, 180, 0.18);
+  --grad-a: #D6537E;
+  --grad-b: #E888AA;
+}
+[data-theme="dark"][data-collection="marketing"] {
+  --color-accent:       #F08FB0;
+  --color-accent-soft:  #3A1F2A;
+  --color-accent-dark:  #F5AFC8;
+  --glow-1: rgba(240, 143, 176, 0.18);
+  --glow-2: rgba(200, 100, 140, 0.14);
+  --grad-a: #F08FB0;
+  --grad-b: #E9A8C4;
+}
+
+/* ── Finance (sage green) ─────────────────────────────────────────────── */
+[data-collection="finance"] {
+  --color-accent:       #4E9B6B;
+  --color-accent-soft:  #E8F5EC;
+  --color-accent-dark:  #3D7D56;
+  --glow-1: rgba(78, 155, 107, 0.24);
+  --glow-2: rgba(140, 200, 165, 0.18);
+  --grad-a: #4E9B6B;
+  --grad-b: #7DC298;
+}
+[data-theme="dark"][data-collection="finance"] {
+  --color-accent:       #6FCC91;
+  --color-accent-soft:  #16281D;
+  --color-accent-dark:  #8FDCAE;
+  --glow-1: rgba(111, 204, 145, 0.18);
+  --glow-2: rgba(80, 170, 115, 0.14);
+  --grad-a: #6FCC91;
+  --grad-b: #9EE0B8;
+}
+
+/* ── Legal (indigo) ───────────────────────────────────────────────────── */
+[data-collection="legal"] {
+  --color-accent:       #5C6FB8;
+  --color-accent-soft:  #ECEEF9;
+  --color-accent-dark:  #4A5A9A;
+  --glow-1: rgba(92, 111, 184, 0.24);
+  --glow-2: rgba(150, 165, 220, 0.18);
+  --grad-a: #5C6FB8;
+  --grad-b: #8B9AE0;
+}
+[data-theme="dark"][data-collection="legal"] {
+  --color-accent:       #8B9AE0;
+  --color-accent-soft:  #1E2340;
+  --color-accent-dark:  #AAB6EC;
+  --glow-1: rgba(139, 154, 224, 0.18);
+  --glow-2: rgba(100, 115, 190, 0.14);
+  --grad-a: #8B9AE0;
+  --grad-b: #B0BCEC;
+}
+
+/* ── HR (plum) ────────────────────────────────────────────────────────── */
+[data-collection="hr"] {
+  --color-accent:       #B0609E;
+  --color-accent-soft:  #F7E9F3;
+  --color-accent-dark:  #8F4C80;
+  --glow-1: rgba(176, 96, 158, 0.24);
+  --glow-2: rgba(210, 150, 200, 0.18);
+  --grad-a: #B0609E;
+  --grad-b: #D08FC0;
+}
+[data-theme="dark"][data-collection="hr"] {
+  --color-accent:       #E098D0;
+  --color-accent-soft:  #2E1F2B;
+  --color-accent-dark:  #EDB5E2;
+  --glow-1: rgba(224, 152, 208, 0.18);
+  --glow-2: rgba(180, 110, 165, 0.14);
+  --grad-a: #E098D0;
+  --grad-b: #EEB8E0;
+}
+
+/* ── Health (sky blue) ────────────────────────────────────────────────── */
+[data-collection="health"] {
+  --color-accent:       #4E8FC4;
+  --color-accent-soft:  #E8F1FA;
+  --color-accent-dark:  #3D71A0;
+  --glow-1: rgba(78, 143, 196, 0.24);
+  --glow-2: rgba(140, 185, 225, 0.18);
+  --grad-a: #4E8FC4;
+  --grad-b: #82B6E0;
+}
+[data-theme="dark"][data-collection="health"] {
+  --color-accent:       #7FB8E8;
+  --color-accent-soft:  #17222E;
+  --color-accent-dark:  #A0CDF2;
+  --glow-1: rgba(127, 184, 232, 0.18);
+  --glow-2: rgba(90, 150, 200, 0.14);
+  --grad-a: #7FB8E8;
+  --grad-b: #A6D0F0;
+}
+
+/* ── Design (violet) ──────────────────────────────────────────────────── */
+[data-collection="design"] {
+  --color-accent:       #8A5CD6;
+  --color-accent-soft:  #F0EBFB;
+  --color-accent-dark:  #6E45B0;
+  --glow-1: rgba(138, 92, 214, 0.24);
+  --glow-2: rgba(180, 150, 230, 0.18);
+  --grad-a: #8A5CD6;
+  --grad-b: #B08AE8;
+}
+[data-theme="dark"][data-collection="design"] {
+  --color-accent:       #B294EE;
+  --color-accent-soft:  #241A38;
+  --color-accent-dark:  #C7B0F5;
+  --glow-1: rgba(178, 148, 238, 0.18);
+  --glow-2: rgba(140, 110, 200, 0.14);
+  --grad-a: #B294EE;
+  --grad-b: #CCB6F5;
+}
+
+/* ── Productivity (teal-cyan) ─────────────────────────────────────────── */
+[data-collection="productivity"] {
+  --color-accent:       #3D9AA6;
+  --color-accent-soft:  #E6F4F5;
+  --color-accent-dark:  #2F7C86;
+  --glow-1: rgba(61, 154, 166, 0.24);
+  --glow-2: rgba(130, 200, 210, 0.18);
+  --grad-a: #3D9AA6;
+  --grad-b: #75C2CC;
+}
+[data-theme="dark"][data-collection="productivity"] {
+  --color-accent:       #5FC3D0;
+  --color-accent-soft:  #16282A;
+  --color-accent-dark:  #82D6E0;
+  --glow-1: rgba(95, 195, 208, 0.18);
+  --glow-2: rgba(60, 160, 175, 0.14);
+  --grad-a: #5FC3D0;
+  --grad-b: #8ADAE2;
 }
 
 /* ── Futuristic background (fixed, behind everything) ────────────────────── */

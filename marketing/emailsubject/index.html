@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" data-collection="marketing" data-tool="EmailSubjectTester">
+<head>
+  <meta charset="UTF-8" />
+  <script>(function(){try{var t=localStorage.getItem('tapdot-theme');var d=matchMedia('(prefers-color-scheme: dark)').matches;if(t==='dark'||(!t&&d))document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EmailSubjectTester — Email Subject Line Analyser | tapdot</title>
+  <meta name="description" content="Test email subject lines for open rate potential, spam trigger words, and mobile preview. On-device. Your email strategy stays private." />
+  <meta property="og:title" content="EmailSubjectTester — Email Subject Line Analyser | tapdot" />
+  <meta property="og:description" content="Spam triggers, mobile preview, sentiment, and AI variants — all local." />
+  <link rel="canonical" href="https://tools.tapdot.org/marketing/emailsubject/" />
+  <link rel="icon" type="image/png" href="/assets/tapdot-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/shared/shared.css" />
+  <link rel="stylesheet" href="/marketing/marketing.css" />
+</head>
+<body>
+<nav class="ts-nav">
+  <a href="https://tapdot.org" class="ts-nav-logo"><img src="/assets/tapdot-icon.png" width="22" height="22" alt="tapdot" /><span>tapdot</span></a>
+  <button class="ts-dark-toggle" id="darkToggle" aria-label="Toggle dark mode"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg></button>
+</nav>
+<main class="ts-main">
+  <div class="ts-tool-header">
+    <h1 class="ts-tool-name">EmailSubjectTester</h1>
+    <p class="ts-tool-desc">Spam triggers, mobile preview, sentiment, and AI variants.</p>
+  </div>
+  <div class="ts-privacy-strip"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Everything runs in your browser — nothing is sent anywhere</div>
+
+  <div class="ts-card">
+    <p class="ts-card-label">Subject line</p>
+    <input class="ts-input" id="subject" placeholder="🎉 Your exclusive offer ends tonight" />
+    <p class="ts-card-label ts-mt-md">Preheader (optional)</p>
+    <input class="ts-input" id="preheader" placeholder="Don't miss out on 20% off everything" />
+  </div>
+
+  <div class="ts-stats-grid">
+    <div class="ts-stat"><span class="ts-stat-num" id="charCount">0</span><span class="ts-stat-label">Characters</span></div>
+    <div class="ts-stat"><span class="ts-stat-num" id="emojiCount">0</span><span class="ts-stat-label">Emoji</span></div>
+    <div class="ts-stat"><span class="ts-stat-num" id="spamCount">0</span><span class="ts-stat-label">Spam triggers</span></div>
+    <div class="ts-stat"><span class="ts-stat-num" id="sentiment">—</span><span class="ts-stat-label">Sentiment</span></div>
+  </div>
+
+  <div class="ts-card">
+    <p class="ts-card-label">Inbox preview</p>
+    <div style="border:0.5px solid var(--color-border);border-radius:var(--radius-md);padding:12px 14px;background:var(--color-bg-soft)">
+      <div style="font-weight:600;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" id="mobilePreview"></div>
+      <div style="font-size:12px;color:var(--color-muted);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" id="preheaderPreview"></div>
+    </div>
+    <p class="biz-muted ts-mt-sm" id="previewNote"></p>
+  </div>
+
+  <div class="ts-card" id="spamCard">
+    <p class="ts-card-label">Spam trigger words found</p>
+    <div id="spamWords" class="biz-row"></div>
+  </div>
+
+  <div class="ts-card">
+    <div class="biz-row" style="justify-content:space-between">
+      <p class="ts-card-label" style="margin-bottom:0">AI variants</p>
+      <button class="ts-btn ts-btn-secondary" id="genBtn" style="height:32px;padding:0 12px">Generate 3 alternatives</button>
+    </div>
+    <p class="biz-ai-status" id="aiStatus"></p>
+    <div id="variants" class="ts-mt-sm"></div>
+  </div>
+</main>
+<footer class="ts-footer">
+  <span>Built by <a href="https://tapdot.org">tapdot</a></span><span class="ts-footer-dot">·</span>
+  <a href="/privacy.html">Privacy</a><span class="ts-footer-dot">·</span><span>All processing happens in your browser</span>
+</footer>
+<script src="/shared/shared.js"></script>
+<script src="emailsubject.js" defer></script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "YOUR_CLOUDFLARE_TOKEN"}'></script>
+</body>
+</html>

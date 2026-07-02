@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" data-collection="marketing" data-tool="AdCopyWriter">
+<head>
+  <meta charset="UTF-8" />
+  <script>(function(){try{var t=localStorage.getItem('tapdot-theme');var d=matchMedia('(prefers-color-scheme: dark)').matches;if(t==='dark'||(!t&&d))document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AdCopyWriter — Ad Copy Generator | tapdot</title>
+  <meta name="description" content="Generate Google Ads, Meta Ads, and LinkedIn Ad copy from your brief. On-device AI. Your product brief never leaves your browser." />
+  <meta property="og:title" content="AdCopyWriter — Ad Copy Generator | tapdot" />
+  <meta property="og:description" content="Platform-aware ad copy from a brief — generated on-device." />
+  <link rel="canonical" href="https://tools.tapdot.org/marketing/adcopy/" />
+  <link rel="icon" type="image/png" href="/assets/tapdot-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/shared/shared.css" />
+  <link rel="stylesheet" href="/marketing/marketing.css" />
+</head>
+<body>
+<nav class="ts-nav">
+  <a href="https://tapdot.org" class="ts-nav-logo"><img src="/assets/tapdot-icon.png" width="22" height="22" alt="tapdot" /><span>tapdot</span></a>
+  <button class="ts-dark-toggle" id="darkToggle" aria-label="Toggle dark mode"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg></button>
+</nav>
+<main class="ts-main">
+  <div class="ts-tool-header">
+    <h1 class="ts-tool-name">AdCopyWriter</h1>
+    <p class="ts-tool-desc">Google, Meta and LinkedIn ad copy from a brief — generated on-device.</p>
+  </div>
+  <div class="ts-privacy-strip"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>On-device AI — your product brief never leaves your browser</div>
+
+  <div class="ts-card">
+    <p class="ts-card-label">Platform</p>
+    <div class="ts-pill-tabs" id="platformTabs">
+      <button class="ts-pill-tab active" data-platform="google">Google Ads</button>
+      <button class="ts-pill-tab" data-platform="meta">Meta Ads</button>
+      <button class="ts-pill-tab" data-platform="linkedin">LinkedIn Ads</button>
+    </div>
+    <div class="biz-grid-2 ts-mt-md">
+      <div><label class="ts-label" for="product">Product / service name</label><input class="ts-input" id="product" placeholder="tapdot Tools" /></div>
+      <div><label class="ts-label" for="audience">Target audience</label><input class="ts-input" id="audience" placeholder="busy developers" /></div>
+      <div><label class="ts-label" for="usp">Unique selling point</label><input class="ts-input" id="usp" placeholder="everything runs in your browser" /></div>
+      <div><label class="ts-label" for="tone">Tone</label>
+        <select class="ts-select" id="tone" style="width:100%">
+          <option>Professional</option><option>Playful</option><option>Urgent</option><option>Friendly</option>
+        </select>
+      </div>
+    </div>
+    <button class="ts-btn ts-btn-primary ts-mt-md" id="genBtn">Generate 3 variants</button>
+    <p class="biz-ai-status" id="aiStatus"></p>
+  </div>
+
+  <div class="ts-output" id="output">
+    <div id="variants"></div>
+  </div>
+</main>
+<footer class="ts-footer">
+  <span>Built by <a href="https://tapdot.org">tapdot</a></span><span class="ts-footer-dot">·</span>
+  <a href="/privacy.html">Privacy</a><span class="ts-footer-dot">·</span><span>All processing happens in your browser</span>
+</footer>
+<script src="/shared/shared.js"></script>
+<script src="adcopy.js" defer></script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "YOUR_CLOUDFLARE_TOKEN"}'></script>
+</body>
+</html>

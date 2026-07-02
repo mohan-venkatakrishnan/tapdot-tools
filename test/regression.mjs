@@ -38,6 +38,9 @@ const ROUTES = [
   '/dev/json/', '/dev/jsonconvert/', '/dev/jwt/', '/dev/yaml/', '/dev/csv/',
   '/dev/markdown/', '/dev/html/', '/dev/sql/', '/dev/contrast/', '/dev/uuid/',
   '/dev/timezone/', '/dev/timeconvert/', '/dev/regex/', '/dev/cron/',
+  '/marketing/', '/marketing/utm/', '/marketing/headline/', '/marketing/emailsubject/',
+  '/marketing/adcopy/', '/marketing/calendar/', '/marketing/persona/',
+  '/marketing/competitor/', '/marketing/roi/',
   '/privacy.html',
 ];
 const VIEWPORTS = [

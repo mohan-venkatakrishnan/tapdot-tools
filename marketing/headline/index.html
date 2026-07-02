@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" data-collection="marketing" data-tool="HeadlineScore">
+<head>
+  <meta charset="UTF-8" />
+  <script>(function(){try{var t=localStorage.getItem('tapdot-theme');var d=matchMedia('(prefers-color-scheme: dark)').matches;if(t==='dark'||(!t&&d))document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HeadlineScore — Headline Analyser | tapdot</title>
+  <meta name="description" content="Score your headline for clarity, emotional pull, and SEO potential. Get 3 improved alternatives. On-device AI. Your copy stays private." />
+  <meta property="og:title" content="HeadlineScore — Headline Analyser | tapdot" />
+  <meta property="og:description" content="Score headlines for clarity, emotion, specificity and SEO — with AI rewrites." />
+  <link rel="canonical" href="https://tools.tapdot.org/marketing/headline/" />
+  <link rel="icon" type="image/png" href="/assets/tapdot-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/shared/shared.css" />
+  <link rel="stylesheet" href="/marketing/marketing.css" />
+</head>
+<body>
+<nav class="ts-nav">
+  <a href="https://tapdot.org" class="ts-nav-logo"><img src="/assets/tapdot-icon.png" width="22" height="22" alt="tapdot" /><span>tapdot</span></a>
+  <button class="ts-dark-toggle" id="darkToggle" aria-label="Toggle dark mode"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg></button>
+</nav>
+<main class="ts-main">
+  <div class="ts-tool-header">
+    <h1 class="ts-tool-name">HeadlineScore</h1>
+    <p class="ts-tool-desc">Score clarity, emotional pull, specificity and SEO — with AI rewrites.</p>
+  </div>
+  <div class="ts-privacy-strip"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Scored locally — AI alternatives use on-device AI only</div>
+
+  <div class="ts-card">
+    <p class="ts-card-label">Headline</p>
+    <input class="ts-input" id="headline" placeholder="7 Proven Ways to Boost Your Productivity Today" />
+    <button class="ts-btn ts-btn-primary ts-mt-md" id="scoreBtn">Score headline</button>
+  </div>
+
+  <div class="ts-output" id="output">
+    <div class="ts-card">
+      <div class="biz-score-wrap">
+        <div>
+          <div class="biz-score-num" id="totalScore">0</div>
+          <div class="biz-score-sub">/ 100</div>
+        </div>
+        <div class="biz-subscores">
+          <div class="ts-stat"><span class="ts-stat-num" id="sClarity">0</span><span class="ts-stat-label">Clarity</span></div>
+          <div class="ts-stat"><span class="ts-stat-num" id="sEmotional">0</span><span class="ts-stat-label">Emotion</span></div>
+          <div class="ts-stat"><span class="ts-stat-num" id="sSpecific">0</span><span class="ts-stat-label">Specificity</span></div>
+          <div class="ts-stat"><span class="ts-stat-num" id="sSeo">0</span><span class="ts-stat-label">SEO</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="ts-card">
+      <div class="biz-row" style="justify-content:space-between">
+        <p class="ts-card-label" style="margin-bottom:0">3 AI alternatives</p>
+        <button class="ts-btn ts-btn-secondary" id="genBtn" style="height:32px;padding:0 12px">Generate</button>
+      </div>
+      <p class="biz-ai-status" id="aiStatus"></p>
+      <div id="alternatives" class="ts-mt-sm"></div>
+    </div>
+  </div>
+</main>
+<footer class="ts-footer">
+  <span>Built by <a href="https://tapdot.org">tapdot</a></span><span class="ts-footer-dot">·</span>
+  <a href="/privacy.html">Privacy</a><span class="ts-footer-dot">·</span><span>All processing happens in your browser</span>
+</footer>
+<script src="/shared/shared.js"></script>
+<script src="headline.js" defer></script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "YOUR_CLOUDFLARE_TOKEN"}'></script>
+</body>
+</html>

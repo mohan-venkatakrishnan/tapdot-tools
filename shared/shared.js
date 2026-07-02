@@ -125,6 +125,21 @@ const ICON_PATHS = {
   'LoremCraft': '<path d="M4 6h16M4 12h16M4 18h10"/>',
   'ThreadCraft': '<path d="M21 11.5a8.4 8.4 0 0 1-12.4 7.4L3 21l2.1-5.6A8.5 8.5 0 1 1 21 11.5z"/>',
   dev: '<polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>',
+  marketing: '<path d="M3 10v4a1 1 0 0 0 1 1h3l5 4V5L7 9H4a1 1 0 0 0-1 1z"/><path d="M16 8a4 4 0 0 1 0 8"/><path d="M19 5a8 8 0 0 1 0 14"/>',
+  finance: '<circle cx="12" cy="12" r="9"/><path d="M12 7v10M9.5 9.3c0-1.1 1-2 2.5-2s2.5.9 2.5 1.7c0 2-5 1-5 3 0 .8 1 1.7 2.5 1.7s2.5-.9 2.5-2"/>',
+  legal: '<path d="M8.5 8.5L2.5 14.5"/><path d="M13 3l6 6-2.5 2.5-6-6z"/><path d="M8.5 7.5l6 6-1.5 1.5-6-6z"/><path d="M2 20h9"/>',
+  hr: '<path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+  health: '<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>',
+  design: '<path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><circle cx="11" cy="11" r="2"/>',
+  productivity: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/>',
+  'UTMBuilder': '<path d="M3 10v4a1 1 0 0 0 1 1h3l5 4V5L7 9H4a1 1 0 0 0-1 1z"/><path d="M16 8a4 4 0 0 1 0 8"/><path d="M19 5a8 8 0 0 1 0 14"/>',
+  'HeadlineScore': '<path d="M4 12h16M4 6h16M4 18h10"/>',
+  'EmailSubjectTester': '<rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 6 10 7L22 6"/>',
+  'AdCopyWriter': '<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/>',
+  'SocialCalendar': '<rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/>',
+  'PersonaBuilder': '<path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/>',
+  'CompetitorMatrix': '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/>',
+  'ROICalculator': '<circle cx="12" cy="12" r="9"/><path d="M12 7v10M9.5 9.3c0-1.1 1-2 2.5-2s2.5.9 2.5 1.7c0 2-5 1-5 3 0 .8 1 1.7 2.5 1.7s2.5-.9 2.5-2"/>',
   'JSONLab': '<path d="M8 3H7a2 2 0 0 0-2 2v5a2 2 0 0 1-2 2 2 2 0 0 1 2 2v5a2 2 0 0 0 2 2h1"/><path d="M16 3h1a2 2 0 0 1 2 2v5a2 2 0 0 0 2 2 2 2 0 0 0-2 2v5a2 2 0 0 1-2 2h-1"/>',
   'JSONConvert': '<polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/>',
   'JWTRead': '<circle cx="7.5" cy="15.5" r="4.5"/><path d="M10.7 12.3L20 3M17 6l2 2M14 9l2 2"/>',
@@ -149,7 +164,11 @@ const ICONS = Object.fromEntries(Object.entries(ICON_PATHS).map(([k, v]) => [k, 
 function initFavicon() {
   const col = document.documentElement.dataset.collection || 'tools';
   const tool = document.documentElement.dataset.tool || '';
-  const color = { tools: '#5B6CF0', study: '#12A594', write: '#D97757', dev: '#5B6CF0' }[col] || '#5B6CF0';
+  const color = {
+    tools: '#5B6CF0', study: '#12A594', write: '#D97757', dev: '#5B6CF0',
+    marketing: '#D6537E', finance: '#4E9B6B', legal: '#5C6FB8', hr: '#B0609E',
+    health: '#4E8FC4', design: '#8A5CD6', productivity: '#3D9AA6',
+  }[col] || '#5B6CF0';
   const paths = ICON_PATHS[tool] || ICON_PATHS[col] || ICON_PATHS.tools;
   const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">' +
     '<rect width="24" height="24" rx="6" fill="' + color + '"/>' +
@@ -297,6 +316,15 @@ const TOOL_REGISTRY = [
   { name: 'TZConvert', url: '/dev/timeconvert/', collection: 'dev', desc: 'Convert a date & time across timezones' },
   { name: 'RegexLab', url: '/dev/regex/', collection: 'dev', desc: 'Regex tester with match highlighting' },
   { name: 'CronLab', url: '/dev/cron/', collection: 'dev', desc: 'Cron expression workbench' },
+  { name: 'Marketing tools', url: '/marketing/', collection: 'marketing', desc: 'UTM builder, headline scorer, ad copy, ROI calculator' },
+  { name: 'UTMBuilder', url: '/marketing/utm/', collection: 'marketing', desc: 'Build UTM tracking links — history saved locally' },
+  { name: 'HeadlineScore', url: '/marketing/headline/', collection: 'marketing', desc: 'Score headlines for clarity, emotion, and SEO' },
+  { name: 'EmailSubjectTester', url: '/marketing/emailsubject/', collection: 'marketing', desc: 'Spam triggers, mobile preview, sentiment' },
+  { name: 'AdCopyWriter', url: '/marketing/adcopy/', collection: 'marketing', desc: 'Google, Meta and LinkedIn ad copy from a brief' },
+  { name: 'SocialCalendar', url: '/marketing/calendar/', collection: 'marketing', desc: 'Plan your content calendar — saved locally' },
+  { name: 'PersonaBuilder', url: '/marketing/persona/', collection: 'marketing', desc: 'AI-assisted customer personas, saved locally' },
+  { name: 'CompetitorMatrix', url: '/marketing/competitor/', collection: 'marketing', desc: 'Feature comparison matrix — export CSV or Markdown' },
+  { name: 'ROICalculator', url: '/marketing/roi/', collection: 'marketing', desc: 'ROI, ROAS, CPA, CLV and payback period' },
   { name: 'Privacy Policy', url: '/privacy.html', collection: 'tools', desc: "What tapdot tools does — and doesn't — collect" },
 ];
 
@@ -455,7 +483,11 @@ function initParallax(bg) {
 
 // ── Breadcrumb nav (tapdot / Tools / <Category> / <Tool>) + back button ──────
 
-const COLLECTION_LABELS = { study: 'Study', write: 'Write', dev: 'Dev' };
+const COLLECTION_LABELS = {
+  study: 'Study', write: 'Write', dev: 'Dev',
+  marketing: 'Marketing', finance: 'Finance', legal: 'Legal', hr: 'HR',
+  health: 'Health', design: 'Design', productivity: 'Productivity',
+};
 
 function collectionHome() {
   const col = document.documentElement.dataset.collection || 'tools';
@@ -663,6 +695,46 @@ const STEPS = {
     { t: 'Enter an expression', d: { k: 'text', text: '0 9 * * 1-5' } },
     { t: 'Plain English', d: { k: 'result', text: 'Weekdays at 09:00' } },
     { t: 'Next 20 runs', d: { k: 'rows', rows: [['Mon', '09:00'], ['Tue', '09:00']] } },
+  ],
+  'UTMBuilder': [
+    { t: 'Paste your URL', d: { k: 'text', text: 'example.com/landing' } },
+    { t: 'Add source & campaign', d: { k: 'fields', rows: [['Source', 'newsletter'], ['Campaign', 'q3_launch']] } },
+    { t: 'Copy the tagged link', d: { k: 'result', text: '?utm_source=newsletter' } },
+  ],
+  'HeadlineScore': [
+    { t: 'Paste a headline', d: { k: 'text', text: '7 Proven Ways to Focus' } },
+    { t: 'See your score', d: { k: 'count', to: 82, label: 'score / 100' } },
+    { t: 'Get AI alternatives', d: { k: 'chips', items: ['Clarity ✓', 'Emotion ✓'], on: 0 } },
+  ],
+  'EmailSubjectTester': [
+    { t: 'Paste a subject line', d: { k: 'text', text: 'Your order ships today' } },
+    { t: 'Check spam triggers', d: { k: 'chips', items: ['0 triggers'], on: 0 } },
+    { t: 'Preview & AI variants', d: { k: 'stats', items: [['38', 'chars'], ['0', 'emoji']] } },
+  ],
+  'AdCopyWriter': [
+    { t: 'Fill in your brief', d: { k: 'fields', rows: [['Product', 'tapdot Tools'], ['Tone', 'Friendly']] } },
+    { t: 'Pick a platform', d: { k: 'chips', items: ['Google', 'Meta', 'LinkedIn'], on: 0 } },
+    { t: 'Get 3 variants', d: { k: 'result', text: 'Headline: Free & Private Tools' } },
+  ],
+  'SocialCalendar': [
+    { t: 'Click a day', d: { k: 'chips', items: ['Jul 15'], on: 0 } },
+    { t: 'Add platform & copy', d: { k: 'fields', rows: [['Platform', 'Instagram'], ['Status', 'Draft']] } },
+    { t: 'Plan your month', d: { k: 'rows', rows: [['Jul 15', 'Instagram'], ['Jul 18', 'LinkedIn']] } },
+  ],
+  'PersonaBuilder': [
+    { t: 'Describe your segment', d: { k: 'fields', rows: [['Segment', 'freelance designers'], ['Pains', 'missed deadlines']] } },
+    { t: 'AI builds the persona', d: { k: 'text', text: 'Maya, 29, Freelance Designer' } },
+    { t: 'Save & reuse it', d: { k: 'chips', items: ['Saved ✓'], on: 0 } },
+  ],
+  'CompetitorMatrix': [
+    { t: 'Add competitors', d: { k: 'chips', items: ['Us', 'Competitor A'], on: 0 } },
+    { t: 'Rate each feature', d: { k: 'rows', rows: [['API access', 'Yes'], ['Free tier', 'Partial']] } },
+    { t: 'Export the matrix', d: { k: 'chips', items: ['CSV', 'Markdown'], on: 0 } },
+  ],
+  'ROICalculator': [
+    { t: 'Enter spend & revenue', d: { k: 'fields', rows: [['Spend', '$1,000'], ['Revenue', '$3,000']] } },
+    { t: 'See ROI & ROAS', d: { k: 'count', to: 200, label: '% ROI' } },
+    { t: 'Compare campaigns', d: { k: 'table', rows: [['Campaign A', '200%'], ['Campaign B', '140%']] } },
   ],
 };
 

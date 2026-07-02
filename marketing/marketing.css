@@ -1,0 +1,51 @@
+/* marketing/marketing.css — imported by all marketing tools in addition to shared.css */
+
+.biz-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; min-width: 0; }
+.biz-muted { color: var(--color-muted); font-size: 12px; }
+.biz-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 480px) { .biz-grid-2 { grid-template-columns: 1fr; } }
+
+/* Simple horizontal bar chart, pure divs (no chart library) */
+.biz-bars { display: flex; flex-direction: column; gap: 10px; }
+.biz-bar-row { display: grid; grid-template-columns: 110px 1fr 60px; gap: 10px; align-items: center; }
+.biz-bar-label { font-size: 12px; color: var(--color-text); text-align: right; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.biz-bar-track { height: 20px; background: var(--color-bg-soft); border: 0.5px solid var(--color-border); border-radius: 999px; overflow: hidden; }
+.biz-bar-fill { height: 100%; background: linear-gradient(90deg, var(--grad-a), var(--grad-b)); border-radius: 999px; transition: width 0.4s ease; }
+.biz-bar-val { font-family: var(--font-mono); font-size: 12px; color: var(--color-muted); }
+
+/* Comparison matrix table */
+.biz-matrix { width: 100%; border-collapse: collapse; font-size: 13px; }
+.biz-matrix th, .biz-matrix td { border: 0.5px solid var(--color-border); padding: 8px 10px; text-align: center; }
+.biz-matrix th:first-child, .biz-matrix td:first-child { text-align: left; background: var(--color-bg-soft); font-weight: 500; }
+.biz-matrix th { background: var(--color-accent-soft); color: var(--color-accent); font-weight: 600; }
+.biz-matrix input, .biz-matrix select { width: 100%; border: none; background: transparent; text-align: center; font-family: var(--font-body); font-size: 13px; color: var(--color-text); }
+.biz-matrix input:focus, .biz-matrix select:focus { outline: 1px solid var(--color-accent); border-radius: 4px; }
+.biz-rm { background: none; border: none; color: var(--color-muted); cursor: pointer; font-size: 15px; }
+.biz-rm:hover { color: var(--color-danger); }
+
+/* Card grid for saved items (personas, calendars, etc.) */
+.biz-item-card { background: var(--color-surface); border: 0.5px solid var(--color-border); border-radius: var(--radius-lg); padding: 16px; margin-bottom: 12px; }
+.biz-item-title { font-size: 15px; font-weight: 600; color: var(--color-text); margin-bottom: 4px; }
+.biz-item-meta { font-size: 12px; color: var(--color-muted); margin-bottom: 10px; }
+.biz-tag { display: inline-flex; align-items: center; font-size: 11px; padding: 2px 8px; border-radius: 999px; background: var(--color-accent-soft); color: var(--color-accent); margin-right: 4px; }
+
+/* Score ring / gauge */
+.biz-score-wrap { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+.biz-score-num { font-family: var(--font-mono); font-size: 44px; font-weight: 700; color: var(--color-accent); letter-spacing: -0.02em; }
+.biz-score-sub { font-size: 12px; color: var(--color-muted); }
+.biz-subscores { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 10px; flex: 1; }
+
+/* Calendar grid */
+.biz-cal { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+.biz-cal-head { font-size: 10px; text-transform: uppercase; color: var(--color-muted); text-align: center; padding: 4px 0; }
+.biz-cal-cell { min-height: 64px; border: 0.5px solid var(--color-border); border-radius: var(--radius-sm); padding: 4px; font-size: 10px; background: var(--color-bg-soft); cursor: pointer; }
+.biz-cal-cell.empty { background: transparent; border-color: transparent; cursor: default; }
+.biz-cal-cell .d { color: var(--color-muted); margin-bottom: 3px; }
+.biz-cal-post { font-size: 9px; padding: 1px 4px; border-radius: 4px; background: var(--color-accent-soft); color: var(--color-accent); margin-bottom: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.biz-ai-status { font-size: 12px; color: var(--color-muted); }
+.biz-ai-status.working { color: var(--color-accent); }
+.biz-ai-status.fallback { color: var(--color-warning); }
+.biz-ai-status.ok { color: var(--color-success); }
+
+.biz-platform-tabs { display: flex; gap: 6px; flex-wrap: wrap; }

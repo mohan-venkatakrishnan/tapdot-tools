@@ -97,7 +97,6 @@ textarea.ts-code-input {
 .ts-tz-table td { padding: 7px 12px; border-bottom: 0.5px solid var(--color-border); color: var(--color-text); white-space: nowrap; }
 .ts-tz-table tr:last-child td { border-bottom: none; }
 .ts-tz-table tr:hover td { background: var(--color-bg-soft); }
-.ts-table-scroll { max-height: 460px; overflow: auto; border: 0.5px solid var(--color-border); border-radius: var(--radius-md); }
 
 /* Calendar heatmap (CronLab) */
 .ts-heatmap { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; margin-top: 12px; }

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" data-collection="marketing" data-tool="CompetitorMatrix">
+<head>
+  <meta charset="UTF-8" />
+  <script>(function(){try{var t=localStorage.getItem('tapdot-theme');var d=matchMedia('(prefers-color-scheme: dark)').matches;if(t==='dark'||(!t&&d))document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CompetitorMatrix — Competitive Analysis Table | tapdot</title>
+  <meta name="description" content="Build a competitor comparison matrix. Add features, rate competitors, export as CSV. Everything saved locally — no leak of competitive intel." />
+  <meta property="og:title" content="CompetitorMatrix — Competitive Analysis Table | tapdot" />
+  <meta property="og:description" content="Feature comparison matrix — saved locally, exports as CSV or Markdown." />
+  <link rel="canonical" href="https://tools.tapdot.org/marketing/competitor/" />
+  <link rel="icon" type="image/png" href="/assets/tapdot-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/shared/shared.css" />
+  <link rel="stylesheet" href="/marketing/marketing.css" />
+</head>
+<body>
+<nav class="ts-nav">
+  <a href="https://tapdot.org" class="ts-nav-logo"><img src="/assets/tapdot-icon.png" width="22" height="22" alt="tapdot" /><span>tapdot</span></a>
+  <button class="ts-dark-toggle" id="darkToggle" aria-label="Toggle dark mode"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg></button>
+</nav>
+<main class="ts-main ts-main-wide">
+  <div class="ts-tool-header">
+    <h1 class="ts-tool-name">CompetitorMatrix</h1>
+    <p class="ts-tool-desc">Build a feature comparison matrix — saved locally, never uploaded.</p>
+  </div>
+  <div class="ts-privacy-strip"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Competitive intel stays in your browser — never uploaded anywhere</div>
+
+  <div class="ts-card">
+    <div class="biz-row" style="justify-content:space-between;margin-bottom:12px">
+      <div class="biz-row">
+        <button class="ts-btn ts-btn-secondary" id="addCol" style="height:32px;padding:0 12px">+ Competitor</button>
+        <button class="ts-btn ts-btn-secondary" id="addRow" style="height:32px;padding:0 12px">+ Feature</button>
+      </div>
+      <div class="biz-row">
+        <button class="ts-btn ts-btn-ghost" id="copyMd" style="height:32px;padding:0 12px">Copy as Markdown</button>
+        <button class="ts-btn ts-btn-ghost" id="downloadCsv" style="height:32px;padding:0 12px">Download CSV</button>
+      </div>
+    </div>
+    <div class="ts-table-scroll"><table class="biz-matrix" id="matrix"></table></div>
+    <p class="biz-muted ts-mt-sm">Rate each cell Yes / No / Partial, or type a 1–5 score.</p>
+  </div>
+
+  <div class="ts-card">
+    <p class="ts-card-label">Summary — features won per column</p>
+    <div class="biz-bars" id="summaryBars"></div>
+  </div>
+</main>
+<footer class="ts-footer">
+  <span>Built by <a href="https://tapdot.org">tapdot</a></span><span class="ts-footer-dot">·</span>
+  <a href="/privacy.html">Privacy</a><span class="ts-footer-dot">·</span><span>All processing happens in your browser</span>
+</footer>
+<script src="/shared/shared.js"></script>
+<script src="competitor.js" defer></script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "YOUR_CLOUDFLARE_TOKEN"}'></script>
+</body>
+</html>

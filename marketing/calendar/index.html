@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" data-collection="marketing" data-tool="SocialCalendar">
+<head>
+  <meta charset="UTF-8" />
+  <script>(function(){try{var t=localStorage.getItem('tapdot-theme');var d=matchMedia('(prefers-color-scheme: dark)').matches;if(t==='dark'||(!t&&d))document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SocialCalendar — Content Calendar Planner | tapdot</title>
+  <meta name="description" content="Plan your social media content calendar. Add posts, filter by platform, export as CSV. Saved to your browser only. No account, no server." />
+  <meta property="og:title" content="SocialCalendar — Content Calendar Planner | tapdot" />
+  <meta property="og:description" content="Plan social content by month — saved locally, no publishing, no connections." />
+  <link rel="canonical" href="https://tools.tapdot.org/marketing/calendar/" />
+  <link rel="icon" type="image/png" href="/assets/tapdot-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/shared/shared.css" />
+  <link rel="stylesheet" href="/marketing/marketing.css" />
+</head>
+<body>
+<nav class="ts-nav">
+  <a href="https://tapdot.org" class="ts-nav-logo"><img src="/assets/tapdot-icon.png" width="22" height="22" alt="tapdot" /><span>tapdot</span></a>
+  <button class="ts-dark-toggle" id="darkToggle" aria-label="Toggle dark mode"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg></button>
+</nav>
+<main class="ts-main ts-main-wide">
+  <div class="ts-tool-header">
+    <h1 class="ts-tool-name">SocialCalendar</h1>
+    <p class="ts-tool-desc">Plan your content calendar — saved locally, no publishing, no connections.</p>
+  </div>
+  <div class="ts-privacy-strip"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Everything runs in your browser — nothing is sent anywhere</div>
+
+  <div class="ts-card">
+    <div class="biz-row" style="justify-content:space-between">
+      <div class="biz-row">
+        <button class="ts-btn ts-btn-ghost" id="prevMonth" style="width:34px;padding:0">‹</button>
+        <span id="monthLabel" style="font-weight:600;min-width:140px;text-align:center"></span>
+        <button class="ts-btn ts-btn-ghost" id="nextMonth" style="width:34px;padding:0">›</button>
+      </div>
+      <select class="ts-select" id="platformFilter">
+        <option value="">All platforms</option>
+        <option value="instagram">Instagram</option>
+        <option value="linkedin">LinkedIn</option>
+        <option value="x">X</option>
+        <option value="tiktok">TikTok</option>
+        <option value="facebook">Facebook</option>
+      </select>
+    </div>
+    <div class="biz-cal ts-mt-md" id="calHead"></div>
+    <div class="biz-cal ts-mt-sm" id="calGrid"></div>
+  </div>
+
+  <div class="ts-card" id="editorCard">
+    <p class="ts-card-label" id="editorLabel">Add a post</p>
+    <div class="biz-grid-2">
+      <div><label class="ts-label" for="pDate">Date</label><input class="ts-input" id="pDate" type="date" /></div>
+      <div><label class="ts-label" for="pPlatform">Platform</label>
+        <select class="ts-select" id="pPlatform" style="width:100%">
+          <option value="instagram">Instagram</option><option value="linkedin">LinkedIn</option>
+          <option value="x">X</option><option value="tiktok">TikTok</option><option value="facebook">Facebook</option>
+        </select>
+      </div>
+      <div class="cite-field-full"><label class="ts-label" for="pCopy">Copy</label><textarea class="ts-textarea" id="pCopy" style="min-height:80px" placeholder="Post text…"></textarea></div>
+      <div><label class="ts-label" for="pStatus">Status</label>
+        <select class="ts-select" id="pStatus" style="width:100%">
+          <option value="draft">Draft</option><option value="ready">Ready</option><option value="scheduled">Scheduled</option><option value="posted">Posted</option>
+        </select>
+      </div>
+    </div>
+    <div class="biz-row ts-mt-md">
+      <button class="ts-btn ts-btn-primary" id="saveBtn">Add post</button>
+      <button class="ts-btn ts-btn-ghost ts-hidden" id="deleteBtn">Delete</button>
+      <button class="ts-btn ts-btn-ghost" id="exportCsv">Export month as CSV</button>
+    </div>
+  </div>
+</main>
+<footer class="ts-footer">
+  <span>Built by <a href="https://tapdot.org">tapdot</a></span><span class="ts-footer-dot">·</span>
+  <a href="/privacy.html">Privacy</a><span class="ts-footer-dot">·</span><span>All processing happens in your browser</span>
+</footer>
+<script src="/shared/shared.js"></script>
+<script src="calendar.js" defer></script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "YOUR_CLOUDFLARE_TOKEN"}'></script>
+</body>
+</html>

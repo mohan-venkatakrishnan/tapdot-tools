@@ -182,6 +182,74 @@ const check = (name, ok) => { console.log((ok ? 'PASS' : 'FAIL') + '  ' + name);
   await page.close();
 }
 
+// 11. UTMBuilder: builds a correctly tagged URL.
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/marketing/utm/', { waitUntil: 'networkidle' });
+  await page.fill('#baseUrl', 'https://example.com/page');
+  await page.fill('#source', 'Newsletter'); await page.fill('#medium', 'Email'); await page.fill('#campaign', 'Q3 Launch');
+  await page.click('#buildBtn'); await page.waitForTimeout(100);
+  const out = await page.$eval('#resultOut', el => el.textContent);
+  check('UTMBuilder tags a URL correctly', out.includes('utm_source=newsletter') && out.includes('utm_campaign=q3_launch'));
+  check('no JS errors on UTMBuilder', errs.length === 0);
+  await page.close();
+}
+
+// 12. ROICalculator: computes ROI correctly for known inputs.
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/marketing/roi/', { waitUntil: 'networkidle' });
+  const firstRow = page.locator('#campaignBody tr').first();
+  await firstRow.locator('[data-f="spend"]').fill('1000');
+  await firstRow.locator('[data-f="revenue"]').fill('3000');
+  await firstRow.locator('[data-f="spend"]').dispatchEvent('input');
+  await page.waitForTimeout(150);
+  const roiText = await page.$eval('#resultsTable tbody tr td:nth-child(2)', el => el.textContent);
+  check('ROICalculator computes 200% ROI for 1000->3000', roiText.includes('200'));
+  check('no JS errors on ROICalculator', errs.length === 0);
+  await page.close();
+}
+
+// 13. EmailSubjectTester: flags known spam trigger words.
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/marketing/emailsubject/', { waitUntil: 'networkidle' });
+  await page.fill('#subject', 'Act now - free money guaranteed!');
+  await page.waitForTimeout(100);
+  const spamCount = await page.$eval('#spamCount', el => el.textContent);
+  check('EmailSubjectTester flags spam trigger words', parseInt(spamCount, 10) >= 2);
+  check('no JS errors on EmailSubjectTester', errs.length === 0);
+  await page.close();
+}
+
+// 14. CompetitorMatrix: add-column control works.
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/marketing/competitor/', { waitUntil: 'networkidle' });
+  await page.click('#addCol'); await page.waitForTimeout(50);
+  const cols = await page.$$eval('#matrix thead input', els => els.length);
+  check('CompetitorMatrix adds a competitor column', cols === 4);
+  check('no JS errors on CompetitorMatrix', errs.length === 0);
+  await page.close();
+}
+
+// 15. HeadlineScore: scores locally and degrades gracefully when AI is unavailable.
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/marketing/headline/', { waitUntil: 'networkidle' });
+  await page.fill('#headline', '7 Proven Ways to Boost Your Productivity Today');
+  await page.click('#scoreBtn'); await page.waitForTimeout(100);
+  const total = await page.$eval('#totalScore', el => el.textContent);
+  check('HeadlineScore computes a non-zero score', parseInt(total, 10) > 0);
+  check('no JS errors on HeadlineScore', errs.length === 0);
+  await page.close();
+}
+
 await browser.close(); srv.close();
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);
