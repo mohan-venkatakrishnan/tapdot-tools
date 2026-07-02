@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" data-collection="dev" data-tool="ColourContrast">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ColourContrast — WCAG Contrast Checker | tapdot</title>
+  <meta name="description" content="Check foreground and background colour contrast for WCAG AA and AAA compliance. Instant, private, no tracking." />
+  <meta property="og:title" content="ColourContrast — WCAG Contrast Checker | tapdot" />
+  <meta property="og:description" content="WCAG AA/AAA contrast checker. Instant and private." />
+  <link rel="canonical" href="https://tools.tapdot.org/dev/contrast/" />
+  <link rel="icon" type="image/png" href="/assets/tapdot-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/shared/shared.css" />
+  <link rel="stylesheet" href="/dev/dev.css" />
+</head>
+<body>
+<nav class="ts-nav">
+  <a href="https://tapdot.org" class="ts-nav-logo"><img src="/assets/tapdot-icon.png" width="22" height="22" alt="tapdot" /><span>tapdot</span></a>
+  <button class="ts-dark-toggle" id="darkToggle" aria-label="Toggle dark mode"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg></button>
+</nav>
+<main class="ts-main">
+  <div class="ts-tool-header">
+    <h1 class="ts-tool-name">ColourContrast</h1>
+    <p class="ts-tool-desc">Check colour contrast for WCAG AA and AAA compliance.</p>
+  </div>
+  <div class="ts-privacy-strip"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Everything runs in your browser — nothing is sent anywhere</div>
+
+  <div class="ts-card">
+    <div class="cc-grid">
+      <div>
+        <label class="ts-label" for="fgHex">Foreground (text)</label>
+        <div class="cc-field"><input type="color" id="fg" value="#0F0F1A" /><input class="ts-input" id="fgHex" value="#0F0F1A" /></div>
+      </div>
+      <div>
+        <label class="ts-label" for="bgHex">Background</label>
+        <div class="cc-field"><input type="color" id="bg" value="#FFFFFF" /><input class="ts-input" id="bgHex" value="#FFFFFF" /></div>
+      </div>
+    </div>
+    <div class="dev-row ts-mt-md">
+      <button class="ts-btn ts-btn-secondary" id="swap">Swap colours</button>
+      <button class="ts-btn ts-btn-ghost" id="suggest">Suggest accessible text colour</button>
+    </div>
+  </div>
+
+  <div class="ts-card" style="text-align:center">
+    <div class="cc-ratio" id="ratio">—</div>
+    <div class="dev-muted" id="ratioLabel">contrast ratio</div>
+    <div class="cc-preview" id="preview">The quick brown fox jumps over the lazy dog</div>
+  </div>
+
+  <div class="ts-stats-grid" id="results"></div>
+</main>
+<footer class="ts-footer">
+  <span>Built by <a href="https://tapdot.org">tapdot</a></span><span class="ts-footer-dot">·</span>
+  <a href="/privacy.html">Privacy</a><span class="ts-footer-dot">·</span><span>All processing happens in your browser</span>
+</footer>
+<script src="/shared/shared.js"></script>
+<script src="contrast.js" defer></script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "YOUR_CLOUDFLARE_TOKEN"}'></script>
+</body>
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" data-collection="dev" data-tool="RegexLab">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RegexLab — Regex Tester &amp; Debugger | tapdot</title>
+  <meta name="description" content="Test regular expressions with live match highlighting, group capture view, and replace preview. Private, no data sent." />
+  <meta property="og:title" content="RegexLab — Regex Tester & Debugger | tapdot" />
+  <meta property="og:description" content="Live regex tester with match highlighting and capture groups — fully local." />
+  <link rel="canonical" href="https://tools.tapdot.org/dev/regex/" />
+  <link rel="icon" type="image/png" href="/assets/tapdot-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/shared/shared.css" />
+  <link rel="stylesheet" href="/dev/dev.css" />
+</head>
+<body>
+<nav class="ts-nav">
+  <a href="https://tapdot.org" class="ts-nav-logo"><img src="/assets/tapdot-icon.png" width="22" height="22" alt="tapdot" /><span>tapdot</span></a>
+  <button class="ts-dark-toggle" id="darkToggle" aria-label="Toggle dark mode"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg></button>
+</nav>
+<main class="ts-main">
+  <div class="ts-tool-header">
+    <h1 class="ts-tool-name">RegexLab</h1>
+    <p class="ts-tool-desc">Test regular expressions with live highlighting and capture groups.</p>
+  </div>
+  <div class="ts-privacy-strip"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Runs entirely in your browser — safe for patterns over sensitive data</div>
+
+  <div class="ts-card">
+    <div class="dev-row" style="justify-content:space-between">
+      <p class="ts-card-label" style="margin-bottom:0">Expression</p>
+      <span class="dev-badge" id="count">0 matches</span>
+    </div>
+    <div class="dev-row ts-mt-sm" style="flex-wrap:nowrap">
+      <span class="dev-muted">/</span>
+      <input class="ts-input ts-grow" id="pattern" value="([a-z]+)\\d{2,4}" style="font-family:var(--font-mono)" />
+      <span class="dev-muted">/</span>
+    </div>
+    <div class="rx-flags ts-mt-sm" id="flags">
+      <span class="rx-flag on" data-f="g">g</span><span class="rx-flag" data-f="i">i</span><span class="rx-flag" data-f="m">m</span><span class="rx-flag" data-f="s">s</span><span class="rx-flag" data-f="u">u</span>
+    </div>
+    <p class="ts-err-msg ts-mt-sm" id="err"></p>
+  </div>
+
+  <div class="ts-card">
+    <p class="ts-card-label">Test string</p>
+    <textarea class="ts-textarea ts-code-input" id="test">The quick brown fox jumped over 42 lazy dogs in 2024</textarea>
+    <p class="ts-card-label ts-mt-sm">Highlighted</p>
+    <div class="ts-code-output rx-test" id="highlight"></div>
+  </div>
+
+  <div class="ts-card">
+    <p class="ts-card-label">Replace (optional — use $1, $2 for groups)</p>
+    <input class="ts-input" id="replace" placeholder="[$1]" />
+    <div class="ts-code-output ts-mt-sm rx-test" id="replaced"></div>
+  </div>
+
+  <div class="ts-card"><p class="ts-card-label">Matches</p><div id="matches" class="ts-code-output"></div></div>
+</main>
+<footer class="ts-footer">
+  <span>Built by <a href="https://tapdot.org">tapdot</a></span><span class="ts-footer-dot">·</span>
+  <a href="/privacy.html">Privacy</a><span class="ts-footer-dot">·</span><span>All processing happens in your browser</span>
+</footer>
+<script src="/shared/shared.js"></script>
+<script src="regex.js" defer></script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "YOUR_CLOUDFLARE_TOKEN"}'></script>
+</body>
+</html>

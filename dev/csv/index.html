@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" data-collection="dev" data-tool="CSVExplore">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CSVExplore — Private CSV Viewer | tapdot</title>
+  <meta name="description" content="Paste CSV and see it as a sortable, filterable table instantly. No file upload. Your data never leaves your browser." />
+  <meta property="og:title" content="CSVExplore — Private CSV Viewer | tapdot" />
+  <meta property="og:description" content="Paste CSV → instant sortable, filterable table. Nothing leaves your browser." />
+  <link rel="canonical" href="https://tools.tapdot.org/dev/csv/" />
+  <link rel="icon" type="image/png" href="/assets/tapdot-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/shared/shared.css" />
+  <link rel="stylesheet" href="/dev/dev.css" />
+</head>
+<body>
+<nav class="ts-nav">
+  <a href="https://tapdot.org" class="ts-nav-logo"><img src="/assets/tapdot-icon.png" width="22" height="22" alt="tapdot" /><span>tapdot</span></a>
+  <button class="ts-dark-toggle" id="darkToggle" aria-label="Toggle dark mode"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg></button>
+</nav>
+<main class="ts-main">
+  <div class="ts-tool-header">
+    <h1 class="ts-tool-name">CSVExplore</h1>
+    <p class="ts-tool-desc">Paste CSV and explore it as a sortable, filterable table.</p>
+  </div>
+  <div class="ts-privacy-strip"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Parsed in your browser — your data never leaves the page</div>
+
+  <div class="ts-card">
+    <p class="ts-card-label">Paste CSV</p>
+    <textarea class="ts-textarea ts-code-input" id="input" placeholder="name,age,city&#10;Jo,29,NYC&#10;Sam,34,London"></textarea>
+    <div class="dev-row ts-mt-sm">
+      <input type="file" id="file" accept=".csv,text/csv" hidden />
+      <button class="ts-btn ts-btn-ghost" id="attach">Attach .csv</button>
+      <input class="ts-input" id="filter" placeholder="Filter across all columns…" style="max-width:280px" />
+    </div>
+  </div>
+
+  <div class="ts-stats-grid" id="stats"></div>
+
+  <div class="ts-card">
+    <div class="dev-row" style="justify-content:space-between">
+      <p class="ts-card-label" style="margin-bottom:0" id="tblLabel">Table</p>
+      <div class="dev-row"><button class="ts-btn ts-btn-ghost" id="copyTsv" style="height:30px;padding:0 12px">Copy TSV</button><button class="ts-btn ts-btn-ghost" id="dlCsv" style="height:30px;padding:0 12px">Download CSV</button></div>
+    </div>
+    <div class="ts-table-scroll ts-mt-sm"><table class="ts-tz-table" id="tbl"></table></div>
+  </div>
+</main>
+<footer class="ts-footer">
+  <span>Built by <a href="https://tapdot.org">tapdot</a></span><span class="ts-footer-dot">·</span>
+  <a href="/privacy.html">Privacy</a><span class="ts-footer-dot">·</span><span>All processing happens in your browser</span>
+</footer>
+<script src="/shared/shared.js"></script>
+<script src="csv.js" defer></script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "YOUR_CLOUDFLARE_TOKEN"}'></script>
+</body>
+</html>

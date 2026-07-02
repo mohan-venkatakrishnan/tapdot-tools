@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" data-collection="dev" data-tool="">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dev Tools — JSON, JWT, YAML, Regex, Cron & more | tapdot</title>
+  <meta name="description" content="Thirteen privacy-first developer tools: JSON, JWT, YAML, CSV, SQL, Markdown, regex, cron and more. Everything runs in your browser — safe for keys, tokens and configs." />
+  <meta property="og:title" content="Dev Tools | tapdot" />
+  <meta property="og:description" content="Privacy-first developer tools — JSON, JWT, YAML, regex, cron and more, all in your browser." />
+  <link rel="canonical" href="https://tools.tapdot.org/dev/" />
+  <link rel="icon" type="image/png" href="/assets/tapdot-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/shared/shared.css" />
+  <link rel="stylesheet" href="/dev/dev.css" />
+</head>
+<body>
+
+<nav class="ts-nav">
+  <a href="https://tapdot.org" class="ts-nav-logo">
+    <img src="/assets/tapdot-icon.png" width="22" height="22" alt="tapdot" />
+    <span>tapdot</span>
+  </a>
+  <button class="ts-dark-toggle" id="darkToggle" aria-label="Toggle dark mode">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg>
+  </button>
+</nav>
+
+<main class="ts-main">
+  <div class="ts-tool-header">
+    <h1 class="ts-tool-name">Dev tools</h1>
+    <p class="ts-tool-desc">Thirteen developer tools that run entirely in your browser — safe for API keys, JWTs, and internal configs.</p>
+  </div>
+
+  <div class="ts-privacy-strip">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+    Nothing you paste is ever sent anywhere — not even to us
+  </div>
+
+  <p class="ts-card-label">Document &amp; data</p>
+  <div class="ts-hub-grid">
+    <a class="ts-hub-card" href="/dev/json/"><span class="ts-hub-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H7a2 2 0 0 0-2 2v5a2 2 0 0 1-2 2 2 2 0 0 1 2 2v5a2 2 0 0 0 2 2h1"/><path d="M16 3h1a2 2 0 0 1 2 2v5a2 2 0 0 0 2 2 2 2 0 0 0-2 2v5a2 2 0 0 1-2 2h-1"/></svg></span><div class="ts-hub-card-title">JSONLab</div><div class="ts-hub-card-desc">Format, validate, minify, diff and tree-view JSON.</div><div class="ts-hub-card-link">Open tool →</div></a>
+    <a class="ts-hub-card" href="/dev/jsonconvert/"><span class="ts-hub-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg></span><div class="ts-hub-card-title">JSONConvert</div><div class="ts-hub-card-desc">JSON ↔ YAML ↔ CSV ↔ XML ↔ TOML.</div><div class="ts-hub-card-link">Open tool →</div></a>
+    <a class="ts-hub-card" href="/dev/jwt/"><span class="ts-hub-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="15.5" r="4.5"/><path d="M10.7 12.3L20 3M17 6l2 2M14 9l2 2"/></svg></span><div class="ts-hub-card-title">JWTRead</div><div class="ts-hub-card-desc">Decode &amp; inspect JWTs — never sent to a server.</div><div class="ts-hub-card-link">Open tool →</div></a>
+    <a class="ts-hub-card" href="/dev/yaml/"><span class="ts-hub-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></span><div class="ts-hub-card-title">YAMLCheck</div><div class="ts-hub-card-desc">Validate &amp; format YAML, Compose, Actions, K8s.</div><div class="ts-hub-card-link">Open tool →</div></a>
+    <a class="ts-hub-card" href="/dev/csv/"><span class="ts-hub-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg></span><div class="ts-hub-card-title">CSVExplore</div><div class="ts-hub-card-desc">Paste CSV → sortable, filterable table.</div><div class="ts-hub-card-link">Open tool →</div></a>
+  </div>
+
+  <p class="ts-card-label" style="margin-top:24px">Code &amp; markup</p>
+  <div class="ts-hub-grid">
+    <a class="ts-hub-card" href="/dev/markdown/"><span class="ts-hub-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M6 15V9l3 3 3-3v6M17 9v5M14.6 12.4L17 15l2.4-2.6"/></svg></span><div class="ts-hub-card-title">MarkdownLive</div><div class="ts-hub-card-desc">Split-pane Markdown editor with live preview.</div><div class="ts-hub-card-link">Open tool →</div></a>
+    <a class="ts-hub-card" href="/dev/html/"><span class="ts-hub-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 9h20M6 6.5h.01M9 6.5h.01"/></svg></span><div class="ts-hub-card-title">HTMLPreview</div><div class="ts-hub-card-desc">Render raw HTML in a sandboxed iframe.</div><div class="ts-hub-card-link">Open tool →</div></a>
+    <a class="ts-hub-card" href="/dev/sql/"><span class="ts-hub-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></svg></span><div class="ts-hub-card-title">SQLFormat</div><div class="ts-hub-card-desc">Beautify SQL — safe for real schema names.</div><div class="ts-hub-card-link">Open tool →</div></a>
+  </div>
+
+  <p class="ts-card-label" style="margin-top:24px">Utilities &amp; generators</p>
+  <div class="ts-hub-grid">
+    <a class="ts-hub-card" href="/dev/contrast/"><span class="ts-hub-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor" stroke="none"/></svg></span><div class="ts-hub-card-title">ColourContrast</div><div class="ts-hub-card-desc">WCAG AA/AAA contrast checker.</div><div class="ts-hub-card-link">Open tool →</div></a>
+    <a class="ts-hub-card" href="/dev/uuid/"><span class="ts-hub-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8.5" cy="8.5" r="1.3" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.3" fill="currentColor" stroke="none"/><circle cx="15.5" cy="15.5" r="1.3" fill="currentColor" stroke="none"/></svg></span><div class="ts-hub-card-title">UUIDGen</div><div class="ts-hub-card-desc">UUID v4/v7, ULID, nanoid, random tokens.</div><div class="ts-hub-card-link">Open tool →</div></a>
+    <a class="ts-hub-card" href="/dev/timezone/"><span class="ts-hub-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><div class="ts-hub-card-title">TimezoneNow</div><div class="ts-hub-card-desc">World clock &amp; meeting overlap finder.</div><div class="ts-hub-card-link">Open tool →</div></a>
+  </div>
+
+  <p class="ts-card-label" style="margin-top:24px">Workbench</p>
+  <div class="ts-hub-grid">
+    <a class="ts-hub-card" href="/dev/regex/"><span class="ts-hub-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></span><div class="ts-hub-card-title">RegexLab</div><div class="ts-hub-card-desc">Live regex tester with match highlighting.</div><div class="ts-hub-card-link">Open tool →</div></a>
+    <a class="ts-hub-card" href="/dev/cron/"><span class="ts-hub-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/><path d="M12 13v3l2 1"/></svg></span><div class="ts-hub-card-title">CronLab</div><div class="ts-hub-card-desc">Parse, build &amp; explain cron — 20 next runs.</div><div class="ts-hub-card-link">Open tool →</div></a>
+  </div>
+</main>
+
+<footer class="ts-footer">
+  <span>Built by <a href="https://tapdot.org">tapdot</a></span>
+  <span class="ts-footer-dot">·</span>
+  <a href="/privacy.html">Privacy</a>
+  <span class="ts-footer-dot">·</span>
+  <span>All processing happens in your browser</span>
+</footer>
+
+<script src="/shared/shared.js"></script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "YOUR_CLOUDFLARE_TOKEN"}'></script>
+</body>
+</html>

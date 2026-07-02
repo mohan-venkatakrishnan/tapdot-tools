@@ -32,9 +32,12 @@ function serve() {
 }
 
 const ROUTES = [
-  '/', '/study/', '/write/',
+  '/', '/study/', '/write/', '/dev/',
   '/study/cite/', '/study/flashcards/', '/study/grades/', '/study/bias/',
   '/write/readscore/', '/write/wordcount/', '/write/lorem/', '/write/thread/',
+  '/dev/json/', '/dev/jsonconvert/', '/dev/jwt/', '/dev/yaml/', '/dev/csv/',
+  '/dev/markdown/', '/dev/html/', '/dev/sql/', '/dev/contrast/', '/dev/uuid/',
+  '/dev/timezone/', '/dev/regex/', '/dev/cron/',
   '/privacy.html',
 ];
 const VIEWPORTS = [

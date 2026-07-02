@@ -107,3 +107,8 @@ DNS on GoDaddy. See README.md for the one-time setup.
   `assets/icons/`; persistent BiasCheck flags guide; Playwright regression harness.
 - v4: unique per-tool walkthrough demos with real sample text, played sequentially;
   per-page favicon tiles; shared `tapdotAI`; FlashForge attach-file + AI auto-format.
+- v5: **dev collection** (tools.tapdot.org/dev) — 13 developer tools (JSONLab,
+  JSONConvert, JWTRead, YAMLCheck, CSVExplore, MarkdownLive, HTMLPreview, SQLFormat,
+  ColourContrast, UUIDGen, TimezoneNow, RegexLab, CronLab). Shared `dev/dev.css`;
+  js-yaml bundled locally at `dev/libs/`. Dev inherits the purple accent (no theme
+  override). CronLab uses `tapdotAI` for NL→cron with a rule-based fallback.

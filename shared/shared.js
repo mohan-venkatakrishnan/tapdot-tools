@@ -116,6 +116,20 @@ const ICON_PATHS = {
   'WordCount Pro': '<path d="M4 9h16M4 15h16M10 3L8 21M16 3l-2 18"/>',
   'LoremCraft': '<path d="M4 6h16M4 12h16M4 18h10"/>',
   'ThreadCraft': '<path d="M21 11.5a8.4 8.4 0 0 1-12.4 7.4L3 21l2.1-5.6A8.5 8.5 0 1 1 21 11.5z"/>',
+  dev: '<polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>',
+  'JSONLab': '<path d="M8 3H7a2 2 0 0 0-2 2v5a2 2 0 0 1-2 2 2 2 0 0 1 2 2v5a2 2 0 0 0 2 2h1"/><path d="M16 3h1a2 2 0 0 1 2 2v5a2 2 0 0 0 2 2 2 2 0 0 0-2 2v5a2 2 0 0 1-2 2h-1"/>',
+  'JSONConvert': '<polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/>',
+  'JWTRead': '<circle cx="7.5" cy="15.5" r="4.5"/><path d="M10.7 12.3L20 3M17 6l2 2M14 9l2 2"/>',
+  'YAMLCheck': '<path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>',
+  'CSVExplore': '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/>',
+  'MarkdownLive': '<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M6 15V9l3 3 3-3v6M17 9v5M14.6 12.4L17 15l2.4-2.6"/>',
+  'HTMLPreview': '<rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 9h20M6 6.5h.01M9 6.5h.01"/>',
+  'SQLFormat': '<ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/>',
+  'ColourContrast': '<circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor" stroke="none"/>',
+  'UUIDGen': '<rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8.5" cy="8.5" r="1.3" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.3" fill="currentColor" stroke="none"/><circle cx="15.5" cy="15.5" r="1.3" fill="currentColor" stroke="none"/>',
+  'TimezoneNow': '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  'RegexLab': '<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>',
+  'CronLab': '<rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/><path d="M12 13v3l2 1"/>',
 };
 function svgIcon(paths) {
   return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' + paths + '</svg>';
@@ -126,7 +140,7 @@ const ICONS = Object.fromEntries(Object.entries(ICON_PATHS).map(([k, v]) => [k, 
 function initFavicon() {
   const col = document.documentElement.dataset.collection || 'tools';
   const tool = document.documentElement.dataset.tool || '';
-  const color = { tools: '#5B6CF0', study: '#12A594', write: '#D97757' }[col] || '#5B6CF0';
+  const color = { tools: '#5B6CF0', study: '#12A594', write: '#D97757', dev: '#5B6CF0' }[col] || '#5B6CF0';
   const paths = ICON_PATHS[tool] || ICON_PATHS[col] || ICON_PATHS.tools;
   const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">' +
     '<rect width="24" height="24" rx="6" fill="' + color + '"/>' +
@@ -288,6 +302,71 @@ const STEPS = {
     { t: 'Paste long text', d: { k: 'text', text: 'A long post worth splitting.' } },
     { t: 'Set limit & numbers', d: { k: 'chips', items: ['280 chars', '1/n'], on: 0 } },
     { t: 'Copy your thread', d: { k: 'tweets', items: ['1/3  Intro to...', '2/3  The key...', '3/3  In short...'] } },
+  ],
+  'JSONLab': [
+    { t: 'Paste JSON', d: { k: 'text', text: '{"user":"jo","ok":true}' } },
+    { t: 'Format & validate', d: { k: 'result', text: '{ "user": "jo" }' } },
+    { t: 'Copy, minify or diff', d: { k: 'chips', items: ['Format', 'Minify', 'Diff'], on: 0 } },
+  ],
+  'JSONConvert': [
+    { t: 'Paste JSON', d: { k: 'text', text: '{"port":8080}' } },
+    { t: 'Choose a target', d: { k: 'chips', items: ['YAML', 'CSV', 'XML'], on: 0 } },
+    { t: 'Get the result', d: { k: 'result', text: 'port: 8080' } },
+  ],
+  'JWTRead': [
+    { t: 'Paste your token', d: { k: 'text', text: 'eyJhbGciOiJIUzI1Ni...' } },
+    { t: 'Decoded locally', d: { k: 'rows', rows: [['alg', 'HS256'], ['sub', '1234']] } },
+    { t: 'Check expiry', d: { k: 'chips', items: ['Valid'], on: 0 } },
+  ],
+  'YAMLCheck': [
+    { t: 'Paste YAML', d: { k: 'text', text: 'name: build' } },
+    { t: 'Validate', d: { k: 'chips', items: ['Valid ✓'], on: 0 } },
+    { t: 'Format & copy', d: { k: 'result', text: 'name: build' } },
+  ],
+  'CSVExplore': [
+    { t: 'Paste CSV', d: { k: 'text', text: 'name,age,city' } },
+    { t: 'Instant table', d: { k: 'table', rows: [['name', 'age'], ['Jo', '29']] } },
+    { t: 'Sort & filter', d: { k: 'chips', items: ['Sort', 'Filter'], on: 0 } },
+  ],
+  'MarkdownLive': [
+    { t: 'Type Markdown', d: { k: 'text', text: '# Hello **world**' } },
+    { t: 'Live preview', d: { k: 'result', text: 'Hello world' } },
+    { t: 'Autosaves locally', d: { k: 'chips', items: ['.md', 'HTML'], on: 0 } },
+  ],
+  'HTMLPreview': [
+    { t: 'Paste HTML', d: { k: 'text', text: '<h1>Hi</h1>' } },
+    { t: 'Sandboxed render', d: { k: 'result', text: 'Hi' } },
+    { t: 'Desktop / mobile', d: { k: 'chips', items: ['Desktop', 'Tablet', 'Mobile'], on: 0 } },
+  ],
+  'SQLFormat': [
+    { t: 'Paste a query', d: { k: 'text', text: 'select * from users' } },
+    { t: 'Format it', d: { k: 'result', text: 'SELECT * FROM users' } },
+    { t: 'Copy clean SQL', d: { k: 'chips', items: ['UPPER', 'lower'], on: 0 } },
+  ],
+  'ColourContrast': [
+    { t: 'Pick two colours', d: { k: 'chips', items: ['#0F0F1A', '#FFFFFF'], on: 0 } },
+    { t: 'See the ratio', d: { k: 'count', to: 16.1, label: 'contrast' } },
+    { t: 'AA / AAA check', d: { k: 'chips', items: ['AA ✓', 'AAA ✓'], on: 0 } },
+  ],
+  'UUIDGen': [
+    { t: 'Pick a format', d: { k: 'chips', items: ['v4', 'v7', 'ULID', 'nanoid'], on: 0 } },
+    { t: 'Generate locally', d: { k: 'text', text: '9f1c2a7e-4b3d-...' } },
+    { t: 'Copy or download', d: { k: 'count', to: 100, label: 'at once' } },
+  ],
+  'TimezoneNow': [
+    { t: 'Add cities', d: { k: 'chips', items: ['NYC', 'London', 'Tokyo'], on: 0 } },
+    { t: 'Live clocks', d: { k: 'rows', rows: [['London', '14:30'], ['Tokyo', '22:30']] } },
+    { t: 'Find overlap', d: { k: 'chips', items: ['9-6 overlap'], on: 0 } },
+  ],
+  'RegexLab': [
+    { t: 'Write a pattern', d: { k: 'text', text: '[a-z]+\\d+' } },
+    { t: 'Live matches', d: { k: 'hl', text: 'abc12 xy99 zz', marks: ['abc12', 'xy99'] } },
+    { t: 'Groups & replace', d: { k: 'chips', items: ['2 matches'], on: 0 } },
+  ],
+  'CronLab': [
+    { t: 'Enter an expression', d: { k: 'text', text: '0 9 * * 1-5' } },
+    { t: 'Plain English', d: { k: 'result', text: 'Weekdays at 09:00' } },
+    { t: 'Next 20 runs', d: { k: 'rows', rows: [['Mon', '09:00'], ['Tue', '09:00']] } },
   ],
 };
 
