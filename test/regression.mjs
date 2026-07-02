@@ -52,6 +52,9 @@ const ROUTES = [
   '/health/cycle/', '/health/water/', '/health/sleep/',
   '/design/', '/design/palette/', '/design/typography/', '/design/icons/',
   '/design/shadows/', '/design/spacing/', '/design/gradient/',
+  '/productivity/', '/productivity/focus/', '/productivity/note/',
+  '/productivity/decision/', '/productivity/meeting-timer/',
+  '/productivity/habits/', '/productivity/reading/',
   '/privacy.html',
 ];
 const VIEWPORTS = [

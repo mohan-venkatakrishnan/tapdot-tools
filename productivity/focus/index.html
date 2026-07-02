@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" data-collection="productivity" data-tool="FocusTimer">
+<head>
+  <meta charset="UTF-8" />
+  <script>(function(){try{var t=localStorage.getItem('tapdot-theme');var d=matchMedia('(prefers-color-scheme: dark)').matches;if(t==='dark'||(!t&&d))document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FocusTimer — Pomodoro Focus Timer | tapdot</title>
+  <meta name="description" content="Pomodoro-style focus sessions with browser notifications. No account. Your work sessions stay private." />
+  <meta property="og:title" content="FocusTimer — Pomodoro Focus Timer | tapdot" />
+  <meta property="og:description" content="Customisable 25/5/15 Pomodoro timer with session stats — fully local." />
+  <link rel="canonical" href="https://tools.tapdot.org/productivity/focus/" />
+  <link rel="icon" type="image/png" href="/assets/tapdot-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/shared/shared.css" />
+  <link rel="stylesheet" href="/productivity/productivity.css" />
+</head>
+<body>
+<nav class="ts-nav">
+  <a href="https://tapdot.org" class="ts-nav-logo"><img src="/assets/tapdot-icon.png" width="22" height="22" alt="tapdot" /><span>tapdot</span></a>
+  <button class="ts-dark-toggle" id="darkToggle" aria-label="Toggle dark mode"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg></button>
+</nav>
+<main class="ts-main">
+  <div class="ts-tool-header">
+    <h1 class="ts-tool-name">FocusTimer</h1>
+    <p class="ts-tool-desc">A Pomodoro-style focus timer with browser notifications.</p>
+  </div>
+
+  <div class="ts-card timer-ring-wrap">
+    <div class="ts-segment" id="modeTabs">
+      <button class="ts-segment-btn active" data-mode="focus">Focus</button>
+      <button class="ts-segment-btn" data-mode="short">Short break</button>
+      <button class="ts-segment-btn" data-mode="long">Long break</button>
+    </div>
+    <svg width="220" height="220" viewBox="0 0 220 220" id="ring"></svg>
+    <div class="biz-row">
+      <button class="ts-btn ts-btn-primary" id="startPause">Start</button>
+      <button class="ts-btn ts-btn-secondary" id="resetBtn">Reset</button>
+      <button class="ts-btn ts-btn-ghost" id="skipBtn">Skip</button>
+    </div>
+    <p class="biz-muted" id="notifStatus"></p>
+  </div>
+
+  <div class="ts-card">
+    <div class="biz-grid-2">
+      <div><label class="ts-label" for="focusMins">Focus (min)</label><input class="ts-input" id="focusMins" type="number" value="25" min="1" /></div>
+      <div><label class="ts-label" for="shortMins">Short break (min)</label><input class="ts-input" id="shortMins" type="number" value="5" min="1" /></div>
+      <div><label class="ts-label" for="longMins">Long break (min)</label><input class="ts-input" id="longMins" type="number" value="15" min="1" /></div>
+      <div><label class="ts-label" for="longEvery">Long break every N sessions</label><input class="ts-input" id="longEvery" type="number" value="4" min="1" /></div>
+    </div>
+  </div>
+
+  <div class="ts-stats-grid">
+    <div class="ts-stat"><span class="ts-stat-num" id="sessionsToday">0</span><span class="ts-stat-label">Sessions today</span></div>
+    <div class="ts-stat"><span class="ts-stat-num" id="focusThisWeek">0m</span><span class="ts-stat-label">Focus time this week</span></div>
+  </div>
+</main>
+<footer class="ts-footer">
+  <span>Built by <a href="https://tapdot.org">tapdot</a></span><span class="ts-footer-dot">·</span>
+  <a href="/privacy.html">Privacy</a><span class="ts-footer-dot">·</span><span>All processing happens in your browser</span>
+</footer>
+<script src="/shared/shared.js"></script>
+<script src="focus.js" defer></script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "YOUR_CLOUDFLARE_TOKEN"}'></script>
+</body>
+</html>

@@ -283,3 +283,15 @@ DNS on GoDaddy. See README.md for the one-time setup.
     retroactively for Health too).
   - `test/regression.mjs` grew to 219 checks, `test/functional.mjs` to 103 — both
     suites pass with 0 failures.
+- v14: **Productivity collection** (`productivity/`) — 6 tools, completing all 10
+  planned collections (~74 tools total). FocusTimer (Pomodoro 25/5/15, browser
+  notifications, session log), QuickNote (up to 10 autosaving notes, 500ms debounce,
+  .txt/.md export), DecisionMatrix (weighted criteria × options, CSV/Markdown
+  export), MeetingTimer (live per-second cost from attendee salaries, budget alert,
+  state shareable via URL hash — base64 JSON, no server), HabitTracker (daily
+  check-off, streaks, 30-day completion rate + heatmap), ReadingList (to-read/
+  reading/done status cycling, notes, Markdown export). Teal-cyan pastel theme.
+  Clean pass — no bugs found in regression or functional; the ICONS/STEPS global-
+  collision class of bug from v13 didn't recur since no tool declared those names.
+  `test/regression.mjs` grew to 240 checks, `test/functional.mjs` to 118 — both
+  suites pass with 0 failures.

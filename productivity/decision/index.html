@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" data-collection="productivity" data-tool="DecisionMatrix">
+<head>
+  <meta charset="UTF-8" />
+  <script>(function(){try{var t=localStorage.getItem('tapdot-theme');var d=matchMedia('(prefers-color-scheme: dark)').matches;if(t==='dark'||(!t&&d))document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DecisionMatrix — Decision Making Tool | tapdot</title>
+  <meta name="description" content="Make better decisions with a weighted criteria matrix. Add options, rate them, and see which wins. Your thinking stays private." />
+  <meta property="og:title" content="DecisionMatrix — Decision Making Tool | tapdot" />
+  <meta property="og:description" content="A weighted decision matrix with CSV/Markdown export — fully local." />
+  <link rel="canonical" href="https://tools.tapdot.org/productivity/decision/" />
+  <link rel="icon" type="image/png" href="/assets/tapdot-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/shared/shared.css" />
+  <link rel="stylesheet" href="/productivity/productivity.css" />
+</head>
+<body>
+<nav class="ts-nav">
+  <a href="https://tapdot.org" class="ts-nav-logo"><img src="/assets/tapdot-icon.png" width="22" height="22" alt="tapdot" /><span>tapdot</span></a>
+  <button class="ts-dark-toggle" id="darkToggle" aria-label="Toggle dark mode"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg></button>
+</nav>
+<main class="ts-main ts-main-wide">
+  <div class="ts-tool-header">
+    <h1 class="ts-tool-name">DecisionMatrix</h1>
+    <p class="ts-tool-desc">Weigh criteria, rate your options, and see which one wins.</p>
+  </div>
+
+  <div class="ts-card">
+    <label class="ts-label" for="decisionTitle">Decision</label>
+    <input class="ts-input" id="decisionTitle" value="Which laptop to buy" />
+  </div>
+
+  <div class="ts-card">
+    <div class="biz-row" style="justify-content: space-between">
+      <h2 class="ts-card-title">Criteria &amp; weights (1–5)</h2>
+      <button class="ts-btn ts-btn-secondary" id="addCriterion">+ Add criterion</button>
+    </div>
+    <div id="criteriaList"></div>
+  </div>
+
+  <div class="ts-card">
+    <div class="biz-row" style="justify-content: space-between">
+      <h2 class="ts-card-title">Options</h2>
+      <button class="ts-btn ts-btn-secondary" id="addOption">+ Add option</button>
+    </div>
+    <div class="matrix-table-wrap">
+      <table class="matrix-table" id="matrixTable"></table>
+    </div>
+  </div>
+
+  <div class="ts-card">
+    <div class="biz-row">
+      <button class="ts-btn ts-btn-secondary" id="exportCsv">Export CSV</button>
+      <button class="ts-btn ts-btn-secondary" id="exportMd">Export Markdown</button>
+    </div>
+  </div>
+</main>
+<footer class="ts-footer">
+  <span>Built by <a href="https://tapdot.org">tapdot</a></span><span class="ts-footer-dot">·</span>
+  <a href="/privacy.html">Privacy</a><span class="ts-footer-dot">·</span><span>All processing happens in your browser</span>
+</footer>
+<script src="/shared/shared.js"></script>
+<script src="decision.js" defer></script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "YOUR_CLOUDFLARE_TOKEN"}'></script>
+</body>
+</html>

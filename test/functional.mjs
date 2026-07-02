@@ -663,6 +663,96 @@ const check = (name, ok) => { console.log((ok ? 'PASS' : 'FAIL') + '  ' + name);
   await page.close();
 }
 
+// 43. FocusTimer: starting the timer counts down, switching mode resets the ring.
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/productivity/focus/', { waitUntil: 'networkidle' });
+  const initialText = await page.$eval('#ring text', el => el.textContent);
+  check('FocusTimer starts at 25:00', initialText === '25:00');
+  await page.click('[data-mode="short"]');
+  await page.waitForTimeout(100);
+  const shortText = await page.$eval('#ring text', el => el.textContent);
+  check('FocusTimer switches to a 05:00 short break', shortText === '05:00');
+  check('no JS errors on FocusTimer', errs.length === 0);
+  await page.close();
+}
+
+// 44. QuickNote: typing autosaves after the debounce and updates the word count.
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/productivity/note/', { waitUntil: 'networkidle' });
+  await page.fill('#noteBody', 'four little words here');
+  await page.waitForTimeout(700);
+  const wordCount = await page.$eval('#wordCount', el => el.textContent);
+  const status = await page.$eval('#saveStatus', el => el.textContent);
+  check('QuickNote updates the word count', wordCount === '4 words');
+  check('QuickNote autosaves after the debounce', status === 'Saved');
+  check('no JS errors on QuickNote', errs.length === 0);
+  await page.close();
+}
+
+// 45. DecisionMatrix: default matrix computes a weighted score and marks a winner.
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/productivity/decision/', { waitUntil: 'networkidle' });
+  await page.waitForTimeout(100);
+  const winners = await page.$$eval('.matrix-table .winner', els => els.length);
+  check('DecisionMatrix marks exactly one winning option', winners === 1);
+  check('no JS errors on DecisionMatrix', errs.length === 0);
+  await page.close();
+}
+
+// 46. MeetingTimer: cost accrues over time based on attendee salaries.
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/productivity/meeting-timer/', { waitUntil: 'networkidle' });
+  const before = await page.$eval('#costNum', el => el.textContent);
+  await page.click('#startPause');
+  await page.waitForTimeout(2200);
+  const after = await page.$eval('#costNum', el => el.textContent);
+  check('MeetingTimer cost increases once started', before === '$0.00' && after !== '$0.00');
+  check('no JS errors on MeetingTimer', errs.length === 0);
+  await page.close();
+}
+
+// 47. HabitTracker: checking a habit today shows a 1-day streak.
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/productivity/habits/', { waitUntil: 'networkidle' });
+  await page.fill('#newHabitName', 'Read 20 minutes');
+  await page.click('#addHabit');
+  await page.waitForTimeout(100);
+  await page.click('.habit-check');
+  await page.waitForTimeout(100);
+  const streakText = await page.$eval('.habit-streak', el => el.textContent);
+  check('HabitTracker shows a 1-day streak after checking today', streakText.includes('1d streak'));
+  check('no JS errors on HabitTracker', errs.length === 0);
+  await page.close();
+}
+
+// 48. ReadingList: adding an item and cycling its status updates the badge.
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/productivity/reading/', { waitUntil: 'networkidle' });
+  await page.fill('#itemTitle', 'Designing Data-Intensive Applications');
+  await page.click('#addItem');
+  await page.waitForTimeout(100);
+  const initialBadge = await page.$eval('.reading-status-badge', el => el.textContent);
+  check('ReadingList adds a new item as "To read"', initialBadge.includes('To read'));
+  await page.click('.reading-status-badge');
+  await page.waitForTimeout(100);
+  const afterBadge = await page.$eval('.reading-status-badge', el => el.textContent);
+  check('ReadingList cycles status to "Reading" on click', afterBadge.includes('Reading') && !afterBadge.includes('To read'));
+  check('no JS errors on ReadingList', errs.length === 0);
+  await page.close();
+}
+
 await browser.close(); srv.close();
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

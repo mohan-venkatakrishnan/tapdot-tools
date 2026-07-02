@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" data-collection="productivity" data-tool="QuickNote">
+<head>
+  <meta charset="UTF-8" />
+  <script>(function(){try{var t=localStorage.getItem('tapdot-theme');var d=matchMedia('(prefers-color-scheme: dark)').matches;if(t==='dark'||(!t&&d))document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QuickNote — Private Browser Notepad | tapdot</title>
+  <meta name="description" content="A fast, private notepad that saves to your browser as you type. No sync, no account. Your notes stay on your device." />
+  <meta property="og:title" content="QuickNote — Private Browser Notepad | tapdot" />
+  <meta property="og:description" content="Autosaving multi-note notepad with word count and .txt/.md export — fully local." />
+  <link rel="canonical" href="https://tools.tapdot.org/productivity/note/" />
+  <link rel="icon" type="image/png" href="/assets/tapdot-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/shared/shared.css" />
+  <link rel="stylesheet" href="/productivity/productivity.css" />
+</head>
+<body>
+<nav class="ts-nav">
+  <a href="https://tapdot.org" class="ts-nav-logo"><img src="/assets/tapdot-icon.png" width="22" height="22" alt="tapdot" /><span>tapdot</span></a>
+  <button class="ts-dark-toggle" id="darkToggle" aria-label="Toggle dark mode"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg></button>
+</nav>
+<main class="ts-main">
+  <div class="ts-tool-header">
+    <h1 class="ts-tool-name">QuickNote</h1>
+    <p class="ts-tool-desc">A fast, private notepad that autosaves as you type.</p>
+  </div>
+
+  <div class="note-tabs" id="noteTabs"></div>
+  <div class="biz-row" style="margin-bottom:12px">
+    <button class="ts-btn ts-btn-secondary" id="newNote">+ New note</button>
+    <button class="ts-btn ts-btn-ghost" id="deleteNote">Delete this note</button>
+    <button class="ts-btn ts-btn-ghost" id="exportTxt">Export .txt</button>
+    <button class="ts-btn ts-btn-ghost" id="exportMd">Export .md</button>
+  </div>
+
+  <input class="ts-input" id="noteTitle" placeholder="Note title" style="margin-bottom:10px" />
+  <textarea class="note-editor" id="noteBody" placeholder="Start typing — this note saves automatically."></textarea>
+  <div class="note-status">
+    <span id="wordCount">0 words</span>
+    <span id="saveStatus">Saved</span>
+  </div>
+</main>
+<footer class="ts-footer">
+  <span>Built by <a href="https://tapdot.org">tapdot</a></span><span class="ts-footer-dot">·</span>
+  <a href="/privacy.html">Privacy</a><span class="ts-footer-dot">·</span><span>All processing happens in your browser</span>
+</footer>
+<script src="/shared/shared.js"></script>
+<script src="note.js" defer></script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "YOUR_CLOUDFLARE_TOKEN"}'></script>
+</body>
+</html>

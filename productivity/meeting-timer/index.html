@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" data-collection="productivity" data-tool="MeetingTimer">
+<head>
+  <meta charset="UTF-8" />
+  <script>(function(){try{var t=localStorage.getItem('tapdot-theme');var d=matchMedia('(prefers-color-scheme: dark)').matches;if(t==='dark'||(!t&&d))document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MeetingTimer — Meeting Cost Calculator | tapdot</title>
+  <meta name="description" content="See the real cost of your meeting in real time. Add attendees with salaries. Your salary data stays private." />
+  <meta property="og:title" content="MeetingTimer — Meeting Cost Calculator | tapdot" />
+  <meta property="og:description" content="A live per-second meeting cost calculator with a budget alert — fully local." />
+  <link rel="canonical" href="https://tools.tapdot.org/productivity/meeting-timer/" />
+  <link rel="icon" type="image/png" href="/assets/tapdot-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/shared/shared.css" />
+  <link rel="stylesheet" href="/productivity/productivity.css" />
+</head>
+<body>
+<nav class="ts-nav">
+  <a href="https://tapdot.org" class="ts-nav-logo"><img src="/assets/tapdot-icon.png" width="22" height="22" alt="tapdot" /><span>tapdot</span></a>
+  <button class="ts-dark-toggle" id="darkToggle" aria-label="Toggle dark mode"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg></button>
+</nav>
+<main class="ts-main">
+  <div class="ts-tool-header">
+    <h1 class="ts-tool-name">MeetingTimer</h1>
+    <p class="ts-tool-desc">Watch the real cost of your meeting tick up in real time.</p>
+  </div>
+
+  <div class="ts-card meeting-cost">
+    <div class="meeting-cost-num" id="costNum">$0.00</div>
+    <p class="biz-muted" id="elapsedLabel">00:00 elapsed</p>
+    <div class="biz-row" style="justify-content:center;margin-top:12px">
+      <button class="ts-btn ts-btn-primary" id="startPause">Start</button>
+      <button class="ts-btn ts-btn-secondary" id="resetBtn">Reset</button>
+    </div>
+    <p class="biz-muted ts-mt-sm" id="budgetAlert"></p>
+  </div>
+
+  <div class="ts-card">
+    <div class="biz-grid-2">
+      <div><label class="ts-label" for="budget">Meeting budget ($, optional)</label><input class="ts-input" id="budget" type="number" placeholder="e.g. 500" /></div>
+    </div>
+  </div>
+
+  <div class="ts-card">
+    <div class="biz-row" style="justify-content: space-between">
+      <h2 class="ts-card-title">Attendees</h2>
+      <button class="ts-btn ts-btn-secondary" id="addAttendee">+ Add attendee</button>
+    </div>
+    <div id="attendeeList"></div>
+    <p class="biz-muted ts-mt-sm" id="rateLabel"></p>
+  </div>
+
+  <div class="ts-card">
+    <button class="ts-btn ts-btn-secondary" id="shareLink">Copy share link</button>
+    <p class="biz-muted ts-mt-sm">Encodes attendees + budget in the URL — nothing is sent to a server.</p>
+  </div>
+</main>
+<footer class="ts-footer">
+  <span>Built by <a href="https://tapdot.org">tapdot</a></span><span class="ts-footer-dot">·</span>
+  <a href="/privacy.html">Privacy</a><span class="ts-footer-dot">·</span><span>All processing happens in your browser</span>
+</footer>
+<script src="/shared/shared.js"></script>
+<script src="meeting-timer.js" defer></script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "YOUR_CLOUDFLARE_TOKEN"}'></script>
+</body>
+</html>

@@ -172,6 +172,12 @@ const ICON_PATHS = {
   'ShadowStudio': '<rect x="4" y="4" width="13" height="13" rx="2"/><path d="M9 21h9a2 2 0 0 0 2-2V9" stroke-dasharray="2 2"/>',
   'SpacingCalc': '<line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="15" y2="12"/><line x1="3" y1="18" x2="9" y2="18"/>',
   'GradientMaker': '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 12h18M12 3v18"/>',
+  'FocusTimer': '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>',
+  'QuickNote': '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/>',
+  'DecisionMatrix': '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/>',
+  'MeetingTimer': '<line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5.5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H7"/>',
+  'HabitTracker': '<path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>',
+  'ReadingList': '<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>',
   'JSONLab': '<path d="M8 3H7a2 2 0 0 0-2 2v5a2 2 0 0 1-2 2 2 2 0 0 1 2 2v5a2 2 0 0 0 2 2h1"/><path d="M16 3h1a2 2 0 0 1 2 2v5a2 2 0 0 0 2 2 2 2 0 0 0-2 2v5a2 2 0 0 1-2 2h-1"/>',
   'JSONConvert': '<polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/>',
   'JWTRead': '<circle cx="7.5" cy="15.5" r="4.5"/><path d="M10.7 12.3L20 3M17 6l2 2M14 9l2 2"/>',
@@ -398,6 +404,13 @@ const TOOL_REGISTRY = [
   { name: 'ShadowStudio', url: '/design/shadows/', collection: 'design', desc: 'Layered CSS box shadows visually, with presets' },
   { name: 'SpacingCalc', url: '/design/spacing/', collection: 'design', desc: 'Linear or multiplicative spacing scale, with export' },
   { name: 'GradientMaker', url: '/design/gradient/', collection: 'design', desc: 'Linear, radial, and conic CSS gradients visually' },
+  { name: 'Productivity tools', url: '/productivity/', collection: 'productivity', desc: 'Focus timer, notes, decision matrix, meeting cost, habits, reading list' },
+  { name: 'FocusTimer', url: '/productivity/focus/', collection: 'productivity', desc: 'Pomodoro-style focus sessions with notifications' },
+  { name: 'QuickNote', url: '/productivity/note/', collection: 'productivity', desc: 'A fast, private notepad that autosaves as you type' },
+  { name: 'DecisionMatrix', url: '/productivity/decision/', collection: 'productivity', desc: 'Weigh criteria, rate options, see which wins' },
+  { name: 'MeetingTimer', url: '/productivity/meeting-timer/', collection: 'productivity', desc: 'See the real cost of your meeting, live' },
+  { name: 'HabitTracker', url: '/productivity/habits/', collection: 'productivity', desc: 'Daily habits with streaks and a heatmap' },
+  { name: 'ReadingList', url: '/productivity/reading/', collection: 'productivity', desc: 'Save articles and books, track status and notes' },
   { name: 'Privacy Policy', url: '/privacy.html', collection: 'tools', desc: "What tapdot tools does — and doesn't — collect" },
 ];
 
@@ -968,6 +981,36 @@ const STEPS = {
     { t: 'Choose a type', d: { k: 'chips', items: ['Linear', 'Radial', 'Conic'], on: 0 } },
     { t: 'Add colour stops', d: { k: 'fields', rows: [['Stop 1', '#4E8FC4'], ['Stop 2', '#8A5CD6']] } },
     { t: 'Copy the CSS', d: { k: 'result', text: 'linear-gradient(90deg, ...)' } },
+  ],
+  'FocusTimer': [
+    { t: 'Pick a mode', d: { k: 'chips', items: ['Focus 25m', 'Short break 5m'], on: 0 } },
+    { t: 'Watch the ring count down', d: { k: 'count', to: 25, label: 'minutes left' } },
+    { t: 'Get notified & track stats', d: { k: 'stats', items: [['4', 'sessions today'], ['1.7h', 'this week']] } },
+  ],
+  'QuickNote': [
+    { t: 'Start typing', d: { k: 'text', text: 'Ideas for Q3 roadmap...' } },
+    { t: 'Autosaves as you go', d: { k: 'result', text: 'Saved' } },
+    { t: 'Export as .txt or .md', d: { k: 'chips', items: ['.txt', '.md'], on: 1 } },
+  ],
+  'DecisionMatrix': [
+    { t: 'Add options & criteria', d: { k: 'fields', rows: [['Option', 'MacBook Air'], ['Weight', 'Performance ×5']] } },
+    { t: 'Rate each option', d: { k: 'table', rows: [['Price', '7/10'], ['Performance', '8/10']] } },
+    { t: 'See the winner', d: { k: 'result', text: 'MacBook Air wins — 7.4' } },
+  ],
+  'MeetingTimer': [
+    { t: 'Add attendees & salaries', d: { k: 'fields', rows: [['Attendees', '6'], ['Avg salary', '$95k']] } },
+    { t: 'Press start', d: { k: 'count', to: 84.20, label: 'dollars so far' } },
+    { t: 'Get a budget alert', d: { k: 'result', text: '⚠ Over budget: $500' } },
+  ],
+  'HabitTracker': [
+    { t: 'Add a habit', d: { k: 'fields', rows: [['Habit', 'Read 20 min']] } },
+    { t: 'Check it off daily', d: { k: 'chips', items: ['Mon ✓', 'Tue ✓', 'Wed ✓'], on: 2 } },
+    { t: 'Watch your streak grow', d: { k: 'count', to: 12, label: 'day streak' } },
+  ],
+  'ReadingList': [
+    { t: 'Save something to read', d: { k: 'fields', rows: [['Title', 'Designing Data-Intensive Apps'], ['Type', 'Book']] } },
+    { t: 'Track your status', d: { k: 'chips', items: ['To read', 'Reading', 'Done'], on: 1 } },
+    { t: 'Add notes & export', d: { k: 'result', text: 'Great chapter on replication' } },
   ],
 };
 
