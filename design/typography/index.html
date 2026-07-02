@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" data-collection="design" data-tool="TypographyScale">
+<head>
+  <meta charset="UTF-8" />
+  <script>(function(){try{var t=localStorage.getItem('tapdot-theme');var d=matchMedia('(prefers-color-scheme: dark)').matches;if(t==='dark'||(!t&&d))document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TypographyScale — Type Scale Generator | tapdot</title>
+  <meta name="description" content="Generate a harmonious type scale for your design system. Preview at every size. Export as CSS variables or Tailwind config." />
+  <meta property="og:title" content="TypographyScale — Type Scale Generator | tapdot" />
+  <meta property="og:description" content="Generate a 9-step type scale from a base size and ratio — fully local." />
+  <link rel="canonical" href="https://tools.tapdot.org/design/typography/" />
+  <link rel="icon" type="image/png" href="/assets/tapdot-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/shared/shared.css" />
+  <link rel="stylesheet" href="/design/design.css" />
+</head>
+<body>
+<nav class="ts-nav">
+  <a href="https://tapdot.org" class="ts-nav-logo"><img src="/assets/tapdot-icon.png" width="22" height="22" alt="tapdot" /><span>tapdot</span></a>
+  <button class="ts-dark-toggle" id="darkToggle" aria-label="Toggle dark mode"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg></button>
+</nav>
+<main class="ts-main ts-main-wide">
+  <div class="ts-tool-header">
+    <h1 class="ts-tool-name">TypographyScale</h1>
+    <p class="ts-tool-desc">Generate a harmonious type scale from a base size and ratio.</p>
+  </div>
+
+  <div class="ts-card">
+    <div class="biz-grid-2">
+      <div><label class="ts-label" for="baseSize">Base size (px)</label><input class="ts-input" id="baseSize" type="number" value="16" /></div>
+      <div><label class="ts-label" for="ratio">Scale ratio</label>
+        <select class="ts-select" id="ratio" style="width:100%">
+          <option value="1.067">Minor second (1.067)</option>
+          <option value="1.125">Major second (1.125)</option>
+          <option value="1.2" selected>Minor third (1.2)</option>
+          <option value="1.25">Major third (1.25)</option>
+          <option value="1.333">Perfect fourth (1.333)</option>
+          <option value="1.414">Augmented fourth (1.414)</option>
+          <option value="1.5">Perfect fifth (1.5)</option>
+          <option value="1.618">Golden ratio (1.618)</option>
+        </select>
+      </div>
+    </div>
+    <label class="ts-label ts-mt-md" for="previewText">Preview text</label>
+    <input class="ts-input" id="previewText" value="The quick brown fox jumps" />
+  </div>
+
+  <div class="ts-card">
+    <h2 class="ts-card-title">Scale</h2>
+    <div id="scaleList"></div>
+  </div>
+
+  <div class="ts-card">
+    <div class="ts-segment" id="exportTabs">
+      <button class="ts-segment-btn active" data-fmt="css">CSS variables</button>
+      <button class="ts-segment-btn" data-fmt="tailwind">Tailwind fontSize</button>
+    </div>
+    <pre class="ts-mono-output" id="exportOutput"></pre>
+    <button class="ts-btn ts-btn-secondary ts-mt-md" id="copyExport">Copy</button>
+  </div>
+</main>
+<footer class="ts-footer">
+  <span>Built by <a href="https://tapdot.org">tapdot</a></span><span class="ts-footer-dot">·</span>
+  <a href="/privacy.html">Privacy</a><span class="ts-footer-dot">·</span><span>All processing happens in your browser</span>
+</footer>
+<script src="/shared/shared.js"></script>
+<script src="typography.js" defer></script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "YOUR_CLOUDFLARE_TOKEN"}'></script>
+</body>
+</html>

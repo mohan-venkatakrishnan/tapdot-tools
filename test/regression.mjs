@@ -50,6 +50,8 @@ const ROUTES = [
   '/hr/onboarding/', '/hr/leave/',
   '/health/', '/health/bmi/', '/health/medication/', '/health/symptoms/',
   '/health/cycle/', '/health/water/', '/health/sleep/',
+  '/design/', '/design/palette/', '/design/typography/', '/design/icons/',
+  '/design/shadows/', '/design/spacing/', '/design/gradient/',
   '/privacy.html',
 ];
 const VIEWPORTS = [

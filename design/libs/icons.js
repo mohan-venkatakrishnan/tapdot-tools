@@ -1,0 +1,155 @@
+// design/libs/icons.js — curated outline icon set (24x24, stroke="currentColor")
+// A deliberately curated ~120-icon set across common UI categories, not a
+// wholesale bundle of a third-party library — see CLAUDE.md for the rationale
+// (same quality-over-quantity call as LegalGlossary).
+
+const ICON_LIBRARY = [
+  // navigation
+  { name: 'home', category: 'navigation', paths: '<path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/>' },
+  { name: 'menu', category: 'navigation', paths: '<line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/>' },
+  { name: 'compass', category: 'navigation', paths: '<circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/>' },
+  { name: 'map', category: 'navigation', paths: '<path d="M9 3v15M15 6v15"/><path d="M3 5l6-2 6 2 6-2v16l-6 2-6-2-6 2z"/>' },
+  { name: 'map-pin', category: 'navigation', paths: '<path d="M12 22s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/>' },
+  { name: 'grid', category: 'navigation', paths: '<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>' },
+  { name: 'list', category: 'navigation', paths: '<line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.5" cy="6" r="1"/><circle cx="4.5" cy="12" r="1"/><circle cx="4.5" cy="18" r="1"/>' },
+  { name: 'sidebar', category: 'navigation', paths: '<rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/>' },
+  { name: 'external-link', category: 'navigation', paths: '<path d="M14 3h7v7"/><path d="M21 3l-9 9"/><path d="M19 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h6"/>' },
+  { name: 'link', category: 'navigation', paths: '<path d="M9 17H7a5 5 0 0 1 0-10h2"/><path d="M15 7h2a5 5 0 0 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/>' },
+
+  // arrows
+  { name: 'arrow-up', category: 'arrows', paths: '<line x1="12" y1="20" x2="12" y2="4"/><polyline points="5 11 12 4 19 11"/>' },
+  { name: 'arrow-down', category: 'arrows', paths: '<line x1="12" y1="4" x2="12" y2="20"/><polyline points="19 13 12 20 5 13"/>' },
+  { name: 'arrow-left', category: 'arrows', paths: '<line x1="20" y1="12" x2="4" y2="12"/><polyline points="11 5 4 12 11 19"/>' },
+  { name: 'arrow-right', category: 'arrows', paths: '<line x1="4" y1="12" x2="20" y2="12"/><polyline points="13 5 20 12 13 19"/>' },
+  { name: 'chevron-up', category: 'arrows', paths: '<polyline points="6 15 12 9 18 15"/>' },
+  { name: 'chevron-down', category: 'arrows', paths: '<polyline points="6 9 12 15 18 9"/>' },
+  { name: 'chevron-left', category: 'arrows', paths: '<polyline points="15 6 9 12 15 18"/>' },
+  { name: 'chevron-right', category: 'arrows', paths: '<polyline points="9 6 15 12 9 18"/>' },
+  { name: 'corner-up-right', category: 'arrows', paths: '<polyline points="9 6 15 12 9 18" transform="rotate(-45 12 12)"/><path d="M4 12h12a4 4 0 0 0 4-4"/>' },
+  { name: 'refresh', category: 'arrows', paths: '<path d="M21 12a9 9 0 1 1-3-6.7"/><polyline points="21 3 21 9 15 9"/>' },
+  { name: 'shuffle', category: 'arrows', paths: '<path d="M4 4h4l10 16h3"/><path d="M4 20h4l3-4.5"/><path d="M15 4h5v5"/><path d="M20 4l-6 8"/>' },
+  { name: 'move', category: 'arrows', paths: '<polyline points="5 9 2 12 5 15"/><polyline points="9 5 12 2 15 5"/><polyline points="15 19 12 22 9 19"/><polyline points="19 9 22 12 19 15"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="12" y1="2" x2="12" y2="22"/>' },
+
+  // communication
+  { name: 'mail', category: 'communication', paths: '<rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2 6 12 13 22 6"/>' },
+  { name: 'message-circle', category: 'communication', paths: '<path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.5 8.5 0 0 1-4-1L3 21l1.5-5.5A8.38 8.38 0 0 1 3 11.5 8.5 8.5 0 0 1 12.5 3a8.38 8.38 0 0 1 8.5 8.5z"/>' },
+  { name: 'phone', category: 'communication', paths: '<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.7a2 2 0 0 1-.5 2.1L8 9.7a16 16 0 0 0 6 6l1.2-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.5 2.7.6a2 2 0 0 1 2 2.3z"/>' },
+  { name: 'at-sign', category: 'communication', paths: '<circle cx="12" cy="12" r="4"/><path d="M16 12v1.5a2.5 2.5 0 0 0 5 0V12a9 9 0 1 0-4 7.5"/>' },
+  { name: 'send', category: 'communication', paths: '<line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>' },
+  { name: 'bell', category: 'communication', paths: '<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.9 1.9 0 0 0 3.4 0"/>' },
+  { name: 'megaphone', category: 'communication', paths: '<path d="M3 11v2a2 2 0 0 0 2 2h1l3 5V9L6 4H5a2 2 0 0 0-2 2z" transform="translate(0 -1)"/><path d="M11 6l9-4v20l-9-4"/>' },
+  { name: 'share', category: 'communication', paths: '<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="10.5" x2="15.4" y2="6.5"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/>' },
+
+  // media
+  { name: 'image', category: 'media', paths: '<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>' },
+  { name: 'camera', category: 'media', paths: '<path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/>' },
+  { name: 'video', category: 'media', paths: '<polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/>' },
+  { name: 'music', category: 'media', paths: '<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>' },
+  { name: 'play', category: 'media', paths: '<polygon points="5 3 19 12 5 21 5 3"/>' },
+  { name: 'pause', category: 'media', paths: '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>' },
+  { name: 'volume', category: 'media', paths: '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/>' },
+  { name: 'mic', category: 'media', paths: '<rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><line x1="12" y1="19" x2="12" y2="23"/>' },
+  { name: 'film', category: 'media', paths: '<rect x="2" y="2" width="20" height="20" rx="2"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/><line x1="17" y1="17" x2="22" y2="17"/>' },
+
+  // files
+  { name: 'file', category: 'files', paths: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><polyline points="14 2 14 8 20 8"/>' },
+  { name: 'file-text', category: 'files', paths: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/>' },
+  { name: 'folder', category: 'files', paths: '<path d="M3 6a2 2 0 0 1 2-2h4l2 3h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>' },
+  { name: 'folder-plus', category: 'files', paths: '<path d="M3 6a2 2 0 0 1 2-2h4l2 3h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><line x1="12" y1="11" x2="12" y2="17"/><line x1="9" y1="14" x2="15" y2="14"/>' },
+  { name: 'download', category: 'files', paths: '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>' },
+  { name: 'upload', category: 'files', paths: '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>' },
+  { name: 'paperclip', category: 'files', paths: '<path d="M21.4 11.1L12 20.5a5 5 0 0 1-7-7l9-9a3.5 3.5 0 0 1 5 5l-9 9a2 2 0 0 1-3-3l8-8"/>' },
+  { name: 'archive', category: 'files', paths: '<rect x="2" y="3" width="20" height="5" rx="1"/><path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8"/><line x1="10" y1="12" x2="14" y2="12"/>' },
+  { name: 'copy', category: 'files', paths: '<rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>' },
+  { name: 'clipboard', category: 'files', paths: '<rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>' },
+
+  // editing
+  { name: 'edit', category: 'editing', paths: '<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.1 2.1 0 0 1 3 3L12 15l-4 1 1-4z"/>' },
+  { name: 'trash', category: 'editing', paths: '<polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/>' },
+  { name: 'scissors', category: 'editing', paths: '<circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.1" y2="15.9"/><line x1="14.8" y1="14.8" x2="20" y2="20"/><line x1="8.1" y1="8.1" x2="12" y2="12"/>' },
+  { name: 'crop', category: 'editing', paths: '<path d="M6 2v14a2 2 0 0 0 2 2h14"/><path d="M18 22V8a2 2 0 0 0-2-2H2"/>' },
+  { name: 'sliders', category: 'editing', paths: '<line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><circle cx="4" cy="12" r="2"/><circle cx="12" cy="10" r="2"/><circle cx="20" cy="14" r="2"/>' },
+  { name: 'type', category: 'editing', paths: '<polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/>' },
+  { name: 'bold', category: 'editing', paths: '<path d="M6 4h8a4 4 0 0 1 0 8H6z"/><path d="M6 12h9a4 4 0 0 1 0 8H6z"/>' },
+  { name: 'italic', category: 'editing', paths: '<line x1="19" y1="4" x2="10" y2="4"/><line x1="14" y1="20" x2="5" y2="20"/><line x1="15" y1="4" x2="9" y2="20"/>' },
+  { name: 'save', category: 'editing', paths: '<path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/>' },
+  { name: 'undo', category: 'editing', paths: '<polyline points="9 14 4 9 9 4"/><path d="M4 9h11a5 5 0 0 1 0 10h-1"/>' },
+
+  // commerce
+  { name: 'shopping-cart', category: 'commerce', paths: '<circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/>' },
+  { name: 'shopping-bag', category: 'commerce', paths: '<path d="M6 2l-1.5 4M18 2l1.5 4"/><path d="M3 6h18l-1.5 14a2 2 0 0 1-2 2H6.5a2 2 0 0 1-2-2z"/><path d="M8 10a4 4 0 0 0 8 0"/>' },
+  { name: 'credit-card', category: 'commerce', paths: '<rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/>' },
+  { name: 'dollar-sign', category: 'commerce', paths: '<line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5.5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H7"/>' },
+  { name: 'tag', category: 'commerce', paths: '<path d="M20.6 12.6l-8.2 8.2a2 2 0 0 1-2.8 0l-8.2-8.2a2 2 0 0 1 0-2.8l8.2-8.2H15l7 7v3z"/><circle cx="14.5" cy="9.5" r="1.5"/>' },
+  { name: 'gift', category: 'commerce', paths: '<rect x="2" y="8" width="20" height="5" rx="1"/><path d="M4 13v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7"/><line x1="12" y1="8" x2="12" y2="21"/><path d="M12 8C10 4 5 4 5 7s3 1 7 1zM12 8c2-4 7-4 7-1s-3 1-7 1z"/>' },
+  { name: 'truck', category: 'commerce', paths: '<rect x="1" y="3" width="15" height="13"/><path d="M16 8h4l3 3v5h-7z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>' },
+  { name: 'package', category: 'commerce', paths: '<path d="M21 8l-9-5-9 5v8l9 5 9-5z"/><polyline points="3.3 8.5 12 13 20.7 8.5"/><line x1="12" y1="22" x2="12" y2="13"/>' },
+
+  // devices
+  { name: 'smartphone', category: 'devices', paths: '<rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/>' },
+  { name: 'laptop', category: 'devices', paths: '<rect x="4" y="4" width="16" height="11" rx="1"/><path d="M2 19h20l-2-4H4z"/>' },
+  { name: 'monitor', category: 'devices', paths: '<rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>' },
+  { name: 'wifi', category: 'devices', paths: '<path d="M5 13a12 12 0 0 1 14 0"/><path d="M8.5 16.5a7 7 0 0 1 7 0"/><line x1="12" y1="20" x2="12.01" y2="20"/><path d="M2 9a17 17 0 0 1 20 0"/>' },
+  { name: 'battery', category: 'devices', paths: '<rect x="1" y="7" width="18" height="10" rx="2"/><line x1="22" y1="10" x2="22" y2="14"/><rect x="4" y="9.5" width="10" height="5" fill="currentColor" stroke="none"/>' },
+  { name: 'bluetooth', category: 'devices', paths: '<polyline points="6.5 6.5 17.5 17.5 12 23 12 1 17.5 6.5 6.5 17.5"/>' },
+  { name: 'cpu', category: 'devices', paths: '<rect x="6" y="6" width="12" height="12" rx="1"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="1" y1="15" x2="4" y2="15"/><line x1="20" y1="15" x2="23" y2="15"/>' },
+  { name: 'printer', category: 'devices', paths: '<polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/>' },
+
+  // weather
+  { name: 'sun', category: 'weather', paths: '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.2" y1="4.2" x2="5.6" y2="5.6"/><line x1="18.4" y1="18.4" x2="19.8" y2="19.8"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.2" y1="19.8" x2="5.6" y2="18.4"/><line x1="18.4" y1="5.6" x2="19.8" y2="4.2"/>' },
+  { name: 'moon', category: 'weather', paths: '<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>' },
+  { name: 'cloud', category: 'weather', paths: '<path d="M18 10h-1.3A5.5 5.5 0 1 0 8 15.9"/><path d="M18 10a4 4 0 0 1 0 8H8a5 5 0 0 1-.9-9.9"/>' },
+  { name: 'cloud-rain', category: 'weather', paths: '<path d="M16 13a4 4 0 0 0 0-8 5.5 5.5 0 0 0-10.7 1.6A4.5 4.5 0 0 0 6.5 15H16z"/><line x1="8" y1="19" x2="8" y2="21"/><line x1="12" y1="19" x2="12" y2="21"/><line x1="16" y1="19" x2="16" y2="21"/>' },
+  { name: 'umbrella', category: 'weather', paths: '<path d="M2 12a10 10 0 0 1 20 0z"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M9 21a2 2 0 0 0 3 0"/>' },
+  { name: 'zap', category: 'weather', paths: '<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>' },
+  { name: 'wind', category: 'weather', paths: '<path d="M3 8h11a3 3 0 1 0-3-3"/><path d="M3 16h13a3 3 0 1 1-3 3"/>' },
+  { name: 'thermometer', category: 'weather', paths: '<path d="M14 14.8V4a2 2 0 0 0-4 0v10.8a4 4 0 1 0 4 0z"/>' },
+
+  // people & social
+  { name: 'user', category: 'social', paths: '<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/>' },
+  { name: 'users', category: 'social', paths: '<circle cx="9" cy="8" r="4"/><path d="M2 21c0-3.9 3.1-7 7-7s7 3.1 7 7"/><path d="M17 4.5a4 4 0 0 1 0 7.8"/><path d="M23 21a6.5 6.5 0 0 0-5-6.3"/>' },
+  { name: 'user-check', category: 'social', paths: '<circle cx="9" cy="8" r="4"/><path d="M2 21c0-3.9 3.1-7 7-7s7 3.1 7 7"/><polyline points="17 10 19 12 23 8"/>' },
+  { name: 'heart', category: 'social', paths: '<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21.2l8.8-8.8a5.5 5.5 0 0 0 0-7.8z"/>' },
+  { name: 'star', category: 'social', paths: '<polygon points="12 2 15.1 8.3 22 9.3 17 14.1 18.2 21 12 17.8 5.8 21 7 14.1 2 9.3 8.9 8.3 12 2"/>' },
+  { name: 'thumbs-up', category: 'social', paths: '<path d="M7 10v11H4a1 1 0 0 1-1-1v-9a1 1 0 0 1 1-1z"/><path d="M7 10l4-8a2.5 2.5 0 0 1 2.5 2.5V9h5a2 2 0 0 1 2 2.4l-1.4 7A2 2 0 0 1 17.1 20H10a3 3 0 0 1-3-3"/>' },
+  { name: 'award', category: 'social', paths: '<circle cx="12" cy="8" r="6"/><polyline points="8.2 13.5 7 22 12 19 17 22 15.8 13.5"/>' },
+  { name: 'smile', category: 'social', paths: '<circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/>' },
+
+  // alerts / status
+  { name: 'check', category: 'alerts', paths: '<polyline points="20 6 9 17 4 12"/>' },
+  { name: 'check-circle', category: 'alerts', paths: '<path d="M22 11.1V12a10 10 0 1 1-5.9-9.1"/><polyline points="22 4 12 14.1 9 11.1"/>' },
+  { name: 'x', category: 'alerts', paths: '<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>' },
+  { name: 'x-circle', category: 'alerts', paths: '<circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>' },
+  { name: 'alert-circle', category: 'alerts', paths: '<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>' },
+  { name: 'alert-triangle', category: 'alerts', paths: '<path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>' },
+  { name: 'info', category: 'alerts', paths: '<circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>' },
+  { name: 'help-circle', category: 'alerts', paths: '<circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 1 1 4.2 2.7c-.8.4-1.3 1.2-1.3 2.1v.2"/><line x1="12" y1="17" x2="12.01" y2="17"/>' },
+  { name: 'shield', category: 'alerts', paths: '<path d="M12 2l8 4v6c0 5-3.4 9-8 10-4.6-1-8-5-8-10V6z"/>' },
+  { name: 'lock', category: 'alerts', paths: '<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>' },
+  { name: 'unlock', category: 'alerts', paths: '<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 9.5-2.2"/>' },
+  { name: 'eye', category: 'alerts', paths: '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>' },
+  { name: 'eye-off', category: 'alerts', paths: '<path d="M17.9 17.9A10.7 10.7 0 0 1 12 20c-7 0-11-8-11-8a18.6 18.6 0 0 1 4.2-5.2M9.9 4.2A9.8 9.8 0 0 1 12 4c7 0 11 8 11 8a18.6 18.6 0 0 1-2.2 3.2"/><path d="M14.1 14.1a3 3 0 1 1-4.2-4.2"/><line x1="1" y1="1" x2="23" y2="23"/>' },
+
+  // misc
+  { name: 'calendar', category: 'misc', paths: '<rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>' },
+  { name: 'clock', category: 'misc', paths: '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>' },
+  { name: 'search', category: 'misc', paths: '<circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>' },
+  { name: 'settings', category: 'misc', paths: '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 0 1-4 0v-.1a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 0 1 0-4h.1a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 0 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 0 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>' },
+  { name: 'filter', category: 'misc', paths: '<polygon points="22 3 2 3 10 12.5 10 19 14 21 14 12.5 22 3"/>' },
+  { name: 'flag', category: 'misc', paths: '<path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/>' },
+  { name: 'bookmark', category: 'misc', paths: '<path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>' },
+  { name: 'globe', category: 'misc', paths: '<circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>' },
+  { name: 'briefcase', category: 'misc', paths: '<rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>' },
+  { name: 'book', category: 'misc', paths: '<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>' },
+  { name: 'code', category: 'misc', paths: '<polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>' },
+  { name: 'terminal', category: 'misc', paths: '<polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/>' },
+  { name: 'database', category: 'misc', paths: '<ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.7 4 3 9 3s9-1.3 9-3V5"/><path d="M3 12c0 1.7 4 3 9 3s9-1.3 9-3"/>' },
+  { name: 'rocket', category: 'misc', paths: '<path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/>' },
+  { name: 'target', category: 'misc', paths: '<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>' },
+  { name: 'trending-up', category: 'misc', paths: '<polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/>' },
+  { name: 'trending-down', category: 'misc', paths: '<polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/>' },
+  { name: 'plus', category: 'misc', paths: '<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>' },
+  { name: 'minus', category: 'misc', paths: '<line x1="5" y1="12" x2="19" y2="12"/>' },
+  { name: 'more-horizontal', category: 'misc', paths: '<circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/>' },
+  { name: 'more-vertical', category: 'misc', paths: '<circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/>' },
+];

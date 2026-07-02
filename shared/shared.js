@@ -166,6 +166,12 @@ const ICON_PATHS = {
   'CycleTracker': '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/>',
   'WaterIntake': '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',
   'SleepLog': '<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>',
+  'PaletteForge': '<circle cx="13.5" cy="6.5" r="0.5"/><circle cx="17.5" cy="10.5" r="0.5"/><circle cx="8.5" cy="7.5" r="0.5"/><circle cx="6.5" cy="12.5" r="0.5"/><path d="M12 2a10 10 0 1 0 0 20c1.1 0 2-.9 2-2 0-.5-.2-1-.6-1.4-.3-.4-.5-.8-.5-1.3 0-1 .8-1.8 1.8-1.8H17a5 5 0 0 0 5-5c0-5-4.5-8.5-10-8.5z"/>',
+  'TypographyScale': '<polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/>',
+  'IconExplorer': '<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>',
+  'ShadowStudio': '<rect x="4" y="4" width="13" height="13" rx="2"/><path d="M9 21h9a2 2 0 0 0 2-2V9" stroke-dasharray="2 2"/>',
+  'SpacingCalc': '<line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="15" y2="12"/><line x1="3" y1="18" x2="9" y2="18"/>',
+  'GradientMaker': '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 12h18M12 3v18"/>',
   'JSONLab': '<path d="M8 3H7a2 2 0 0 0-2 2v5a2 2 0 0 1-2 2 2 2 0 0 1 2 2v5a2 2 0 0 0 2 2h1"/><path d="M16 3h1a2 2 0 0 1 2 2v5a2 2 0 0 0 2 2 2 2 0 0 0-2 2v5a2 2 0 0 1-2 2h-1"/>',
   'JSONConvert': '<polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/>',
   'JWTRead': '<circle cx="7.5" cy="15.5" r="4.5"/><path d="M10.7 12.3L20 3M17 6l2 2M14 9l2 2"/>',
@@ -385,6 +391,13 @@ const TOOL_REGISTRY = [
   { name: 'CycleTracker', url: '/health/cycle/', collection: 'health', desc: 'Predict next period and fertile window' },
   { name: 'WaterIntake', url: '/health/water/', collection: 'health', desc: 'One-tap hydration logging and streaks' },
   { name: 'SleepLog', url: '/health/sleep/', collection: 'health', desc: 'Sleep duration, quality and AI pattern analysis' },
+  { name: 'Design tools', url: '/design/', collection: 'design', desc: 'Palette, type scale, icons, shadows, spacing, gradients' },
+  { name: 'PaletteForge', url: '/design/palette/', collection: 'design', desc: 'Colour palettes with CSS/Tailwind export and contrast ratios' },
+  { name: 'TypographyScale', url: '/design/typography/', collection: 'design', desc: 'A harmonious 9-step type scale from base size and ratio' },
+  { name: 'IconExplorer', url: '/design/icons/', collection: 'design', desc: 'A curated outline icon set — copy as SVG, JSX, or Vue' },
+  { name: 'ShadowStudio', url: '/design/shadows/', collection: 'design', desc: 'Layered CSS box shadows visually, with presets' },
+  { name: 'SpacingCalc', url: '/design/spacing/', collection: 'design', desc: 'Linear or multiplicative spacing scale, with export' },
+  { name: 'GradientMaker', url: '/design/gradient/', collection: 'design', desc: 'Linear, radial, and conic CSS gradients visually' },
   { name: 'Privacy Policy', url: '/privacy.html', collection: 'tools', desc: "What tapdot tools does — and doesn't — collect" },
 ];
 
@@ -925,6 +938,36 @@ const STEPS = {
     { t: 'Log bed & wake time', d: { k: 'fields', rows: [['Bedtime', '11:00 PM'], ['Wake time', '7:00 AM']] } },
     { t: 'See your duration', d: { k: 'count', to: 8, label: 'hours of sleep' } },
     { t: 'AI spots the pattern', d: { k: 'result', text: 'Bedtime consistency: High' } },
+  ],
+  'PaletteForge': [
+    { t: 'Pick a base colour', d: { k: 'fields', rows: [['Base', '#4E8FC4']] } },
+    { t: 'Generates 5 shades', d: { k: 'chips', items: ['Primary', 'Light', 'Dark', 'Accent'], on: 0 } },
+    { t: 'Check WCAG contrast', d: { k: 'stats', items: [['4.8:1', 'vs white'], ['AA', 'rating']] } },
+  ],
+  'TypographyScale': [
+    { t: 'Set base size & ratio', d: { k: 'fields', rows: [['Base', '16px'], ['Ratio', '1.25']] } },
+    { t: 'Get 9 scale steps', d: { k: 'table', rows: [['sm', '12.8px'], ['xl', '31.25px']] } },
+    { t: 'Export CSS or Tailwind', d: { k: 'result', text: '--font-size-lg: 1.25rem;' } },
+  ],
+  'IconExplorer': [
+    { t: 'Search by name', d: { k: 'text', text: 'search: "arrow"' } },
+    { t: 'Style stroke & colour', d: { k: 'chips', items: ['2px', 'Accent'], on: 1 } },
+    { t: 'Copy as SVG or JSX', d: { k: 'result', text: '<ArrowRight />' } },
+  ],
+  'ShadowStudio': [
+    { t: 'Pick a preset', d: { k: 'chips', items: ['Flat', 'Material', 'Glass'], on: 1 } },
+    { t: 'Tune each layer', d: { k: 'fields', rows: [['Blur', '16px'], ['Opacity', '20%']] } },
+    { t: 'Copy the CSS', d: { k: 'result', text: 'box-shadow: 0 8px 16px...' } },
+  ],
+  'SpacingCalc': [
+    { t: 'Set a base unit', d: { k: 'fields', rows: [['Base', '4px'], ['Method', 'Multiplicative']] } },
+    { t: 'See the scale', d: { k: 'table', rows: [['sp-2', '6px'], ['sp-6', '30.4px']] } },
+    { t: 'Export as tokens', d: { k: 'result', text: '"sp-4": { "value": "13.5px" }' } },
+  ],
+  'GradientMaker': [
+    { t: 'Choose a type', d: { k: 'chips', items: ['Linear', 'Radial', 'Conic'], on: 0 } },
+    { t: 'Add colour stops', d: { k: 'fields', rows: [['Stop 1', '#4E8FC4'], ['Stop 2', '#8A5CD6']] } },
+    { t: 'Copy the CSS', d: { k: 'result', text: 'linear-gradient(90deg, ...)' } },
   ],
 };
 

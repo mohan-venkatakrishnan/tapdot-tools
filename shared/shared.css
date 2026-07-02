@@ -328,6 +328,13 @@ body {
   margin-bottom: 10px;
 }
 
+.ts-card-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0 0 14px;
+}
+
 /* ── Inputs ─────────────────────────────────────────────────────────────── */
 
 .ts-textarea {

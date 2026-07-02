@@ -249,3 +249,37 @@ DNS on GoDaddy. See README.md for the one-time setup.
   (`tapdot-<tool>-log`) — no shared storage module, kept intentionally simple since
   each tool's entry shape differs. `test/regression.mjs` grew to 198 checks,
   `test/functional.mjs` to 86 — both suites pass with 0 failures.
+- v13: **Design collection** (`design/`) — 6 tools: PaletteForge (base-colour → 5-shade
+  palette + WCAG contrast ratios + CSS/Tailwind/HSL export), TypographyScale (9-step
+  scale from base size + ratio), IconExplorer (curated ~90-icon outline set — see below
+  — search/filter, live stroke-width/colour styling, copy as SVG/JSX/Vue/path-data),
+  ShadowStudio (up to 5 layered box-shadows with flat/material/neumorphic/glass
+  presets), SpacingCalc (linear or 1.5x-multiplicative scale, CSS/Tailwind/JSON
+  export), GradientMaker (linear/radial/conic, colour stops with position + opacity).
+  Violet pastel theme.
+  - **IconExplorer ships a curated ~90-icon set** (`design/libs/icons.js`), not the
+    plan's aspirational "5,000+" — same deliberate quality-over-quantity call as
+    LegalGlossary's 128 terms vs. "500+". Icons are hand-authored generic outline
+    shapes (24x24, stroke-based), not a bundled third-party library.
+  - **Bug found and fixed — global identifier collisions with shared.js**: both
+    `design/libs/icons.js` (`const ICONS`) and `design/spacing/spacing.js`
+    (`const STEPS`) redeclared globals that `shared.js` already owns site-wide
+    (`ICONS` = tool-icon lookup map, `STEPS` = walkthrough demo data) — since none of
+    these scripts are ES modules, they all share one global scope per page, and the
+    redeclaration threw `SyntaxError: Identifier '...' has already been declared`,
+    silently breaking the whole page's JS. Renamed to `ICON_LIBRARY` and
+    `SCALE_STEPS`. **Any new tool script must avoid `ICONS`, `ICON_PATHS`,
+    `TOOL_REGISTRY`, `COLLECTION_LABELS`, `STEPS`, and `tapdotAI`** — those are
+    shared.js's top-level globals. This class of bug is invisible to the layout
+    regression suite (the page still renders, just inert) and only surfaces via a
+    `pageerror` listener, which is why `test/functional.mjs`'s per-tool "no JS
+    errors" check exists — it caught both instances here.
+  - Bug found and fixed: `.shadow-layer` and `.gradient-stop-row` used rigid
+    `grid-template-columns` with too many fixed tracks, overflowing at 375px —
+    another instance of the min-width:0 grid pattern from v7, fixed by switching both
+    to `flex-wrap: wrap` with `flex: 1 1 <basis>` children instead of a fixed grid.
+  - Added `.ts-card-title` to `shared.css` (was missing — Health's v12 cards used the
+    class already but it had no rule, so those `<h2>`s rendered unstyled; now fixed
+    retroactively for Health too).
+  - `test/regression.mjs` grew to 219 checks, `test/functional.mjs` to 103 — both
+    suites pass with 0 failures.

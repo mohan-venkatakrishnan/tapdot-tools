@@ -568,6 +568,101 @@ const check = (name, ok) => { console.log((ok ? 'PASS' : 'FAIL') + '  ' + name);
   await page.close();
 }
 
+// 37. PaletteForge: entering a base hex generates a 5-swatch palette and export.
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/design/palette/', { waitUntil: 'networkidle' });
+  await page.fill('#baseHex', '#ff0000');
+  await page.dispatchEvent('#baseHex', 'change');
+  await page.waitForTimeout(100);
+  const cards = await page.$$eval('.palette-card', els => els.length);
+  const exportText = await page.$eval('#exportOutput', el => el.textContent);
+  check('PaletteForge generates a 5-colour palette', cards === 5);
+  check('PaletteForge exports CSS variables', exportText.includes('--color-primary'));
+  check('no JS errors on PaletteForge', errs.length === 0);
+  await page.close();
+}
+
+// 38. TypographyScale: base size 16 + ratio 1.2 produces a 'base' step of exactly 16px.
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/design/typography/', { waitUntil: 'networkidle' });
+  await page.waitForTimeout(100);
+  const rows = await page.$eval('#scaleList', el => el.textContent);
+  check('TypographyScale renders 9 steps including base 16.00px', rows.includes('16.00px'));
+  check('no JS errors on TypographyScale', errs.length === 0);
+  await page.close();
+}
+
+// 39. IconExplorer: searching filters the grid, and clicking a tile copies an SVG.
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.context().grantPermissions(['clipboard-read', 'clipboard-write']);
+  await page.goto('http://localhost:8140/design/icons/', { waitUntil: 'networkidle' });
+  await page.waitForTimeout(100);
+  const allCount = await page.$$eval('.icon-tile', els => els.length);
+  await page.fill('#iconSearch', 'arrow');
+  await page.waitForTimeout(100);
+  const filteredCount = await page.$$eval('.icon-tile', els => els.length);
+  check('IconExplorer search narrows the grid', filteredCount > 0 && filteredCount < allCount);
+  await page.click('.icon-tile');
+  await page.waitForTimeout(100);
+  const clip = await page.evaluate(() => navigator.clipboard.readText()).catch(() => '');
+  check('IconExplorer copies an SVG to clipboard', clip.includes('<svg'));
+  check('no JS errors on IconExplorer', errs.length === 0);
+  await page.close();
+}
+
+// 40. ShadowStudio: switching to a preset updates the preview's box-shadow.
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/design/shadows/', { waitUntil: 'networkidle' });
+  await page.click('[data-preset="glass"]');
+  await page.waitForTimeout(100);
+  const shadow = await page.$eval('#previewCard', el => el.style.boxShadow);
+  const exportText = await page.$eval('#exportOutput', el => el.textContent);
+  check('ShadowStudio applies the glass preset to the preview', shadow.length > 0);
+  check('ShadowStudio export contains box-shadow', exportText.includes('box-shadow'));
+  check('no JS errors on ShadowStudio', errs.length === 0);
+  await page.close();
+}
+
+// 41. SpacingCalc: linear method with base 4px produces sp-4 = 16px.
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/design/spacing/', { waitUntil: 'networkidle' });
+  await page.selectOption('#method', 'linear');
+  await page.fill('#baseUnit', '4');
+  await page.waitForTimeout(100);
+  const rows = await page.$eval('#spacingList', el => el.textContent);
+  check('SpacingCalc computes sp-4 = 16px for linear/4px base', rows.includes('sp-4') && rows.includes('16px'));
+  check('no JS errors on SpacingCalc', errs.length === 0);
+  await page.close();
+}
+
+// 42. GradientMaker: default two-stop linear gradient renders and exports valid CSS.
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/design/gradient/', { waitUntil: 'networkidle' });
+  await page.waitForTimeout(100);
+  const bg = await page.$eval('#gradientPreview', el => el.style.backgroundImage);
+  const exportText = await page.$eval('#exportOutput', el => el.textContent);
+  check('GradientMaker renders a linear-gradient preview', bg.includes('linear-gradient'));
+  check('GradientMaker export contains the gradient CSS', exportText.includes('linear-gradient'));
+  await page.click('[data-type="radial"]');
+  await page.waitForTimeout(100);
+  const bgRadial = await page.$eval('#gradientPreview', el => el.style.backgroundImage);
+  check('GradientMaker switches to radial-gradient', bgRadial.includes('radial-gradient'));
+  check('no JS errors on GradientMaker', errs.length === 0);
+  await page.close();
+}
+
 await browser.close(); srv.close();
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);
