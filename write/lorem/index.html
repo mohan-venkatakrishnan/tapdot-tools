@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LoremCraft — Placeholder Text Generator | tapdot</title>
+  <meta name="description" content="Generate placeholder text in 10 styles — classic Lorem, realistic English, startup jargon, and more. Choose length and format. Instant, private." />
+  <meta property="og:title" content="LoremCraft — Placeholder Text Generator | tapdot" />
+  <meta property="og:description" content="Placeholder text in 10 styles. Choose length and format. Instant and private." />
+  <link rel="canonical" href="https://tools.tapdot.org/write/lorem/" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet" />
+  <link rel="icon" type="image/png" href="/assets/tapdot-icon.png" />
+  <link rel="stylesheet" href="/shared/shared.css" />
+  <link rel="stylesheet" href="lorem.css" />
+</head>
+<body>
+
+<nav class="ts-nav">
+  <a href="https://tapdot.org" class="ts-nav-logo">
+    <img src="/assets/tapdot-icon.png" width="22" height="22" alt="tapdot" />
+    <span>tapdot</span>
+  </a>
+  <span class="ts-nav-divider">/</span>
+  <span class="ts-nav-tool">LoremCraft</span>
+  <button class="ts-dark-toggle" id="darkToggle" aria-label="Toggle dark mode">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+         stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      <circle cx="12" cy="12" r="5"/>
+      <line x1="12" y1="1" x2="12" y2="3"/>
+      <line x1="12" y1="21" x2="12" y2="23"/>
+    </svg>
+  </button>
+</nav>
+
+<main class="ts-main">
+
+  <div class="ts-tool-header">
+    <h1 class="ts-tool-name">LoremCraft</h1>
+    <p class="ts-tool-desc">Placeholder text in 10 styles. Pick a length and format.</p>
+  </div>
+
+  <div class="ts-privacy-strip">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+         stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+    </svg>
+    Everything runs in your browser — nothing is sent anywhere
+  </div>
+
+  <div class="ts-card">
+    <div class="lc-controls">
+      <div>
+        <label class="ts-label" for="styleSel">Style</label>
+        <select class="ts-select" id="styleSel" style="width:100%"></select>
+      </div>
+      <div>
+        <label class="ts-label" for="unitSel">Amount of</label>
+        <select class="ts-select" id="unitSel" style="width:100%">
+          <option value="paragraphs">Paragraphs</option>
+          <option value="sentences">Sentences</option>
+          <option value="words">Words</option>
+        </select>
+      </div>
+      <div>
+        <label class="ts-label" for="countInput">How many</label>
+        <input class="ts-input" id="countInput" type="number" value="3" min="1" />
+      </div>
+      <div>
+        <label class="ts-label" for="formatSel">Output format</label>
+        <select class="ts-select" id="formatSel" style="width:100%">
+          <option value="plain">Plain text</option>
+          <option value="html">HTML &lt;p&gt;</option>
+          <option value="markdown">Markdown</option>
+        </select>
+      </div>
+    </div>
+    <button class="ts-btn ts-btn-primary ts-mt-md" id="genBtn">Generate</button>
+  </div>
+
+  <div class="ts-output" id="output">
+    <div class="ts-card">
+      <div class="ts-row" style="justify-content:space-between">
+        <p class="ts-card-label" style="margin-bottom:0">Output</p>
+        <button class="ts-copy-btn" id="copyBtn">Copy</button>
+      </div>
+      <div class="ts-mono-output ts-mt-sm" id="loremOut"></div>
+    </div>
+  </div>
+
+</main>
+
+<footer class="ts-footer">
+  <span>Built by <a href="https://tapdot.org">tapdot</a></span>
+  <span class="ts-footer-dot">·</span>
+  <a href="/privacy.html">Privacy</a>
+  <span class="ts-footer-dot">·</span>
+  <span>All processing happens in your browser</span>
+</footer>
+
+<script src="/shared/shared.js"></script>
+<script src="lorem.js" defer></script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js'
+  data-cf-beacon='{"token": "YOUR_CLOUDFLARE_TOKEN"}'></script>
+</body>
+</html>

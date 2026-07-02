@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ThreadCraft — Tweet Thread Formatter | tapdot</title>
+  <meta name="description" content="Paste any long text and split it into a numbered tweet thread. Character count per tweet. No Twitter login required." />
+  <meta property="og:title" content="ThreadCraft — Tweet Thread Formatter | tapdot" />
+  <meta property="og:description" content="Split long text into a numbered tweet thread with per-tweet character counts." />
+  <link rel="canonical" href="https://tools.tapdot.org/write/thread/" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet" />
+  <link rel="icon" type="image/png" href="/assets/tapdot-icon.png" />
+  <link rel="stylesheet" href="/shared/shared.css" />
+  <link rel="stylesheet" href="thread.css" />
+</head>
+<body>
+
+<nav class="ts-nav">
+  <a href="https://tapdot.org" class="ts-nav-logo">
+    <img src="/assets/tapdot-icon.png" width="22" height="22" alt="tapdot" />
+    <span>tapdot</span>
+  </a>
+  <span class="ts-nav-divider">/</span>
+  <span class="ts-nav-tool">ThreadCraft</span>
+  <button class="ts-dark-toggle" id="darkToggle" aria-label="Toggle dark mode">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+         stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      <circle cx="12" cy="12" r="5"/>
+      <line x1="12" y1="1" x2="12" y2="3"/>
+      <line x1="12" y1="21" x2="12" y2="23"/>
+    </svg>
+  </button>
+</nav>
+
+<main class="ts-main">
+
+  <div class="ts-tool-header">
+    <h1 class="ts-tool-name">ThreadCraft</h1>
+    <p class="ts-tool-desc">Split long text into a numbered tweet thread.</p>
+  </div>
+
+  <div class="ts-privacy-strip">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+         stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+    </svg>
+    Everything runs in your browser — nothing is sent anywhere
+  </div>
+
+  <div class="ts-card">
+    <p class="ts-card-label">Your text</p>
+    <textarea class="ts-textarea" id="input"
+      placeholder="Paste your long text here. For manual splits, put --- on its own line where you want a break."></textarea>
+
+    <div class="tc-controls ts-mt-md">
+      <div>
+        <label class="ts-label" for="limitInput">Char limit per tweet</label>
+        <input class="ts-input" id="limitInput" type="number" value="280" min="50" />
+      </div>
+      <div>
+        <label class="ts-label" for="numFmt">Numbering</label>
+        <select class="ts-select" id="numFmt" style="width:100%">
+          <option value="slash">1/n prefix</option>
+          <option value="plain">Plain (1.)</option>
+          <option value="emoji">Emoji numbers</option>
+          <option value="none">No numbering</option>
+        </select>
+      </div>
+      <div>
+        <label class="ts-label" for="splitMode">Split mode</label>
+        <select class="ts-select" id="splitMode" style="width:100%">
+          <option value="auto">Auto (smart)</option>
+          <option value="manual">Manual (---)</option>
+        </select>
+      </div>
+    </div>
+
+    <button class="ts-btn ts-btn-primary ts-mt-md" id="splitBtn">Split into thread</button>
+  </div>
+
+  <div class="ts-output" id="output">
+    <div class="ts-row" style="justify-content:space-between;margin-bottom:12px">
+      <span class="ts-card-label" id="threadMeta" style="margin-bottom:0"></span>
+      <button class="ts-btn ts-btn-secondary" id="copyAllBtn" style="height:34px">Copy all</button>
+    </div>
+    <div id="tweets"></div>
+  </div>
+
+</main>
+
+<footer class="ts-footer">
+  <span>Built by <a href="https://tapdot.org">tapdot</a></span>
+  <span class="ts-footer-dot">·</span>
+  <a href="/privacy.html">Privacy</a>
+  <span class="ts-footer-dot">·</span>
+  <span>All processing happens in your browser</span>
+</footer>
+
+<script src="/shared/shared.js"></script>
+<script src="thread.js" defer></script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js'
+  data-cf-beacon='{"token": "YOUR_CLOUDFLARE_TOKEN"}'></script>
+</body>
+</html>

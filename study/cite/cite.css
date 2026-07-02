@@ -1,0 +1,20 @@
+/* CiteMaker */
+
+.cite-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.cite-status {
+  font-size: 12px;
+  color: var(--color-muted);
+  margin-top: 8px;
+  min-height: 16px;
+}
+.cite-status.error { color: var(--color-danger); }
+.cite-status.ok    { color: var(--color-success); }
+
+@media (max-width: 480px) {
+  .cite-grid { grid-template-columns: 1fr; }
+}

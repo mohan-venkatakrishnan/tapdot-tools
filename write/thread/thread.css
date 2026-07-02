@@ -1,0 +1,38 @@
+/* ThreadCraft */
+
+#input { min-height: 180px; }
+
+.tc-controls {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.tc-tweet {
+  background: var(--color-surface);
+  border: 0.5px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  margin-bottom: 12px;
+}
+
+.tc-tweet.over { border-color: var(--color-danger); }
+
+.tc-tweet-text {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--color-text);
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin-bottom: 10px;
+}
+
+.tc-tweet-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@media (max-width: 520px) {
+  .tc-controls { grid-template-columns: 1fr; }
+}

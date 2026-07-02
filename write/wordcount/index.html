@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WordCount Pro — Word &amp; Character Counter | tapdot</title>
+  <meta name="description" content="Count words, characters, sentences, paragraphs, reading time, speaking time, and keyword density. All local. No ads." />
+  <meta property="og:title" content="WordCount Pro — Word & Character Counter | tapdot" />
+  <meta property="og:description" content="Words, characters, reading time, and keyword density. All local, no ads." />
+  <link rel="canonical" href="https://tools.tapdot.org/write/wordcount/" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet" />
+  <link rel="icon" type="image/png" href="/assets/tapdot-icon.png" />
+  <link rel="stylesheet" href="/shared/shared.css" />
+  <link rel="stylesheet" href="wordcount.css" />
+</head>
+<body>
+
+<nav class="ts-nav">
+  <a href="https://tapdot.org" class="ts-nav-logo">
+    <img src="/assets/tapdot-icon.png" width="22" height="22" alt="tapdot" />
+    <span>tapdot</span>
+  </a>
+  <span class="ts-nav-divider">/</span>
+  <span class="ts-nav-tool">WordCount Pro</span>
+  <button class="ts-dark-toggle" id="darkToggle" aria-label="Toggle dark mode">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+         stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      <circle cx="12" cy="12" r="5"/>
+      <line x1="12" y1="1" x2="12" y2="3"/>
+      <line x1="12" y1="21" x2="12" y2="23"/>
+    </svg>
+  </button>
+</nav>
+
+<main class="ts-main">
+
+  <div class="ts-tool-header">
+    <h1 class="ts-tool-name">WordCount Pro</h1>
+    <p class="ts-tool-desc">Words, characters, reading time, and keyword density — live as you type.</p>
+  </div>
+
+  <div class="ts-privacy-strip">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+         stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+    </svg>
+    Everything runs in your browser — nothing is sent anywhere
+  </div>
+
+  <div class="ts-stats-grid">
+    <div class="ts-stat"><span class="ts-stat-num" id="sWords">0</span><span class="ts-stat-label">Words</span></div>
+    <div class="ts-stat"><span class="ts-stat-num" id="sChars">0</span><span class="ts-stat-label">Characters</span></div>
+    <div class="ts-stat"><span class="ts-stat-num" id="sCharsNoSpace">0</span><span class="ts-stat-label">No spaces</span></div>
+    <div class="ts-stat"><span class="ts-stat-num" id="sSentences">0</span><span class="ts-stat-label">Sentences</span></div>
+    <div class="ts-stat"><span class="ts-stat-num" id="sParagraphs">0</span><span class="ts-stat-label">Paragraphs</span></div>
+    <div class="ts-stat"><span class="ts-stat-num" id="sReading">0m</span><span class="ts-stat-label">Read time</span></div>
+    <div class="ts-stat"><span class="ts-stat-num" id="sSpeaking">0m</span><span class="ts-stat-label">Speak time</span></div>
+  </div>
+
+  <div class="ts-card">
+    <p class="ts-card-label">Your text</p>
+    <textarea class="ts-textarea" id="input"
+      placeholder="Start typing or paste your text here…"></textarea>
+  </div>
+
+  <div class="ts-card">
+    <p class="ts-card-label">Character limit check</p>
+    <div class="ts-row">
+      <input class="ts-input" id="limitInput" type="number" placeholder="e.g. 280"
+             style="max-width:140px" />
+      <span class="wc-limit" id="limitReadout">Set a limit to see remaining characters.</span>
+    </div>
+  </div>
+
+  <div class="ts-card">
+    <p class="ts-card-label">Keyword density — top 10 (stop words excluded)</p>
+    <table class="ts-table" id="kwTable">
+      <thead><tr><th>Word</th><th>Count</th><th>Density</th></tr></thead>
+      <tbody id="kwBody">
+        <tr><td colspan="3" style="color:var(--color-muted)">Start typing to see keywords.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</main>
+
+<footer class="ts-footer">
+  <span>Built by <a href="https://tapdot.org">tapdot</a></span>
+  <span class="ts-footer-dot">·</span>
+  <a href="/privacy.html">Privacy</a>
+  <span class="ts-footer-dot">·</span>
+  <span>All processing happens in your browser</span>
+</footer>
+
+<script src="/shared/shared.js"></script>
+<script src="wordcount.js" defer></script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js'
+  data-cf-beacon='{"token": "YOUR_CLOUDFLARE_TOKEN"}'></script>
+</body>
+</html>

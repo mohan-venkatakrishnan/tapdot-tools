@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FlashForge — Free Flashcard Maker | tapdot</title>
+  <meta name="description" content="Turn your notes into flashcards instantly. Spaced repetition built in. No account needed. Cards save to your browser, never to a server." />
+  <meta property="og:title" content="FlashForge — Free Flashcard Maker | tapdot" />
+  <meta property="og:description" content="Turn notes into flashcards with spaced repetition. No account. Saved locally." />
+  <link rel="canonical" href="https://tools.tapdot.org/study/flashcards/" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet" />
+  <link rel="icon" type="image/png" href="/assets/tapdot-icon.png" />
+  <link rel="stylesheet" href="/shared/shared.css" />
+  <link rel="stylesheet" href="flashforge.css" />
+</head>
+<body>
+
+<nav class="ts-nav">
+  <a href="https://tapdot.org" class="ts-nav-logo">
+    <img src="/assets/tapdot-icon.png" width="22" height="22" alt="tapdot" />
+    <span>tapdot</span>
+  </a>
+  <span class="ts-nav-divider">/</span>
+  <span class="ts-nav-tool">FlashForge</span>
+  <button class="ts-dark-toggle" id="darkToggle" aria-label="Toggle dark mode">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+         stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      <circle cx="12" cy="12" r="5"/>
+      <line x1="12" y1="1" x2="12" y2="3"/>
+      <line x1="12" y1="21" x2="12" y2="23"/>
+    </svg>
+  </button>
+</nav>
+
+<main class="ts-main">
+
+  <div class="ts-tool-header">
+    <h1 class="ts-tool-name">FlashForge</h1>
+    <p class="ts-tool-desc">Turn notes into flashcards with spaced repetition built in.</p>
+  </div>
+
+  <div class="ts-privacy-strip">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+         stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+    </svg>
+    Cards save to your browser only — nothing is sent anywhere
+  </div>
+
+  <!-- ── State: create ─────────────────────────────────────── -->
+  <section id="viewCreate">
+    <div class="ts-card">
+      <p class="ts-card-label">Paste your notes</p>
+      <textarea class="ts-textarea" id="notesInput" placeholder="Paste notes in any of these formats:
+
+Q: What is the capital of France?
+A: Paris
+
+or
+
+Photosynthesis — the process plants use to convert light into energy
+
+or one item per line (front only)"></textarea>
+      <div class="ts-row ts-mt-sm">
+        <input class="ts-input ts-grow" id="setName" placeholder="Set name (optional)" />
+        <button class="ts-btn ts-btn-primary" id="createBtn">Create cards</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── State: grid ───────────────────────────────────────── -->
+  <section id="viewGrid" class="ts-hidden">
+    <div class="ts-row" style="justify-content:space-between;margin-bottom:16px">
+      <div>
+        <div id="gridTitle" style="font-weight:600"></div>
+        <div class="ff-sub" id="gridSub"></div>
+      </div>
+      <div class="ts-row ts-gap-sm">
+        <button class="ts-btn ts-btn-primary" id="studyBtn">Study</button>
+        <button class="ts-btn ts-btn-ghost" id="resetBtn">New set</button>
+      </div>
+    </div>
+    <div class="ff-grid" id="cardGrid"></div>
+  </section>
+
+  <!-- ── State: study ──────────────────────────────────────── -->
+  <section id="viewStudy" class="ts-hidden">
+    <div class="ff-study-progress" id="studyProgress"></div>
+    <div class="ff-flashcard" id="flashcard">
+      <div class="ff-flashcard-inner">
+        <div class="ff-face ff-front" id="cardFront"></div>
+        <div class="ff-face ff-back" id="cardBack"></div>
+      </div>
+    </div>
+    <p class="ff-hint" id="flipHint">Click the card or press Space to flip</p>
+    <div class="ff-rate ts-hidden" id="rateRow">
+      <button class="ts-btn ts-btn-secondary" data-rate="hard">Hard</button>
+      <button class="ts-btn ts-btn-secondary" data-rate="medium">Medium</button>
+      <button class="ts-btn ts-btn-primary" data-rate="easy">Easy</button>
+    </div>
+    <button class="ts-btn ts-btn-ghost ts-mt-md" id="exitStudy">Exit to cards</button>
+  </section>
+
+  <!-- ── State: done ───────────────────────────────────────── -->
+  <section id="viewDone" class="ts-hidden">
+    <div class="ts-card" style="text-align:center">
+      <p class="ts-card-label">Session complete</p>
+      <div class="ff-done-num" id="doneReviewed">0</div>
+      <p class="ff-sub">cards reviewed this session</p>
+      <div class="ts-stats-grid" style="margin-top:20px">
+        <div class="ts-stat"><span class="ts-stat-num" id="doneEasy">0</span><span class="ts-stat-label">Easy</span></div>
+        <div class="ts-stat"><span class="ts-stat-num" id="doneMedium">0</span><span class="ts-stat-label">Medium</span></div>
+        <div class="ts-stat"><span class="ts-stat-num" id="doneHard">0</span><span class="ts-stat-label">Hard</span></div>
+      </div>
+      <p class="ff-sub ts-mt-md" id="nextDue"></p>
+      <div class="ts-row ts-gap-sm" style="justify-content:center;margin-top:16px">
+        <button class="ts-btn ts-btn-primary" id="doneStudyAgain">Study again</button>
+        <button class="ts-btn ts-btn-ghost" id="doneToGrid">Back to cards</button>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="ts-footer">
+  <span>Built by <a href="https://tapdot.org">tapdot</a></span>
+  <span class="ts-footer-dot">·</span>
+  <a href="/privacy.html">Privacy</a>
+  <span class="ts-footer-dot">·</span>
+  <span>All processing happens in your browser</span>
+</footer>
+
+<script src="/shared/shared.js"></script>
+<script src="flashforge.js" defer></script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js'
+  data-cf-beacon='{"token": "YOUR_CLOUDFLARE_TOKEN"}'></script>
+</body>
+</html>

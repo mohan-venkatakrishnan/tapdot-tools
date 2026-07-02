@@ -1,0 +1,13 @@
+/* LoremCraft */
+
+.lc-controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+#loremOut { max-height: 480px; overflow-y: auto; }
+
+@media (max-width: 520px) {
+  .lc-controls { grid-template-columns: 1fr; }
+}

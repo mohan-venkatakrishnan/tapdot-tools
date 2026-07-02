@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tapdot Tools — Free, Private, Browser-Based Tools</title>
+  <meta name="description" content="Eight privacy-first web tools for students and writers. Citations, flashcards, grade calculators, readability, word count and more. Everything runs in your browser." />
+  <meta property="og:title" content="tapdot Tools — Free, Private, Browser-Based Tools" />
+  <meta property="og:description" content="Eight privacy-first web tools for students and writers. Everything runs in your browser." />
+  <link rel="canonical" href="https://tools.tapdot.org/" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet" />
+  <link rel="icon" type="image/png" href="/assets/tapdot-icon.png" />
+  <link rel="stylesheet" href="/shared/shared.css" />
+</head>
+<body>
+
+<nav class="ts-nav">
+  <a href="https://tapdot.org" class="ts-nav-logo">
+    <img src="/assets/tapdot-icon.png" width="22" height="22" alt="tapdot" />
+    <span>tapdot</span>
+  </a>
+  <span class="ts-nav-divider">/</span>
+  <span class="ts-nav-tool">Tools</span>
+  <button class="ts-dark-toggle" id="darkToggle" aria-label="Toggle dark mode">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+         stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      <circle cx="12" cy="12" r="5"/>
+      <line x1="12" y1="1" x2="12" y2="3"/>
+      <line x1="12" y1="21" x2="12" y2="23"/>
+    </svg>
+  </button>
+</nav>
+
+<main class="ts-main">
+
+  <div class="ts-tool-header">
+    <h1 class="ts-tool-name">Free tools that respect your privacy</h1>
+    <p class="ts-tool-desc">
+      Eight small, fast tools for studying and writing. Every one runs entirely in
+      your browser — no account, no ads, nothing you type is ever sent anywhere.
+    </p>
+  </div>
+
+  <div class="ts-privacy-strip">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+         stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+    </svg>
+    Everything runs in your browser — nothing is sent anywhere
+  </div>
+
+  <div class="ts-hub-grid">
+    <a class="ts-hub-card" href="/study/">
+      <div class="ts-hub-card-title">Study tools</div>
+      <div class="ts-hub-card-desc">For students and researchers.</div>
+      <div class="ts-hub-card-meta">CiteMaker · FlashForge · GradeCalc · BiasCheck</div>
+      <div class="ts-hub-card-link" style="margin-top:12px">Open collection →</div>
+    </a>
+    <a class="ts-hub-card" href="/write/">
+      <div class="ts-hub-card-title">Write tools</div>
+      <div class="ts-hub-card-desc">For writers and creators.</div>
+      <div class="ts-hub-card-meta">ReadScore · WordCount Pro · LoremCraft · ThreadCraft</div>
+      <div class="ts-hub-card-link" style="margin-top:12px">Open collection →</div>
+    </a>
+  </div>
+
+</main>
+
+<footer class="ts-footer">
+  <span>Built by <a href="https://tapdot.org">tapdot</a></span>
+  <span class="ts-footer-dot">·</span>
+  <a href="/privacy.html">Privacy</a>
+  <span class="ts-footer-dot">·</span>
+  <span>All processing happens in your browser</span>
+</footer>
+
+<script src="/shared/shared.js"></script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js'
+  data-cf-beacon='{"token": "YOUR_CLOUDFLARE_TOKEN"}'></script>
+</body>
+</html>

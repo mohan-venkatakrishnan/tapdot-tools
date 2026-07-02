@@ -1,0 +1,29 @@
+/* BiasCheck */
+
+#input { min-height: 180px; }
+
+.bc-status { font-size: 12px; color: var(--color-muted); }
+.bc-status.ready { color: var(--color-success); }
+.bc-status.fallback { color: var(--color-warning); }
+.bc-status.working { color: var(--color-accent); }
+
+.bc-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.bc-chip {
+  font-size: 13px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+  border: 0.5px solid var(--color-border);
+}
+.bc-empty { font-size: 13px; color: var(--color-muted); }
+
+.bc-text { font-size: 14px; line-height: 1.7; color: var(--color-text); }
+
+.bc-list {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--color-text);
+}

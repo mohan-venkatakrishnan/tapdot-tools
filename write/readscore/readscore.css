@@ -1,0 +1,27 @@
+/* ReadScore */
+
+#input { min-height: 200px; }
+
+.rs-highlight {
+  font-size: 15px;
+  line-height: 1.9;
+  color: var(--color-text);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.rs-legend {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  font-size: 11px;
+  color: var(--color-muted);
+}
+.rs-key { display: inline-flex; align-items: center; gap: 5px; }
+.rs-key span {
+  display: inline-block;
+  width: 18px;
+  height: 0;
+}
+.rs-key .ts-hl-long    { border-bottom: 2px solid var(--color-warning); }
+.rs-key .ts-hl-passive { border-bottom: 2px solid var(--color-accent); }

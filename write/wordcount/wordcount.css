@@ -1,0 +1,12 @@
+/* WordCount Pro */
+
+#input { min-height: 220px; }
+
+.wc-limit {
+  font-size: 13px;
+  color: var(--color-muted);
+  font-family: var(--font-mono);
+}
+.wc-limit.ok   { color: var(--color-success); }
+.wc-limit.warn { color: var(--color-warning); }
+.wc-limit.over { color: var(--color-danger); }

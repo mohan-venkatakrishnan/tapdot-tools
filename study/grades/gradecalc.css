@@ -1,0 +1,66 @@
+/* GradeCalc */
+
+.gc-rows { display: flex; flex-direction: column; gap: 8px; }
+
+.gc-row {
+  display: grid;
+  gap: 8px;
+  align-items: center;
+}
+
+.gc-row-gpa      { grid-template-columns: 1fr 90px 70px 32px; }
+.gc-row-weighted { grid-template-columns: 1fr 70px 70px 70px 32px; }
+
+.gc-row .ts-input { height: 38px; }
+
+.gc-del {
+  width: 32px;
+  height: 38px;
+  border: 0.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--color-muted);
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+  transition: color var(--transition), border-color var(--transition);
+}
+.gc-del:hover { color: var(--color-danger); border-color: var(--color-danger); }
+
+.gc-head {
+  display: grid;
+  gap: 8px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-muted);
+  margin-bottom: 4px;
+}
+.gc-head-gpa      { grid-template-columns: 1fr 90px 70px 32px; }
+.gc-head-weighted { grid-template-columns: 1fr 70px 70px 70px 32px; }
+
+.gc-note {
+  font-size: 12px;
+  color: var(--color-muted);
+  margin-top: 10px;
+  min-height: 16px;
+}
+
+.gc-final-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.gc-final-result {
+  font-family: var(--font-mono);
+  font-size: 40px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+@media (max-width: 520px) {
+  .gc-final-grid { grid-template-columns: 1fr; }
+  .gc-row-gpa,   .gc-head-gpa      { grid-template-columns: 1fr 70px 56px 32px; }
+  .gc-row-weighted, .gc-head-weighted { grid-template-columns: 1fr 56px 56px 56px 32px; }
+}
