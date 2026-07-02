@@ -2,11 +2,12 @@
 <html lang="en" data-collection="study" data-tool="CiteMaker">
 <head>
   <meta charset="UTF-8" />
+  <script>(function(){try{var t=localStorage.getItem('tapdot-theme');var d=matchMedia('(prefers-color-scheme: dark)').matches;if(t==='dark'||(!t&&d))document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CiteMaker — Free Citation Generator | tapdot</title>
-  <meta name="description" content="Generate APA, MLA, Chicago and Harvard citations instantly. No signup, no ads. All processing happens in your browser." />
+  <meta name="description" content="Generate APA, MLA, Chicago, Harvard, IEEE, Vancouver and ASA citations for websites, books, journal articles, videos and news. No signup, no ads. All processing happens in your browser." />
   <meta property="og:title" content="CiteMaker — Free Citation Generator | tapdot" />
-  <meta property="og:description" content="Generate APA, MLA, Chicago and Harvard citations instantly. No signup, no ads." />
+  <meta property="og:description" content="7 citation styles, 5 source types. No signup, no ads, all in your browser." />
   <link rel="canonical" href="https://tools.tapdot.org/study/cite/" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -23,8 +24,6 @@
     <img src="/assets/tapdot-icon.png" width="22" height="22" alt="tapdot" />
     <span>tapdot</span>
   </a>
-  <span class="ts-nav-divider">/</span>
-  <span class="ts-nav-tool">CiteMaker</span>
   <button class="ts-dark-toggle" id="darkToggle" aria-label="Toggle dark mode">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
          stroke="currentColor" stroke-width="2" stroke-linecap="round">
@@ -39,7 +38,7 @@
 
   <div class="ts-tool-header">
     <h1 class="ts-tool-name">CiteMaker</h1>
-    <p class="ts-tool-desc">Generate APA, MLA, Chicago and Harvard citations instantly.</p>
+    <p class="ts-tool-desc">7 citation styles, 5 source types. Generate instantly.</p>
   </div>
 
   <div class="ts-privacy-strip">
@@ -52,11 +51,25 @@
 
   <div class="ts-card">
     <p class="ts-card-label">Citation style</p>
-    <div class="ts-segment" id="styleSegment">
+    <div class="ts-segment cite-style-segment" id="styleSegment">
       <button class="ts-segment-btn active" data-style="apa">APA</button>
       <button class="ts-segment-btn" data-style="mla">MLA</button>
       <button class="ts-segment-btn" data-style="chicago">Chicago</button>
       <button class="ts-segment-btn" data-style="harvard">Harvard</button>
+      <button class="ts-segment-btn" data-style="ieee">IEEE</button>
+      <button class="ts-segment-btn" data-style="vancouver">Vancouver</button>
+      <button class="ts-segment-btn" data-style="asa">ASA</button>
+    </div>
+  </div>
+
+  <div class="ts-card">
+    <p class="ts-card-label">Source type</p>
+    <div class="ts-segment cite-style-segment" id="typeSegment">
+      <button class="ts-segment-btn active" data-type="website">Website</button>
+      <button class="ts-segment-btn" data-type="book">Book</button>
+      <button class="ts-segment-btn" data-type="journal">Journal article</button>
+      <button class="ts-segment-btn" data-type="video">Video</button>
+      <button class="ts-segment-btn" data-type="news">News / Magazine</button>
     </div>
   </div>
 
@@ -78,33 +91,8 @@
       <p class="cite-status" id="fetchStatus"></p>
     </div>
 
-    <!-- Manual fields (shared, populated by URL fetch too) -->
-    <div id="manualFields">
-      <div class="cite-grid">
-        <div>
-          <label class="ts-label" for="fAuthor">Author</label>
-          <input class="ts-input" id="fAuthor" placeholder="Last, First" />
-        </div>
-        <div>
-          <label class="ts-label" for="fYear">Year</label>
-          <input class="ts-input" id="fYear" placeholder="2026" />
-        </div>
-      </div>
-      <div style="margin-top:12px">
-        <label class="ts-label" for="fTitle">Title</label>
-        <input class="ts-input" id="fTitle" placeholder="Title of the work" />
-      </div>
-      <div class="cite-grid" style="margin-top:12px">
-        <div>
-          <label class="ts-label" for="fPublisher">Publisher / Site</label>
-          <input class="ts-input" id="fPublisher" placeholder="Publisher or website name" />
-        </div>
-        <div>
-          <label class="ts-label" for="fUrl">URL</label>
-          <input class="ts-input" id="fUrl" placeholder="https://…" />
-        </div>
-      </div>
-    </div>
+    <!-- Manual fields — rebuilt per source type by cite.js -->
+    <div id="manualFields" class="cite-grid"></div>
 
     <button class="ts-btn ts-btn-primary" id="generateBtn" style="margin-top:16px">
       Generate citation

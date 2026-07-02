@@ -1,23 +1,31 @@
-// tapdot tools — shared utilities + shell (v4)
+// tapdot tools — shared utilities + shell (v7)
 
-// ── Dark mode (runs immediately to avoid flash) ────────────────────────────
+// ── Dark mode ────────────────────────────────────────────────────────────
+// The actual dark/light DECISION happens in an inline <script> in <head> on
+// every page (before first paint) — that's what prevents a light-mode flash
+// on load/back-navigation. This just wires the toggle button + icon.
 
-(function () {
-  const stored = localStorage.getItem('tapdot-theme');
-  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  if (stored === 'dark' || (!stored && prefersDark)) {
-    document.documentElement.setAttribute('data-theme', 'dark');
-  }
-})();
+const SUN_ICON = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>';
+const MOON_ICON = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+
+function syncThemeIcon() {
+  const btn = document.getElementById('darkToggle');
+  if (!btn) return;
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  btn.innerHTML = isDark ? SUN_ICON : MOON_ICON;
+  btn.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
+}
 
 function initDarkToggle() {
   const btn = document.getElementById('darkToggle');
   if (!btn) return;
+  syncThemeIcon();
   btn.addEventListener('click', () => {
     const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
     const next = isDark ? 'light' : 'dark';
     document.documentElement.setAttribute('data-theme', next);
     localStorage.setItem('tapdot-theme', next);
+    syncThemeIcon();
   });
 }
 
@@ -105,7 +113,7 @@ const tapdotAI = {
 // ── Icon set (categories + tools) ───────────────────────────────────────────
 
 const ICON_PATHS = {
-  tools: '<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',
+  tools: '<path d="M6 5h12"/><path d="M12 5v9"/><circle cx="12" cy="18.5" r="2"/>',
   study: '<path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1 3 3 6 3s6-2 6-3v-5"/>',
   write: '<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/>',
   'CiteMaker': '<path d="M6 17h3l2-4V7H5v6h3z"/><path d="M16 17h3l2-4V7h-6v6h3z"/>',
@@ -150,6 +158,113 @@ function initFavicon() {
   if (!link) { link = document.createElement('link'); link.rel = 'icon'; document.head.appendChild(link); }
   link.type = 'image/svg+xml';
   link.href = 'data:image/svg+xml,' + encodeURIComponent(svg);
+}
+
+// ── Searchable dropdown (progressive enhancement for long <select> lists) ───
+// Add `data-searchable` to any <select> with many options (e.g. a 36-city
+// timezone picker) and it becomes a themed, type-to-filter combobox. The
+// original <select> stays in the DOM (hidden) and keeps firing 'change' /
+// 'input' — tool scripts that read `select.value` need zero changes.
+
+function enhanceSearchableSelects() {
+  document.querySelectorAll('select[data-searchable]').forEach((sel) => {
+    if (sel.dataset.enhanced) return;
+    sel.dataset.enhanced = '1';
+
+    const wrap = document.createElement('div');
+    wrap.className = 'ts-ssel';
+    if (sel.classList.contains('ts-grow')) wrap.classList.add('ts-grow');
+    if (sel.getAttribute('style')) { wrap.setAttribute('style', sel.getAttribute('style')); sel.removeAttribute('style'); }
+    sel.parentNode.insertBefore(wrap, sel);
+    wrap.appendChild(sel);
+    sel.classList.add('ts-ssel-native');
+
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'ts-ssel-btn';
+    btn.setAttribute('aria-haspopup', 'listbox');
+    const labelSpan = document.createElement('span');
+    labelSpan.className = 'ts-ssel-label';
+    btn.appendChild(labelSpan);
+    btn.insertAdjacentHTML('beforeend',
+      '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>');
+    wrap.appendChild(btn);
+
+    const syncLabel = () => {
+      const opt = sel.options[sel.selectedIndex];
+      labelSpan.textContent = opt ? opt.textContent : '';
+    };
+    syncLabel();
+
+    let panel = null;
+    function close() {
+      if (!panel) return;
+      panel.remove(); panel = null;
+      document.removeEventListener('click', onOutside, true);
+      document.removeEventListener('keydown', onKey, true);
+    }
+    function onOutside(e) { if (!wrap.contains(e.target)) close(); }
+
+    let activeIdx = 0, items = [];
+    function filterItems(q) {
+      q = q.trim().toLowerCase();
+      items = [...sel.options].filter(o => !q || o.textContent.toLowerCase().includes(q));
+      return items;
+    }
+    function renderList(q) {
+      const list = panel.querySelector('.ts-ssel-list');
+      const opts = filterItems(q);
+      activeIdx = Math.max(0, opts.findIndex(o => o.value === sel.value));
+      if (!opts.length) { list.innerHTML = '<div class="ts-ssel-empty">No matches</div>'; return; }
+      list.innerHTML = opts.map((o, i) =>
+        `<div class="ts-ssel-opt${o.value === sel.value ? ' selected' : ''}${i === activeIdx ? ' active' : ''}" data-v="${escapeHtml(o.value)}" role="option">${escapeHtml(o.textContent)}</div>`
+      ).join('');
+      const activeEl = list.querySelector('.ts-ssel-opt.active');
+      if (activeEl) activeEl.scrollIntoView({ block: 'nearest' });
+    }
+    function choose(value) {
+      sel.value = value;
+      sel.dispatchEvent(new Event('change', { bubbles: true }));
+      sel.dispatchEvent(new Event('input', { bubbles: true }));
+      syncLabel();
+      close();
+      btn.focus();
+    }
+    function onKey(e) {
+      if (e.key === 'Escape') { e.preventDefault(); close(); btn.focus(); return; }
+      if (e.key === 'ArrowDown') { e.preventDefault(); activeIdx = Math.min(activeIdx + 1, items.length - 1); reflectActive(); return; }
+      if (e.key === 'ArrowUp') { e.preventDefault(); activeIdx = Math.max(activeIdx - 1, 0); reflectActive(); return; }
+      if (e.key === 'Enter') { e.preventDefault(); if (items[activeIdx]) choose(items[activeIdx].value); }
+    }
+    function reflectActive() {
+      const list = panel.querySelector('.ts-ssel-list');
+      [...list.children].forEach((el, i) => el.classList.toggle('active', i === activeIdx));
+      const activeEl = list.children[activeIdx];
+      if (activeEl) activeEl.scrollIntoView({ block: 'nearest' });
+    }
+
+    function open() {
+      if (panel) return;
+      panel = document.createElement('div');
+      panel.className = 'ts-ssel-panel';
+      panel.innerHTML =
+        '<div class="ts-ssel-search-row"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>' +
+        '<input class="ts-ssel-search" placeholder="Search…" autocomplete="off" spellcheck="false" /></div>' +
+        '<div class="ts-ssel-list" role="listbox"></div>';
+      wrap.appendChild(panel);
+      renderList('');
+      const input = panel.querySelector('.ts-ssel-search');
+      input.focus();
+      input.addEventListener('input', () => renderList(input.value));
+      panel.querySelector('.ts-ssel-list').addEventListener('click', (e) => {
+        const opt = e.target.closest('.ts-ssel-opt'); if (opt) choose(opt.dataset.v);
+      });
+      setTimeout(() => document.addEventListener('click', onOutside, true), 0);
+      document.addEventListener('keydown', onKey, true);
+    }
+
+    btn.addEventListener('click', () => (panel ? close() : open()));
+  });
 }
 
 // ── Global search / command palette (click or Cmd+K / Ctrl+K) ───────────────
@@ -199,23 +314,25 @@ function initSearch() {
     '<span class="label">Search tools…</span><span class="ts-search-kbd">Ctrl K</span>';
   if (toggle) toggle.before(trigger); else nav.appendChild(trigger);
 
+  const GROUP_ORDER = { tools: 0, study: 1, write: 2, dev: 3 };
+  const GROUP_LABELS = { tools: 'Tools', study: 'Study', write: 'Write', dev: 'Dev' };
   let backdrop = null, activeIdx = 0, filtered = [];
 
+  // Grouped by collection (each group keeps its own pastel colour), sorted
+  // by relevance within a group.
   function results(query) {
     const q = query.trim().toLowerCase();
-    if (!q) return TOOL_REGISTRY;
-    return TOOL_REGISTRY
-      .map(item => {
-        const name = item.name.toLowerCase();
-        let score = -1;
-        if (name.startsWith(q)) score = 3;
-        else if (name.includes(q)) score = 2;
-        else if (item.desc.toLowerCase().includes(q) || item.collection.includes(q)) score = 1;
-        return { item, score };
-      })
-      .filter(r => r.score > 0)
-      .sort((a, b) => b.score - a.score)
-      .map(r => r.item);
+    const scored = TOOL_REGISTRY.map(item => {
+      if (!q) return { item, score: 1 };
+      const name = item.name.toLowerCase();
+      let score = -1;
+      if (name.startsWith(q)) score = 3;
+      else if (name.includes(q)) score = 2;
+      else if (item.desc.toLowerCase().includes(q) || item.collection.includes(q)) score = 1;
+      return { item, score };
+    }).filter(r => r.score > 0);
+    scored.sort((a, b) => (GROUP_ORDER[a.item.collection] - GROUP_ORDER[b.item.collection]) || (b.score - a.score));
+    return scored.map(r => r.item);
   }
 
   function iconFor(item) {
@@ -225,12 +342,18 @@ function initSearch() {
   function renderResults() {
     const list = document.getElementById('tsPaletteResults');
     if (!filtered.length) { list.innerHTML = '<div class="ts-palette-empty">No tools match that search.</div>'; return; }
-    list.innerHTML = filtered.map((item, i) =>
-      `<a class="ts-palette-item${i === activeIdx ? ' active' : ''}" href="${item.url}" data-i="${i}">
+    let html = '', lastCol = null;
+    filtered.forEach((item, i) => {
+      if (item.collection !== lastCol) {
+        html += `<div class="ts-palette-group" data-collection="${item.collection}">${GROUP_LABELS[item.collection] || item.collection}</div>`;
+        lastCol = item.collection;
+      }
+      html += `<a class="ts-palette-item${i === activeIdx ? ' active' : ''}" href="${item.url}" data-i="${i}" data-collection="${item.collection}">
          <span class="pi-icon" aria-hidden="true">${iconFor(item)}</span>
          <span class="pi-text"><span class="pi-name">${escapeHtml(item.name)}</span><span class="pi-desc">${escapeHtml(item.desc)}</span></span>
-       </a>`
-    ).join('');
+       </a>`;
+    });
+    list.innerHTML = html;
     const activeEl = list.querySelector('.ts-palette-item.active');
     if (activeEl) activeEl.scrollIntoView({ block: 'nearest' });
   }
@@ -330,7 +453,37 @@ function initParallax(bg) {
   requestAnimationFrame(frame);
 }
 
-// ── Breadcrumb nav (tapdot / Tools / <Category> / <Tool>) ───────────────────
+// ── Breadcrumb nav (tapdot / Tools / <Category> / <Tool>) + back button ──────
+
+const COLLECTION_LABELS = { study: 'Study', write: 'Write', dev: 'Dev' };
+
+function collectionHome() {
+  const col = document.documentElement.dataset.collection || 'tools';
+  return col in COLLECTION_LABELS ? '/' + col + '/' : '/';
+}
+
+// Where the on-page back arrow goes: tool -> its collection hub; collection
+// hub -> root; root -> nowhere (button hidden).
+function parentUrl() {
+  const col = document.documentElement.dataset.collection || 'tools';
+  const tool = document.documentElement.dataset.tool || '';
+  if (tool) return collectionHome();
+  if (col in COLLECTION_LABELS) return '/';
+  return null;
+}
+
+function initBackButton() {
+  const nav = document.querySelector('.ts-nav');
+  if (!nav || document.querySelector('.ts-back-btn')) return;
+  const parent = parentUrl();
+  if (!parent) return;
+  const a = document.createElement('a');
+  a.className = 'ts-back-btn';
+  a.href = parent;
+  a.setAttribute('aria-label', 'Back');
+  a.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>';
+  nav.insertBefore(a, nav.firstChild);
+}
 
 function initBreadcrumb() {
   const nav = document.querySelector('.ts-nav');
@@ -354,9 +507,7 @@ function initBreadcrumb() {
   const col = document.documentElement.dataset.collection || 'tools';
   const tool = document.documentElement.dataset.tool || '';
   const crumbs = [{ label: 'Tools', href: '/' }];
-  if (col === 'study') crumbs.push({ label: 'Study', href: '/study/' });
-  if (col === 'write') crumbs.push({ label: 'Write', href: '/write/' });
-  if (col === 'dev') crumbs.push({ label: 'Dev', href: '/dev/' });
+  if (col in COLLECTION_LABELS) crumbs.push({ label: COLLECTION_LABELS[col], href: collectionHome() });
   if (tool) crumbs.push({ label: tool, href: null });
 
   const frag = document.createDocumentFragment();
@@ -364,10 +515,14 @@ function initBreadcrumb() {
     const div = document.createElement('span');
     div.className = 'ts-nav-divider'; div.textContent = '/';
     frag.appendChild(div);
-    const last = i === crumbs.length - 1;
+    const first = i === 0, last = i === crumbs.length - 1;
     if (c.href && !last) {
       const a = document.createElement('a');
-      a.className = 'ts-nav-crumb'; a.href = c.href; a.textContent = c.label;
+      // Only the FIRST crumb ("Tools", the way home) stays visible when the
+      // nav is tight on mobile; any crumb strictly between first and last
+      // collapses there instead.
+      a.className = 'ts-nav-crumb' + (first ? ' ts-nav-crumb-home' : ' ts-nav-crumb-mid');
+      a.href = c.href; a.textContent = c.label;
       frag.appendChild(a);
     } else {
       const s = document.createElement('span');
@@ -675,8 +830,10 @@ document.addEventListener('DOMContentLoaded', () => {
   initDarkToggle();
   initFavicon();
   initBackground();
+  initBackButton();
   initBreadcrumb();
   initSearch();
+  enhanceSearchableSelects();
   initToolIcon();
   initWalkthrough();
   initReveal();

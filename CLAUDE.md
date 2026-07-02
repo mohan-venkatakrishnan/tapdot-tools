@@ -121,6 +121,16 @@ DNS on GoDaddy. See README.md for the one-time setup.
 - Replace `YOUR_CLOUDFLARE_TOKEN` in every HTML `<script>` beacon before real launch.
 - On-device AI (BiasCheck full analysis, FlashForge auto-format) needs Chrome 128+ with
   Gemini Nano flags; falls back gracefully otherwise. BiasCheck shows a flags guide.
+- **The How-it-works walkthrough demos are still generic/abstract** (user feedback:
+  "not really helpful"). A proper fix means researching each tool's top competitor and
+  redesigning that tool's 3-step demo around its actual best-in-class UX — that's a
+  per-tool design pass, not a mechanical change. Deferred; do this collection-by-collection
+  alongside new tool builds, not as a single mechanical sweep.
+- **`tapdot-tools-master-plan.md`** (repo root) specs 7 more collections — Marketing,
+  Finance, Legal, HR, Health, Design, Productivity (46 tools). Not started. Build
+  collection-by-collection (its own build order is in the doc), running the full test
+  suite after each collection — do not attempt all 46 in one pass; that's exactly how
+  the mobile-nav and grid-shrink bugs got introduced this round.
 
 ## Change log of base decisions
 
@@ -146,3 +156,50 @@ DNS on GoDaddy. See README.md for the one-time setup.
   (1180px) to cut vertical scrolling; bumped the default `.ts-main` to 760px. JWTRead
   gained a claims-explained table + a live expiry countdown. Added `test/functional.mjs`
   (Playwright interaction tests) alongside the layout regression — `npm test` runs both.
+- v7: **Bug-fix pass** driven by real usage feedback.
+  - **Dark-mode flash fixed at the root cause**: the theme decision now runs in an
+    inline `<script>` in `<head>` on every page (before first paint), not in
+    `shared.js` (loaded at the bottom of `<body>`). `shared.js` only wires the toggle
+    button + swaps its icon (sun ↔ moon, via `syncThemeIcon()`) — it no longer decides
+    the theme. **Any new page MUST include that inline snippet in `<head>` right after
+    `<meta charset>`** or it will flash light before JS runs.
+  - **Nav rebuild**: added an on-page **back button** (`initBackButton` — tool → its
+    collection hub → root, hidden on root) computed from `data-collection`/`data-tool`,
+    not `history.back()` (unreliable if the page was opened directly). Fixed the mobile
+    breadcrumb collapse bug — it was hiding ALL crumbs including "Tools" (home),
+    orphaning mobile users. Now only the **middle** crumb (`.ts-nav-crumb-mid`, the
+    collection level) collapses at ≤480px; the first ("Tools") and last (current page)
+    always stay. Logo also drops its text label at ≤480px (icon-only) to save width.
+  - **New "Tools" mark**: replaced the generic 4-square grid icon with a T + dot glyph
+    echoing the actual tapdot logo (`assets/tapdot-icon.png` — a "T" with a tap-dot
+    below it) — used as the root/privacy favicon and the search palette's fallback icon.
+  - **Search palette now categorized + themed**: results group under collection headers
+    (`.ts-palette-group`) and each result/group carries `data-collection` so it renders
+    in ITS OWN pastel colour regardless of the current page's theme — no more
+    single-colour palette. The search trigger button itself also now shows a
+    collection-tinted background by default (previously neutral gray until hover).
+  - **Searchable dropdown component** (`enhanceSearchableSelects` in shared.js): any
+    `<select data-searchable>` gets progressively enhanced into a themed type-to-filter
+    combobox. The original `<select>` stays in the DOM (visually hidden) and still
+    fires `change`/`input`, so tool scripts need **zero changes** — just add
+    `data-searchable` to a `<select>` with a long option list. Applied to the 36-city
+    timezone pickers in TimezoneNow + TZConvert.
+  - **Fixed a systemic CSS Grid/Flexbox bug**: nested grid/flex containers don't shrink
+    below their content's intrinsic min-width unless `min-width: 0` is set at EVERY
+    level of nesting (CSS's `min-size: auto` default). This caused `.ts-workbench`
+    cards (and nested `.dev-row`s inside them, e.g. CronLab's builder) to overflow on
+    mobile even though individual children had already shrunk. Fixed globally:
+    `.ts-select { min-width: 0; max-width: 100% }`, `.ts-workbench > * { min-width: 0 }`,
+    `.dev-row { min-width: 0 }`. **Apply this pattern to any new nested grid/flex
+    layout** — it's the #1 cause of "child shrank fine but the card still overflowed."
+  - Also fixed: world-map marker hit-circles (invisible click targets) were large
+    enough (r=11) to overlap neighboring cities in dense regions like Europe, causing
+    clicks on one city to register on another — shrunk to r=7.
+  - **CiteMaker** expanded from 4 styles/1 source type to **7 styles** (added IEEE,
+    Vancouver, ASA) **× 5 source types** (Website, Book, Journal Article, Video,
+    News/Magazine), each with type-appropriate fields (volume/issue/pages for
+    journals, publisher/city/edition for books, etc.) — `FORMATTERS[style](type, f)`
+    in `cite.js`. Field values persist across type switches (`fieldsState`).
+  - `test/functional.mjs` grew to 28 checks (was 14) — covers the FOUC fix, back
+    button targets, icon swap, palette grouping, searchable-select interaction, and
+    the CiteMaker style/type matrix. All 81 layout + 28 functional checks pass.

@@ -60,7 +60,7 @@ function tzmDots() {
   for (let r = 0; r < TZMAP_ROWS; r++) {
     const row = TZMAP_LAND[r];
     for (let c = 0; c < TZMAP_COLS; c++) {
-      if (row[c] === '1') out += `<circle class="tzm-land" cx="${c * 10 + 5}" cy="${r * 10 + 5}" r="2.1"/>`;
+      if (row[c] === '1') out += `<circle class="tzm-land" cx="${c * 10 + 5}" cy="${r * 10 + 5}" r="2.6"/>`;
     }
   }
   return out;
@@ -114,9 +114,8 @@ function renderWorldMap(container, opts) {
   cities.forEach(([name, tz, lat, lon], i) => {
     const isSel = selSet.has(tz);
     const x = tzmX(lon), y = tzmY(lat);
-    markers += `<g class="tzm-marker${isSel ? ' on' : ''}" data-tz="${tz}" transform="translate(${x},${y})" style="animation-delay:${(i % 12) * 0.18}s">
-      <circle class="tzm-ring"/><circle class="tzm-dot"/>
-      <title>${name}</title>
+    markers += `<g class="tzm-marker${isSel ? ' on' : ''}" data-tz="${tz}" data-name="${name}" transform="translate(${x},${y})" style="animation-delay:${(i % 12) * 0.18}s">
+      <circle class="tzm-hit" r="7"/><circle class="tzm-ring"/><circle class="tzm-dot"/>
     </g>`;
   });
 
@@ -129,11 +128,28 @@ function renderWorldMap(container, opts) {
       <rect class="tzm-sweep" x="-60" y="0" width="60" height="${TZMAP_H}"/>
       <g class="tzm-arcs">${arcs}</g>
       <g class="tzm-markers">${markers}</g>
-    </svg>`;
+    </svg>
+    <div class="tzm-tip" hidden></div>`;
 
-  if (onToggle) {
-    container.querySelectorAll('.tzm-marker').forEach(el => {
-      el.addEventListener('click', () => onToggle(el.dataset.tz));
+  const tip = container.querySelector('.tzm-tip');
+  container.querySelectorAll('.tzm-marker').forEach(el => {
+    if (onToggle) el.addEventListener('click', () => onToggle(el.dataset.tz));
+    el.addEventListener('mouseenter', () => {
+      const tz = el.dataset.tz;
+      let time = '';
+      try {
+        time = ' · ' + new Intl.DateTimeFormat('en-GB', { timeZone: tz, hour: '2-digit', minute: '2-digit', hour12: false }).format(date);
+      } catch (e) { /* unknown tz */ }
+      tip.textContent = el.dataset.name + time;
+      tip.hidden = false;
+      // Position above the marker, clamped inside the container.
+      const dot = el.querySelector('.tzm-dot').getBoundingClientRect();
+      const box = container.getBoundingClientRect();
+      const cx = dot.left - box.left + dot.width / 2;
+      const cy = dot.top - box.top;
+      tip.style.left = Math.max(46, Math.min(box.width - 46, cx)) + 'px';
+      tip.style.top = Math.max(26, cy - 8) + 'px';
     });
-  }
+    el.addEventListener('mouseleave', () => { tip.hidden = true; });
+  });
 }

@@ -1,24 +1,34 @@
-// CronLab — parse, build, explain, next-runs, NL→cron
+// CronLab — parse, build, explain, next-runs, NL→cron. Supports 5-field and
+// 6-field (leading seconds) expressions.
 
-const FIELDS = [
+const FIELDS_5 = [
   { name: 'Minute', label: 'min', range: [0, 59] },
   { name: 'Hour', label: 'hour', range: [0, 23] },
   { name: 'Day of month', label: 'dom', range: [1, 31] },
   { name: 'Month', label: 'mon', range: [1, 12] },
   { name: 'Day of week', label: 'dow', range: [0, 7] },
 ];
+const FIELD_SEC = { name: 'Second', label: 'sec', range: [0, 59] };
 const MONTH_NAMES = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
 const DOW_NAMES = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
 const PRESETS = { '@daily': '0 0 * * *', '@hourly': '0 * * * *', '@weekly': '0 0 * * 0', '@monthly': '0 0 1 * *', '@yearly': '0 0 1 1 *' };
 const TZS = ['UTC', Intl.DateTimeFormat().resolvedOptions().timeZone, 'America/New_York', 'Europe/London', 'Asia/Kolkata', 'Asia/Tokyo', 'Australia/Sydney'];
 const $ = (id) => document.getElementById(id);
 
+let format6 = false; // toggled by pills, auto-detected from input
+
+function activeFields() { return format6 ? [FIELD_SEC, ...FIELDS_5] : FIELDS_5; }
+
 function parseExpression(expr) {
-  const parts = expr.trim().split(/\s+/);
-  if (parts.length !== 5) return { ok: false, error: `Expected 5 fields, got ${parts.length}` };
+  const parts = expr.trim().split(/\s+/).filter(Boolean);
+  if (parts.length !== 5 && parts.length !== 6) {
+    return { ok: false, error: `Expected 5 or 6 fields, got ${parts.length}` };
+  }
+  const hasSeconds = parts.length === 6;
+  const fields = hasSeconds ? [FIELD_SEC, ...FIELDS_5] : FIELDS_5;
   const errors = [];
   parts.forEach((part, i) => {
-    const f = FIELDS[i];
+    const f = fields[i];
     if (part === '*' || part === '?') return;
     for (const val of part.split(',')) {
       if (/^\*\/\d+$/.test(val)) { if (parseInt(val.slice(2)) < 1) errors.push(`${f.label}: step must be ≥ 1`); continue; }
@@ -37,21 +47,28 @@ function parseExpression(expr) {
       if (num < f.range[0] || num > f.range[1]) errors.push(`${f.label}: ${num} outside ${f.range[0]}-${f.range[1]}`);
     }
   });
-  return errors.length ? { ok: false, error: errors.join(' · ') } : { ok: true, parts };
+  return errors.length ? { ok: false, error: errors.join(' · ') }
+    : { ok: true, parts, hasSeconds, main: hasSeconds ? parts.slice(1) : parts, secF: hasSeconds ? parts[0] : null };
 }
 
-function toEnglish(parts) {
-  const [min, hour, dom, mon, dow] = parts;
-  if (parts.every(p => p === '*')) return 'At every minute.';
-  if (/^\*\/\d+$/.test(min) && hour === '*' && dom === '*' && mon === '*' && dow === '*') return `Every ${min.slice(2)} minutes.`;
-  const hourStr = hour === '*' ? 'every hour' : `${String(hour).padStart(2, '0')}:${min === '*' ? '00' : String(min).padStart(2, '0')}`;
-  const minStr = min === '*' ? 'every minute' : `minute ${min}`;
+function toEnglish(res) {
+  const [min, hour, dom, mon, dow] = res.main;
   const dowName = (d) => DOW_NAMES[d === '7' ? 0 : d] || d;
   const dowStr = dow === '*' ? '' : ` on ${dow.split(',').map(seg => seg.includes('-') ? seg.split('-').map(dowName).join('–') : dowName(seg)).join(', ')}`;
   const monStr = mon === '*' ? '' : ` in ${mon.split(',').map(m => MONTH_NAMES[m - 1] || m).join(', ')}`;
   const domStr = dom === '*' ? '' : ` on day ${dom}`;
-  if (hour !== '*' && min !== '*') return `At ${hourStr}${dowStr}${domStr}${monStr}.`;
-  return `At ${minStr} past ${hourStr}${dowStr}${domStr}${monStr}.`;
+  let secPrefix = '';
+  if (res.hasSeconds) {
+    if (/^\*\/\d+$/.test(res.secF) && res.main.every(p => p === '*')) return `Every ${res.secF.slice(2)} seconds.`;
+    if (res.secF === '*' && res.main.every(p => p === '*')) return 'Every second.';
+    if (res.secF !== '0' && res.secF !== '*') secPrefix = `At second ${res.secF}, `;
+  }
+  if (res.main.every(p => p === '*')) return secPrefix ? secPrefix + 'every minute.' : 'At every minute.';
+  if (/^\*\/\d+$/.test(min) && hour === '*' && dom === '*' && mon === '*' && dow === '*') return `${secPrefix}Every ${min.slice(2)} minutes.`;
+  const hourStr = hour === '*' ? 'every hour' : `${String(hour).padStart(2, '0')}:${min === '*' ? '00' : String(min).padStart(2, '0')}`;
+  const minStr = min === '*' ? 'every minute' : `minute ${min}`;
+  if (hour !== '*' && min !== '*') return `${secPrefix}At ${hourStr}${dowStr}${domStr}${monStr}.`;
+  return `${secPrefix}At ${minStr} past ${hourStr}${dowStr}${domStr}${monStr}.`;
 }
 
 function matchesField(value, field, min, isDow) {
@@ -61,7 +78,7 @@ function matchesField(value, field, min, isDow) {
     if (part.includes('-')) {
       const [a, b] = part.split('-').map(Number);
       if (value >= a && value <= b) return true;
-      return isDow && value === 0 && b >= 7; // Sunday expressed as 7 inside a range
+      return isDow && value === 0 && b >= 7;
     }
     const n = parseInt(part);
     if (isDow) return n === value || (value === 0 && n === 7) || (value === 7 && n === 0);
@@ -69,56 +86,109 @@ function matchesField(value, field, min, isDow) {
   });
 }
 
-function getNextRuns(parts, count = 20) {
-  const [minF, hourF, domF, monF, dowF] = parts;
+function matchingSeconds(secF) {
+  const out = [];
+  for (let s = 0; s < 60; s++) if (matchesField(s, secF, 0, false)) out.push(s);
+  return out;
+}
+
+function minuteMatches(cur, main) {
+  const [minF, hourF, domF, monF, dowF] = main;
+  return matchesField(cur.getUTCMinutes(), minF, 0) && matchesField(cur.getUTCHours(), hourF, 0) &&
+         matchesField(cur.getUTCDate(), domF, 1) && matchesField(cur.getUTCMonth() + 1, monF, 1) &&
+         matchesField(cur.getUTCDay(), dowF, 0, true);
+}
+
+function getNextRuns(res, count = 20) {
   const runs = [];
-  let cur = new Date(); cur.setUTCSeconds(0, 0); cur = new Date(cur.getTime() + 60000);
-  const maxIter = 527040;
+  const secs = res.hasSeconds ? matchingSeconds(res.secF) : [0];
+  let cur = new Date(); cur.setUTCSeconds(0, 0);
+  const now = Date.now();
+  const maxIter = 527040; // one year of minutes
   for (let i = 0; i < maxIter && runs.length < count; i++) {
-    if (matchesField(cur.getUTCMinutes(), minF, 0) && matchesField(cur.getUTCHours(), hourF, 0) &&
-        matchesField(cur.getUTCDate(), domF, 1) && matchesField(cur.getUTCMonth() + 1, monF, 1) &&
-        matchesField(cur.getUTCDay(), dowF, 0, true)) {
-      runs.push(new Date(cur));
+    if (minuteMatches(cur, res.main)) {
+      for (const s of secs) {
+        const t = cur.getTime() + s * 1000;
+        if (t > now) { runs.push(new Date(t)); if (runs.length >= count) break; }
+      }
     }
     cur = new Date(cur.getTime() + 60000);
   }
   return runs;
 }
 
+// Honest 30-day histogram — counts EVERY run in the window, independent of the
+// 20-run table above (a "* * * * *" really is 1,440/day, not 20 total).
+function countRunsPerDay(res, days = 30) {
+  const perSecCount = res.hasSeconds ? matchingSeconds(res.secF).length : 1;
+  const buckets = new Map(); // dateString -> count
+  let cur = new Date(); cur.setUTCSeconds(0, 0);
+  const end = cur.getTime() + days * 86400000;
+  let total = 0;
+  while (cur.getTime() < end) {
+    if (minuteMatches(cur, res.main)) {
+      const key = cur.toDateString();
+      buckets.set(key, (buckets.get(key) || 0) + perSecCount);
+      total += perSecCount;
+    }
+    cur = new Date(cur.getTime() + 60000);
+  }
+  return { buckets, total };
+}
+
 function fmtTZ(date, tz) {
-  return new Intl.DateTimeFormat('en-GB', { timeZone: tz, month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false }).format(date);
+  return new Intl.DateTimeFormat('en-GB', { timeZone: tz, month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }).format(date);
+}
+
+function setFormat(is6, rewrite) {
+  format6 = is6;
+  document.querySelectorAll('#fmtPills .ts-pill-tab').forEach(b =>
+    b.classList.toggle('active', (b.dataset.fmt === '6') === is6));
+  if (rewrite) {
+    const parts = $('expr').value.trim().split(/\s+/).filter(Boolean);
+    if (is6 && parts.length === 5) $('expr').value = '0 ' + parts.join(' ');
+    if (!is6 && parts.length === 6) $('expr').value = parts.slice(1).join(' ');
+  }
+  buildBuilder();
 }
 
 function render() {
   const expr = $('expr').value;
-  const res = parseExpression(expr);
-  const parts = expr.trim().split(/\s+/);
-  $('fields').innerHTML = FIELDS.map((f, i) => `<span><b>${escapeHtml(parts[i] || '?')}</b>${f.label}</span>`).join('');
-  if (!res.ok) { $('err').textContent = res.error; $('english').textContent = ''; $('runs').innerHTML = ''; $('heatmap').innerHTML = ''; return; }
-  $('err').textContent = '';
-  $('english').textContent = toEnglish(res.parts);
+  const parts = expr.trim().split(/\s+/).filter(Boolean);
+  // Auto-detect field count as the user types.
+  if ((parts.length === 6) !== format6 && (parts.length === 5 || parts.length === 6)) setFormat(parts.length === 6, false);
 
-  const runs = getNextRuns(res.parts, 20);
+  const res = parseExpression(expr);
+  const fields = activeFields();
+  $('fields').innerHTML = fields.map((f, i) => `<span><b>${escapeHtml(parts[i] || '?')}</b>${f.label}</span>`).join('');
+  if (!res.ok) { $('err').textContent = res.error; $('english').textContent = ''; $('runs').innerHTML = ''; $('heatmap').innerHTML = ''; $('heatTotal').textContent = ''; return; }
+  $('err').textContent = '';
+  $('english').textContent = toEnglish(res);
+
+  const runs = getNextRuns(res, 20);
   const tz1 = $('tz1').value, tz2 = $('tz2').value;
   $('runs').innerHTML = `<thead><tr><th>#</th><th>${escapeHtml(tz1)}</th><th>${escapeHtml(tz2)}</th></tr></thead><tbody>` +
     (runs.length ? runs.map((r, i) => `<tr><td>${i + 1}</td><td>${fmtTZ(r, tz1)}</td><td>${fmtTZ(r, tz2)}</td></tr>`).join('')
       : '<tr><td colspan="3" class="dev-muted">No runs in the next year.</td></tr>') + '</tbody>';
 
-  // 30-day heatmap
+  // 30-day heatmap with real counts
+  const { buckets, total } = countRunsPerDay(res, 30);
   const today = new Date();
   let cells = '';
   for (let d = 0; d < 30; d++) {
     const date = new Date(today); date.setDate(today.getDate() + d);
-    const n = Math.min(4, runs.filter(r => r.toDateString() === date.toDateString()).length);
-    cells += `<div class="ts-heatmap-cell" data-count="${n}" title="${date.toDateString()}: ${n === 4 ? '4+' : n} runs">${date.getDate()}</div>`;
+    const n = buckets.get(date.toDateString()) || 0;
+    const level = n === 0 ? 0 : n === 1 ? 1 : n <= 4 ? 2 : n <= 48 ? 3 : 4;
+    cells += `<div class="ts-heatmap-cell" data-count="${level}" title="${date.toDateString()}: ${n.toLocaleString()} run${n === 1 ? '' : 's'}">${date.getDate()}</div>`;
   }
   $('heatmap').innerHTML = cells;
+  $('heatTotal').textContent = `${total.toLocaleString()} total run${total === 1 ? '' : 's'} in the next 30 days — hover a day for its exact count`;
   saveHistory(expr.trim());
 }
 
-// Visual builder — one-way (builder → expression)
-function initBuilder() {
-  $('builder').innerHTML = FIELDS.map((f, i) => `
+// Visual builder — one-way (builder → expression); gains a Seconds row in 6-field mode
+function buildBuilder() {
+  $('builder').innerHTML = activeFields().map((f, i) => `
     <div class="cron-builder-row">
       <label>${f.name}</label>
       <div class="dev-row" style="gap:6px">
@@ -129,16 +199,14 @@ function initBuilder() {
         <input class="ts-input b-val" data-i="${i}" style="height:34px;max-width:120px" placeholder="${f.range[0]}-${f.range[1]}" />
       </div>
     </div>`).join('');
-  $('builder').addEventListener('input', buildFromControls);
 }
 function buildFromControls() {
-  const parts = FIELDS.map((f, i) => {
+  const parts = activeFields().map((f, i) => {
     const mode = $('builder').querySelector(`.b-mode[data-i="${i}"]`).value;
     const val = $('builder').querySelector(`.b-val[data-i="${i}"]`).value.trim();
     if (mode === 'every') return '*';
     if (mode === 'step') return val ? `*/${val}` : '*';
-    if (mode === 'range') return val || '*';
-    return val || '*'; // at / list
+    return val || '*';
   });
   $('expr').value = parts.join(' ');
   render();
@@ -147,6 +215,7 @@ function buildFromControls() {
 // NL → cron
 function fallbackNLParser(description) {
   const d = description.toLowerCase();
+  if (d.includes('every second')) return format6 ? '* * * * * *' : '* * * * *';
   if (d.includes('every minute')) return '* * * * *';
   if (d.includes('every hour')) return '0 * * * *';
   if (d.includes('midnight')) return '0 0 * * *';
@@ -156,6 +225,7 @@ function fallbackNLParser(description) {
   if (d.includes('every sunday')) return '0 9 * * 0';
   if (d.includes('first of the month') || d.includes('first day')) return '0 0 1 * *';
   let m;
+  if ((m = d.match(/every (\d+) seconds?/))) return `*/${m[1]} * * * * *`;
   if ((m = d.match(/every (\d+) minutes?/))) return `*/${m[1]} * * * *`;
   if ((m = d.match(/every (\d+) hours?/))) return `0 */${m[1]} * * *`;
   if ((m = d.match(/at (\d+)\s*(am|pm)/))) {
@@ -204,7 +274,6 @@ async function convertNL() {
 }
 function applyCron(cron) { $('nlOut').innerHTML = `<code class="ts-kw">${escapeHtml(cron)}</code> <button class="ts-copy-btn" id="nlCopy">Copy</button>`; $('expr').value = cron; render(); $('nlCopy').addEventListener('click', (e) => copyText(cron, e.target)); }
 
-// History
 function saveHistory(expr) {
   if (!expr) return;
   const h = JSON.parse(localStorage.getItem('tapdot-cron-history') || '[]');
@@ -216,10 +285,12 @@ $('tz1').innerHTML = TZS.map((t, i) => `<option${i === 0 ? ' selected' : ''}>${t
 $('tz2').innerHTML = TZS.map((t, i) => `<option${i === 1 ? ' selected' : ''}>${t}</option>`).join('');
 $('presets').innerHTML = Object.entries(PRESETS).map(([k, v]) => `<button class="ts-btn ts-btn-ghost" style="height:30px;padding:0 12px" data-cron="${v}">${k}</button>`).join('');
 $('presets').addEventListener('click', (e) => { const b = e.target.closest('[data-cron]'); if (b) { $('expr').value = b.dataset.cron; render(); } });
+$('fmtPills').addEventListener('click', (e) => { const b = e.target.closest('.ts-pill-tab'); if (b) { setFormat(b.dataset.fmt === '6', true); render(); } });
 $('expr').addEventListener('input', render);
 $('tz1').addEventListener('change', render);
 $('tz2').addEventListener('change', render);
 $('convert').addEventListener('click', convertNL);
 $('nl').addEventListener('keydown', (e) => { if (e.key === 'Enter') convertNL(); });
-initBuilder();
+$('builder').addEventListener('input', buildFromControls);
+buildBuilder();
 render();

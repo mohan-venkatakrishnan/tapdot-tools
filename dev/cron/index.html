@@ -2,6 +2,7 @@
 <html lang="en" data-collection="dev" data-tool="CronLab">
 <head>
   <meta charset="UTF-8" />
+  <script>(function(){try{var t=localStorage.getItem('tapdot-theme');var d=matchMedia('(prefers-color-scheme: dark)').matches;if(t==='dark'||(!t&&d))document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CronLab — Cron Expression Workbench | tapdot</title>
   <meta name="description" content="Parse, build, and test cron expressions. Visual builder, 20 next run times across timezones, and natural language conversion — all private." />
@@ -28,8 +29,14 @@
   <div class="ts-privacy-strip"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Everything runs in your browser — nothing is sent anywhere</div>
 
   <div class="ts-card">
-    <p class="ts-card-label">Cron expression (5-field, interpreted in UTC)</p>
-    <input class="ts-input" id="expr" value="0 9 * * 1-5" style="font-family:var(--font-mono);font-size:16px" />
+    <div class="dev-row" style="justify-content:space-between">
+      <p class="ts-card-label" style="margin-bottom:0">Cron expression (interpreted in UTC)</p>
+      <div class="ts-pill-tabs" id="fmtPills">
+        <button class="ts-pill-tab active" data-fmt="5">5-field</button>
+        <button class="ts-pill-tab" data-fmt="6">6-field +sec</button>
+      </div>
+    </div>
+    <input class="ts-input ts-mt-sm" id="expr" value="0 9 * * 1-5" style="font-family:var(--font-mono);font-size:16px" />
     <div class="ts-field-row" id="fields"></div>
     <p class="ts-mt-sm" id="english" style="font-weight:500"></p>
     <p class="ts-err-msg" id="err"></p>
@@ -47,16 +54,17 @@
         <p class="ts-card-label" style="margin-bottom:0">Next 20 runs</p>
       </div>
       <div class="dev-row ts-mt-sm">
-        <select class="ts-select" id="tz1" style="height:32px"></select>
-        <select class="ts-select" id="tz2" style="height:32px"></select>
+        <select class="ts-select ts-grow" id="tz1" style="height:32px"></select>
+        <select class="ts-select ts-grow" id="tz2" style="height:32px"></select>
       </div>
       <div class="ts-table-scroll ts-mt-sm" style="max-height:300px"><table class="ts-tz-table" id="runs"></table></div>
     </div>
   </div>
 
   <div class="ts-card">
-    <p class="ts-card-label">Next 30 days</p>
+    <p class="ts-card-label">Runs in the next 30 days</p>
     <div class="ts-heatmap" id="heatmap"></div>
+    <p class="dev-muted ts-mt-sm" id="heatTotal"></p>
   </div>
 
   <div class="ts-card">

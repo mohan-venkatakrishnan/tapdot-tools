@@ -2,6 +2,7 @@
 <html lang="en" data-collection="dev" data-tool="TimezoneNow">
 <head>
   <meta charset="UTF-8" />
+  <script>(function(){try{var t=localStorage.getItem('tapdot-theme');var d=matchMedia('(prefers-color-scheme: dark)').matches;if(t==='dark'||(!t&&d))document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TimezoneNow — World Clock &amp; Meeting Planner | tapdot</title>
   <meta name="description" content="Add cities, see current times, and find overlapping work hours for scheduling across timezones. Works offline." />
@@ -36,7 +37,7 @@
     <div class="dev-row" style="justify-content:space-between">
       <p class="ts-card-label" style="margin-bottom:0">Add a city</p>
     </div>
-    <div class="dev-row ts-mt-sm"><select class="ts-select ts-grow" id="tzSelect"></select><button class="ts-btn ts-btn-primary" id="add">Add</button></div>
+    <div class="dev-row ts-mt-sm"><select class="ts-select ts-grow" id="tzSelect" data-searchable></select><button class="ts-btn ts-btn-primary" id="add">Add</button></div>
   </div>
 
   <div class="ts-card">

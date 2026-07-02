@@ -89,6 +89,99 @@ const check = (name, ok) => { console.log((ok ? 'PASS' : 'FAIL') + '  ' + name);
   await page.close();
 }
 
+// 5. Dark mode: no flash — theme attr must be set BEFORE shared.js can run,
+// i.e. as of the earliest committed navigation state.
+{
+  const page = await browser.newPage();
+  await page.addInitScript(() => localStorage.setItem('tapdot-theme', 'dark'));
+  await page.goto('http://localhost:8140/study/cite/', { waitUntil: 'commit' });
+  const themeAtCommit = await page.evaluate(() => document.documentElement.getAttribute('data-theme'));
+  check('dark theme set before shared.js can execute (no FOUC)', themeAtCommit === 'dark');
+  await page.close();
+}
+
+// 6. Back button: present + correct target on a tool page and a hub page; absent on root.
+{
+  const page = await browser.newPage();
+  await page.goto('http://localhost:8140/study/cite/', { waitUntil: 'networkidle' });
+  check('back button on a tool page points to its collection hub', await page.$eval('.ts-back-btn', el => el.getAttribute('href')) === '/study/');
+  await page.goto('http://localhost:8140/study/', { waitUntil: 'networkidle' });
+  check('back button on a hub page points to root', await page.$eval('.ts-back-btn', el => el.getAttribute('href')) === '/');
+  await page.goto('http://localhost:8140/', { waitUntil: 'networkidle' });
+  check('back button absent on root hub', (await page.$('.ts-back-btn')) === null);
+  // breadcrumb: "Tools" root crumb must stay reachable even collapsed on mobile
+  await page.goto('http://localhost:8140/study/cite/', { waitUntil: 'networkidle' });
+  const crumbHref = await page.$eval('.ts-nav-crumb-home', el => el.getAttribute('href'));
+  check('breadcrumb home crumb points to /', crumbHref === '/');
+  await page.close();
+}
+
+// 7. Sun/moon toggle icon actually swaps with theme.
+{
+  const page = await browser.newPage();
+  await page.goto('http://localhost:8140/', { waitUntil: 'networkidle' });
+  const beforeDark = await page.evaluate(() => document.documentElement.getAttribute('data-theme') === 'dark');
+  const beforeHtml = await page.$eval('#darkToggle', el => el.innerHTML);
+  await page.click('#darkToggle');
+  await page.waitForTimeout(50);
+  const afterHtml = await page.$eval('#darkToggle', el => el.innerHTML);
+  check('toggle icon changes after click (sun<->moon)', beforeHtml !== afterHtml);
+  await page.close();
+}
+
+// 8. Search palette groups results by category.
+{
+  const page = await browser.newPage();
+  await page.goto('http://localhost:8140/dev/', { waitUntil: 'networkidle' });
+  await page.click('.ts-search-trigger');
+  await page.waitForTimeout(100);
+  const groups = await page.$$eval('.ts-palette-group', els => els.map(e => e.textContent));
+  check('palette shows category group headers', groups.length >= 3 && groups.includes('Study') && groups.includes('Dev'));
+  await page.close();
+}
+
+// 9. Searchable dropdown (TimezoneNow "Add a city"): opens, filters, selects.
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/dev/timezone/', { waitUntil: 'networkidle' });
+  await page.click('#tzSelect + .ts-ssel-btn, .ts-ssel-btn'); // enhanced control sits next to (wraps) the native select
+  await page.waitForTimeout(100);
+  check('searchable dropdown panel opens', await page.isVisible('.ts-ssel-panel'));
+  await page.fill('.ts-ssel-search', 'Nairobi');
+  await page.waitForTimeout(100);
+  const opts = await page.$$eval('.ts-ssel-opt', els => els.map(e => e.textContent));
+  check('typing filters to Nairobi', opts.length === 1 && opts[0].includes('Nairobi'));
+  await page.click('.ts-ssel-opt');
+  await page.waitForTimeout(50);
+  const selVal = await page.$eval('#tzSelect', el => el.value);
+  check('selecting an option updates the underlying <select> value', selVal === 'Africa/Nairobi');
+  check('no JS errors on TimezoneNow (searchable select)', errs.length === 0);
+  await page.close();
+}
+
+// 10. CiteMaker: 7 styles present, source-type fields swap, a Vancouver book citation generates.
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/study/cite/', { waitUntil: 'networkidle' });
+  const styles = await page.$$eval('#styleSegment .ts-segment-btn', els => els.map(e => e.dataset.style));
+  check('CiteMaker offers 7 styles', styles.length === 7 && styles.includes('vancouver') && styles.includes('ieee') && styles.includes('asa'));
+  await page.click('#typeSegment [data-type="book"]');
+  await page.click('#styleSegment [data-style="vancouver"]');
+  await page.fill('#f_author', 'Smith J');
+  await page.fill('#f_title', 'Deep Work');
+  await page.fill('#f_year', '2016');
+  await page.fill('#f_publisher', 'Grand Central');
+  await page.fill('#f_city', 'New York');
+  await page.click('#generateBtn');
+  await page.waitForTimeout(100);
+  const out = await page.$eval('#citationOut', el => el.textContent);
+  check('Vancouver book citation contains author/title/publisher', out.includes('Smith J') && out.includes('Deep Work') && out.includes('Grand Central'));
+  check('no JS errors on CiteMaker', errs.length === 0);
+  await page.close();
+}
+
 await browser.close(); srv.close();
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);
