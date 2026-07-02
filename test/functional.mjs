@@ -396,6 +396,80 @@ const check = (name, ok) => { console.log((ok ? 'PASS' : 'FAIL') + '  ' + name);
   await page.close();
 }
 
+// 26. LeaveCalculator: full-year employee accrues the full entitlement by year-end.
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/hr/leave/', { waitUntil: 'networkidle' });
+  await page.fill('#startDate', '2020-01-01');
+  await page.fill('#asOfDate', '2026-06-30');
+  await page.fill('#annualEntitlement', '20');
+  await page.fill('#taken', '0'); await page.fill('#priorCarry', '0');
+  await page.dispatchEvent('#asOfDate', 'input');
+  await page.waitForTimeout(100);
+  const projected = await page.$eval('#projected', el => el.textContent);
+  check('LeaveCalculator projects ~20 days for a full-year employee with none taken', Math.abs(parseFloat(projected) - 20) < 0.5);
+  check('no JS errors on LeaveCalculator', errs.length === 0);
+  await page.close();
+}
+
+// 27. SalaryBand: compa-ratio computes correctly (salary / grade midpoint).
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/hr/salary/', { waitUntil: 'networkidle' });
+  await page.waitForTimeout(100);
+  const ratio = await page.$eval('#roleBody tr td:nth-child(4)', el => el.textContent);
+  check('SalaryBand computes a compa-ratio', /%$/.test(ratio));
+  check('no JS errors on SalaryBand', errs.length === 0);
+  await page.close();
+}
+
+// 28. OnboardingChecklist: mobile layout no longer overflows (regression fix),
+// and checking a task updates progress.
+{
+  const page = await browser.newPage({ viewport: { width: 375, height: 800 } });
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/hr/onboarding/', { waitUntil: 'networkidle' });
+  const docWidth = await page.evaluate(() => document.documentElement.scrollWidth);
+  check('OnboardingChecklist has no horizontal overflow on mobile', docWidth <= 376);
+  await page.click('.checklist-item input[type="checkbox"]');
+  await page.waitForTimeout(100);
+  const pct = await page.$eval('#progressPct', el => el.textContent);
+  check('OnboardingChecklist updates progress after checking a task', pct !== '0%');
+  check('no JS errors on OnboardingChecklist', errs.length === 0);
+  await page.close();
+}
+
+// 29. JobDescriptionWriter: exclusionary-language scan flags a known term.
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/hr/jd/', { waitUntil: 'networkidle' });
+  await page.fill('#title', 'Rockstar Engineer');
+  await page.click('#genBtn');
+  await page.waitForTimeout(300);
+  const flagged = await page.isVisible('#exclusionCard:not(.ts-hidden)').catch(() => false);
+  check('JobDescriptionWriter flags exclusionary language ("rockstar")', flagged);
+  check('no JS errors on JobDescriptionWriter', errs.length === 0);
+  await page.close();
+}
+
+// 30. OfferLetterBuilder: template fills in candidate + salary.
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/hr/offer/', { waitUntil: 'networkidle' });
+  await page.fill('#candidate', 'Jordan Lee');
+  await page.fill('#salary', '$140,000');
+  await page.click('#genBtn');
+  await page.waitForTimeout(100);
+  const doc = await page.$eval('#preview', el => el.textContent);
+  check('OfferLetterBuilder fills in candidate and salary', doc.includes('Jordan Lee') && doc.includes('$140,000'));
+  check('no JS errors on OfferLetterBuilder', errs.length === 0);
+  await page.close();
+}
+
 await browser.close(); srv.close();
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

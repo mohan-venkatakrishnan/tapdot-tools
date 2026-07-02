@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" data-collection="hr" data-tool="OfferLetterBuilder">
+<head>
+  <meta charset="UTF-8" />
+  <script>(function(){try{var t=localStorage.getItem('tapdot-theme');var d=matchMedia('(prefers-color-scheme: dark)').matches;if(t==='dark'||(!t&&d))document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OfferLetterBuilder — Offer Letter Template | tapdot</title>
+  <meta name="description" content="Generate a professional job offer letter from a template. Download as plain text. Your compensation offers stay private." />
+  <meta property="og:title" content="OfferLetterBuilder — Offer Letter Template | tapdot" />
+  <meta property="og:description" content="Professional offer letter from a template — generated locally." />
+  <link rel="canonical" href="https://tools.tapdot.org/hr/offer/" />
+  <link rel="icon" type="image/png" href="/assets/tapdot-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/shared/shared.css" />
+  <link rel="stylesheet" href="/hr/hr.css" />
+</head>
+<body>
+<nav class="ts-nav">
+  <a href="https://tapdot.org" class="ts-nav-logo"><img src="/assets/tapdot-icon.png" width="22" height="22" alt="tapdot" /><span>tapdot</span></a>
+  <button class="ts-dark-toggle" id="darkToggle" aria-label="Toggle dark mode"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg></button>
+</nav>
+<main class="ts-main ts-main-wide">
+  <div class="ts-tool-header">
+    <h1 class="ts-tool-name">OfferLetterBuilder</h1>
+    <p class="ts-tool-desc">Generate a professional offer letter from a template.</p>
+  </div>
+  <div class="ts-privacy-strip"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Compensation offers stay private — everything runs in your browser</div>
+
+  <div class="ts-workbench">
+    <div class="ts-card">
+      <div class="biz-grid-2">
+        <div><label class="ts-label" for="candidate">Candidate name</label><input class="ts-input" id="candidate" placeholder="Jordan Lee" /></div>
+        <div><label class="ts-label" for="role">Role title</label><input class="ts-input" id="role" placeholder="Senior Product Designer" /></div>
+        <div><label class="ts-label" for="company">Company name</label><input class="ts-input" id="company" placeholder="Acme Inc." /></div>
+        <div><label class="ts-label" for="manager">Reporting manager</label><input class="ts-input" id="manager" placeholder="Sam Rivera" /></div>
+        <div><label class="ts-label" for="startDate">Start date</label><input class="ts-input" id="startDate" type="date" /></div>
+        <div><label class="ts-label" for="location">Office location</label><input class="ts-input" id="location" placeholder="Remote / San Francisco" /></div>
+        <div><label class="ts-label" for="salary">Annual salary</label><input class="ts-input" id="salary" placeholder="$140,000" /></div>
+        <div><label class="ts-label" for="expiry">Offer expires</label><input class="ts-input" id="expiry" type="date" /></div>
+      </div>
+      <button class="ts-btn ts-btn-primary ts-mt-md" id="genBtn">Generate offer letter</button>
+    </div>
+    <div class="ts-card">
+      <div class="biz-row" style="justify-content:space-between">
+        <p class="ts-card-label" style="margin-bottom:0">Preview</p>
+        <div class="biz-row"><button class="ts-copy-btn" id="copyBtn">Copy</button><button class="ts-btn ts-btn-ghost" id="downloadBtn" style="height:30px;padding:0 12px">Download .txt</button></div>
+      </div>
+      <div class="legal-doc" id="preview"></div>
+    </div>
+  </div>
+</main>
+<footer class="ts-footer">
+  <span>Built by <a href="https://tapdot.org">tapdot</a></span><span class="ts-footer-dot">·</span>
+  <a href="/privacy.html">Privacy</a><span class="ts-footer-dot">·</span><span>All processing happens in your browser</span>
+</footer>
+<script src="/shared/shared.js"></script>
+<script src="offer.js" defer></script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "YOUR_CLOUDFLARE_TOKEN"}'></script>
+</body>
+</html>

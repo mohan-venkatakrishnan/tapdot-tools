@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" data-collection="hr" data-tool="LeaveCalculator">
+<head>
+  <meta charset="UTF-8" />
+  <script>(function(){try{var t=localStorage.getItem('tapdot-theme');var d=matchMedia('(prefers-color-scheme: dark)').matches;if(t==='dark'||(!t&&d))document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeaveCalculator — Leave Balance Calculator | tapdot</title>
+  <meta name="description" content="Calculate leave balances, accruals, and carry-forward. Supports multiple leave policies. All local — no employee data sent anywhere." />
+  <meta property="og:title" content="LeaveCalculator — Leave Balance Calculator | tapdot" />
+  <meta property="og:description" content="Leave accrual, balance and carry-forward — all local." />
+  <link rel="canonical" href="https://tools.tapdot.org/hr/leave/" />
+  <link rel="icon" type="image/png" href="/assets/tapdot-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/shared/shared.css" />
+  <link rel="stylesheet" href="/hr/hr.css" />
+</head>
+<body>
+<nav class="ts-nav">
+  <a href="https://tapdot.org" class="ts-nav-logo"><img src="/assets/tapdot-icon.png" width="22" height="22" alt="tapdot" /><span>tapdot</span></a>
+  <button class="ts-dark-toggle" id="darkToggle" aria-label="Toggle dark mode"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg></button>
+</nav>
+<main class="ts-main">
+  <div class="ts-tool-header">
+    <h1 class="ts-tool-name">LeaveCalculator</h1>
+    <p class="ts-tool-desc">Leave accrual, balance and carry-forward — all local.</p>
+  </div>
+  <div class="ts-privacy-strip"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Everything runs in your browser — no employee data sent anywhere</div>
+
+  <div class="ts-card">
+    <p class="ts-card-label">Policy</p>
+    <div class="biz-grid-2">
+      <div><label class="ts-label" for="annualEntitlement">Annual entitlement (days)</label><input class="ts-input" id="annualEntitlement" type="number" value="20" /></div>
+      <div><label class="ts-label" for="carryLimit">Carry-forward limit (days)</label><input class="ts-input" id="carryLimit" type="number" value="5" /></div>
+    </div>
+    <p class="ts-card-label ts-mt-md">Employee</p>
+    <div class="biz-grid-2">
+      <div><label class="ts-label" for="startDate">Start date</label><input class="ts-input" id="startDate" type="date" /></div>
+      <div><label class="ts-label" for="asOfDate">As of date</label><input class="ts-input" id="asOfDate" type="date" /></div>
+      <div><label class="ts-label" for="taken">Leave taken this year (days)</label><input class="ts-input" id="taken" type="number" value="4" /></div>
+      <div><label class="ts-label" for="priorCarry">Carried over from last year (days)</label><input class="ts-input" id="priorCarry" type="number" value="2" /></div>
+    </div>
+  </div>
+
+  <div class="ts-stats-grid">
+    <div class="ts-stat"><span class="ts-stat-num" id="accrued">—</span><span class="ts-stat-label">Accrued to date</span></div>
+    <div class="ts-stat"><span class="ts-stat-num" id="available">—</span><span class="ts-stat-label">Available balance</span></div>
+    <div class="ts-stat"><span class="ts-stat-num" id="remaining">—</span><span class="ts-stat-label">Remaining this year</span></div>
+    <div class="ts-stat"><span class="ts-stat-num" id="projected">—</span><span class="ts-stat-label">Projected year-end</span></div>
+  </div>
+  <p class="biz-muted">Accrual is prorated by calendar days elapsed since the policy year began (or start date, if later). Carry-forward is capped at the policy limit.</p>
+</main>
+<footer class="ts-footer">
+  <span>Built by <a href="https://tapdot.org">tapdot</a></span><span class="ts-footer-dot">·</span>
+  <a href="/privacy.html">Privacy</a><span class="ts-footer-dot">·</span><span>All processing happens in your browser</span>
+</footer>
+<script src="/shared/shared.js"></script>
+<script src="leave.js" defer></script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "YOUR_CLOUDFLARE_TOKEN"}'></script>
+</body>
+</html>

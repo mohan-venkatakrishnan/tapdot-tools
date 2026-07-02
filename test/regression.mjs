@@ -46,6 +46,8 @@ const ROUTES = [
   '/finance/equity/', '/finance/networth/',
   '/legal/', '/legal/contract/', '/legal/nda/', '/legal/privacy-policy/',
   '/legal/terms/', '/legal/copyright/', '/legal/glossary/',
+  '/hr/', '/hr/salary/', '/hr/jd/', '/hr/interview/', '/hr/offer/',
+  '/hr/onboarding/', '/hr/leave/',
   '/privacy.html',
 ];
 const VIEWPORTS = [

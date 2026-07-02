@@ -1,0 +1,38 @@
+/* hr/hr.css — imported by all HR tools in addition to shared.css */
+
+.biz-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; min-width: 0; }
+.biz-muted { color: var(--color-muted); font-size: 12px; }
+.biz-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 480px) { .biz-grid-2 { grid-template-columns: 1fr; } }
+
+.biz-ai-status { font-size: 12px; color: var(--color-muted); }
+.biz-ai-status.working { color: var(--color-accent); }
+.biz-ai-status.fallback { color: var(--color-warning); }
+.biz-ai-status.ok { color: var(--color-success); }
+
+.legal-doc {
+  font-family: var(--font-mono); font-size: 13px; line-height: 1.8; color: var(--color-text);
+  background: var(--color-bg-soft); border: 0.5px solid var(--color-border); border-radius: var(--radius-md);
+  padding: 20px; white-space: pre-wrap; word-break: break-word; max-height: 600px; overflow-y: auto;
+}
+
+/* Salary band range bars */
+.band-row { display: grid; grid-template-columns: 120px 1fr 70px; gap: 10px; align-items: center; margin-bottom: 10px; }
+.band-track { position: relative; height: 24px; background: var(--color-bg-soft); border: 0.5px solid var(--color-border); border-radius: 999px; }
+.band-fill { position: absolute; top: 0; bottom: 0; background: var(--color-accent-soft); border-radius: 999px; }
+.band-mid { position: absolute; top: -3px; bottom: -3px; width: 2px; background: var(--color-accent); }
+.band-marker { position: absolute; top: 50%; transform: translate(-50%, -50%); width: 12px; height: 12px; border-radius: 50%; background: var(--color-text); border: 2px solid var(--color-bg); }
+
+/* Checklist */
+.checklist-group { margin-bottom: 20px; }
+.checklist-group h3 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-accent); margin-bottom: 10px; }
+.checklist-item { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 0.5px solid var(--color-border); min-width: 0; }
+.checklist-item input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--color-accent); flex-shrink: 0; }
+.checklist-item input[type="text"] { flex: 1; min-width: 0; border: none; background: transparent; font-family: var(--font-body); font-size: 14px; color: var(--color-text); }
+.checklist-item.done input[type="text"] { text-decoration: line-through; color: var(--color-muted); }
+.checklist-item .owner { width: 84px; flex-shrink: 0; min-width: 0; border: 0.5px solid var(--color-border); border-radius: 6px; padding: 4px 6px; font-size: 12px; background: var(--color-bg-soft); }
+.checklist-item .biz-rm { flex-shrink: 0; }
+.biz-rm { background: none; border: none; color: var(--color-muted); cursor: pointer; font-size: 15px; }
+.biz-rm:hover { color: var(--color-danger); }
+
+.exclusion-tag { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; padding: 3px 10px; border-radius: 999px; background: rgba(217,119,6,0.12); color: var(--color-warning); margin: 2px; }

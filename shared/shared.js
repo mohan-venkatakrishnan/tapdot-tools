@@ -154,6 +154,12 @@ const ICON_PATHS = {
   'TermsBuilder': '<path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>',
   'CopyrightChecker': '<circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/>',
   'LegalGlossary': '<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>',
+  'SalaryBand': '<path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/>',
+  'JobDescriptionWriter': '<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/>',
+  'InterviewKit': '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',
+  'OfferLetterBuilder': '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v5h5"/>',
+  'OnboardingChecklist': '<path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>',
+  'LeaveCalculator': '<rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/>',
   'JSONLab': '<path d="M8 3H7a2 2 0 0 0-2 2v5a2 2 0 0 1-2 2 2 2 0 0 1 2 2v5a2 2 0 0 0 2 2h1"/><path d="M16 3h1a2 2 0 0 1 2 2v5a2 2 0 0 0 2 2 2 2 0 0 0-2 2v5a2 2 0 0 1-2 2h-1"/>',
   'JSONConvert': '<polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/>',
   'JWTRead': '<circle cx="7.5" cy="15.5" r="4.5"/><path d="M10.7 12.3L20 3M17 6l2 2M14 9l2 2"/>',
@@ -359,6 +365,13 @@ const TOOL_REGISTRY = [
   { name: 'TermsBuilder', url: '/legal/terms/', collection: 'legal', desc: 'Terms of Service from a template' },
   { name: 'CopyrightChecker', url: '/legal/copyright/', collection: 'legal', desc: 'Estimate public-domain status by jurisdiction' },
   { name: 'LegalGlossary', url: '/legal/glossary/', collection: 'legal', desc: '130+ legal terms explained in plain English' },
+  { name: 'HR tools', url: '/hr/', collection: 'hr', desc: 'Salary bands, JD writer, interview kit, onboarding' },
+  { name: 'SalaryBand', url: '/hr/salary/', collection: 'hr', desc: 'Pay grades, compa-ratio, range visualisation' },
+  { name: 'JobDescriptionWriter', url: '/hr/jd/', collection: 'hr', desc: 'Inclusive job descriptions via on-device AI' },
+  { name: 'InterviewKit', url: '/hr/interview/', collection: 'hr', desc: 'Role-specific questions and a scoring rubric' },
+  { name: 'OfferLetterBuilder', url: '/hr/offer/', collection: 'hr', desc: 'Professional offer letter from a template' },
+  { name: 'OnboardingChecklist', url: '/hr/onboarding/', collection: 'hr', desc: 'Day 1 / Week 1 / Month 1 checklist, saved locally' },
+  { name: 'LeaveCalculator', url: '/hr/leave/', collection: 'hr', desc: 'Accrual, balance, and carry-forward' },
   { name: 'Privacy Policy', url: '/privacy.html', collection: 'tools', desc: "What tapdot tools does — and doesn't — collect" },
 ];
 
@@ -839,6 +852,36 @@ const STEPS = {
     { t: 'Search a term', d: { k: 'text', text: 'indemnify' } },
     { t: 'Read it in plain English', d: { k: 'result', text: 'Compensate for loss or damage' } },
     { t: 'Share a direct link', d: { k: 'chips', items: ['#indemnification'], on: 0 } },
+  ],
+  'SalaryBand': [
+    { t: 'Set your pay grades', d: { k: 'fields', rows: [['L1', '$60k–$90k'], ['L2', '$80k–$120k']] } },
+    { t: 'Add roles', d: { k: 'fields', rows: [['Engineer I', '$68,000']] } },
+    { t: 'See the compa-ratio', d: { k: 'count', to: 91, label: '% of midpoint' } },
+  ],
+  'JobDescriptionWriter': [
+    { t: 'Describe the role', d: { k: 'fields', rows: [['Title', 'PMM'], ['Team', 'Growth']] } },
+    { t: 'AI writes the JD', d: { k: 'result', text: 'We\'re looking for a...' } },
+    { t: 'Checks for bias', d: { k: 'chips', items: ['0 flags found'], on: 0 } },
+  ],
+  'InterviewKit': [
+    { t: 'Enter the role', d: { k: 'fields', rows: [['Role', 'Backend Eng'], ['Skills', 'distributed systems']] } },
+    { t: 'AI writes questions', d: { k: 'chips', items: ['Technical', 'Behavioural'], on: 0 } },
+    { t: 'Get a scoring rubric', d: { k: 'rows', rows: [['1', 'Below bar'], ['5', 'Exceeds bar']] } },
+  ],
+  'OfferLetterBuilder': [
+    { t: 'Fill in the offer', d: { k: 'fields', rows: [['Candidate', 'Jordan Lee'], ['Salary', '$140,000']] } },
+    { t: 'Set the start date', d: { k: 'text', text: 'Aug 4, 2026' } },
+    { t: 'Download the letter', d: { k: 'result', text: 'Dear Jordan,' } },
+  ],
+  'OnboardingChecklist': [
+    { t: 'Start from the default', d: { k: 'chips', items: ['Day 1', 'Week 1', 'Month 1'], on: 0 } },
+    { t: 'Customise & assign owners', d: { k: 'rows', rows: [['IT setup', 'Sam'], ['Handbook', 'Jo']] } },
+    { t: 'Track completion', d: { k: 'count', to: 62, label: '% complete' } },
+  ],
+  'LeaveCalculator': [
+    { t: 'Set the policy', d: { k: 'fields', rows: [['Entitlement', '20 days'], ['Carry limit', '5 days']] } },
+    { t: 'Enter leave taken', d: { k: 'text', text: '4 days taken' } },
+    { t: 'See the balance', d: { k: 'count', to: 16, label: 'days available' } },
   ],
 };
 
