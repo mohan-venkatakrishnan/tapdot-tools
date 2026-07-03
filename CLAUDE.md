@@ -114,7 +114,12 @@ when a tool has meaningful client-side behavior (not just static layout).
 ## Deploy
 
 Push to `main` → GitHub Pages auto-deploys. Custom domain via `CNAME` (tools.tapdot.org),
-DNS on GoDaddy. See README.md for the one-time setup.
+DNS on GoDaddy. See README.md for the one-time setup. Repo root MUST keep a `.nojekyll`
+file — without it, Pages runs the legacy Jekyll build pipeline on every push, which has
+no reason to succeed on a plain static HTML/CSS/JS site and failed silently (generic
+"Page build failed", no details) for six pushes in a row (v10–v15) before this was
+caught. `.nojekyll` makes Pages serve files as-is with no build step, matching the
+project's actual architecture — never remove it.
 
 ## Pending / not-yet-done
 
