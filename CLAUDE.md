@@ -375,3 +375,20 @@ project's actual architecture — never remove it.
     pass (.utm-live, .hl-meter) — the audit already pays for itself.
   - `test/functional.mjs` grew to 140 checks. All 240 layout + 140 functional +
     css-audit pass.
+- v18: **Deep UX pass — Dev collection.** Audited all 14 tools; most were already
+  competitive (UUIDGen, JSONLab, YAMLCheck, SQLFormat, CSVExplore, ColourContrast,
+  CronLab, and the timezone pair needed nothing), so this pass targeted the three
+  real gaps:
+  - **JWTRead** (ref: jwt.io): HMAC signature verification (HS256/HS384/HS512) via
+    WebCrypto — paste the shared secret, get a live verified/invalid badge; the
+    secret never leaves the page. Non-HMAC algs (RS/ES) still show inspection-only
+    with the "never paste private keys" warning.
+  - **RegexLab** (ref: regex101): 10 common-pattern presets (email, URL, IPv4,
+    date, UUID, semver, …) that also load a matching sample test string, plus a
+    21-entry syntax cheat sheet card.
+  - **MarkdownLive**: GFM table support in the hand-rolled parser (header +
+    |---| separator + body rows); preview table CSS already existed.
+  - Test-writing gotcha worth remembering: the canonical jwt.io example token is
+    signed with the secret `your-256-bit-secret`, not `secret` — the verify test
+    failed on first run for exactly this reason while the implementation was fine.
+  - `test/functional.mjs` grew to 148 checks. All suites pass.

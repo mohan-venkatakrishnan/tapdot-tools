@@ -36,6 +36,17 @@ function parseMarkdown(md) {
       const buf = []; while (i < lines.length && /^>\s?/.test(lines[i])) { buf.push(inline(lines[i].replace(/^>\s?/, ''))); i++; }
       html += `<blockquote>${buf.join('<br>')}</blockquote>`; continue;
     }
+    // GFM table: header row, |---| separator, body rows
+    if (/^\s*\|.*\|\s*$/.test(line) && i + 1 < lines.length && /^\s*\|[\s:|-]+\|\s*$/.test(lines[i + 1])) {
+      const cells = (l) => l.trim().replace(/^\||\|$/g, '').split('|').map(c => inline(c.trim()));
+      const head = cells(line);
+      i += 2;
+      const rows = [];
+      while (i < lines.length && /^\s*\|.*\|\s*$/.test(lines[i])) { rows.push(cells(lines[i])); i++; }
+      html += '<table><thead><tr>' + head.map(h => `<th>${h}</th>`).join('') + '</tr></thead><tbody>' +
+        rows.map(r => '<tr>' + r.map(c => `<td>${c}</td>`).join('') + '</tr>').join('') + '</tbody></table>';
+      continue;
+    }
     if (/^(---+|\*\*\*+)$/.test(line.trim())) { html += '<hr>'; i++; continue; }
     if (line.trim() === '') { i++; continue; }
     const buf = []; while (i < lines.length && lines[i].trim() !== '' && !isBlock(lines[i])) { buf.push(lines[i]); i++; }

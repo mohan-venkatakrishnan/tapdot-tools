@@ -70,6 +70,27 @@ function render() {
   } else $('replaced').textContent = '';
 }
 
+// Common patterns with sample test strings so the preset "just works".
+const PRESETS = {
+  email: { p: '[\\w.+-]+@[\\w-]+\\.[\\w.]+', t: 'Contact us: sales@example.com or support+tickets@sub.example.co.uk — not this: foo@bar' },
+  url: { p: 'https?:\\/\\/[\\w.-]+(?:\\/[\\w\\/._~:?#\\[\\]@!$&\'()*+,;=%-]*)?', t: 'Docs at https://example.com/docs?page=2 and http://sub.test.org/path — but not ftp://old.example.com' },
+  ipv4: { p: '\\b(?:(?:25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.){3}(?:25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\b', t: 'Servers: 192.168.1.1, 10.0.0.255, and 8.8.8.8 — invalid: 999.1.1.1' },
+  date: { p: '\\b\\d{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\\d|3[01])\\b', t: 'Deployed 2026-07-03, next release 2026-12-01. Bad date: 2026-13-45' },
+  time: { p: '\\b(?:[01]\\d|2[0-3]):[0-5]\\d\\b', t: 'Standup at 09:30, demo at 14:00, party at 23:59 — not 25:00' },
+  uuid: { p: '\\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\\b', t: 'id: 550e8400-e29b-41d4-a716-446655440000 trace: f47ac10b-58cc-4372-a567-0e02b2c3d479' },
+  hexcolor: { p: '#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})\\b', t: 'Brand colours: #4E8FC4, #fff, and #8A5CD6 — not #GGGGGG' },
+  phone: { p: '\\+?\\d{1,3}[\\s-]?\\(?\\d{2,4}\\)?[\\s-]?\\d{3,4}[\\s-]?\\d{3,4}', t: 'Call +1 (555) 123-4567 or +44 20 7946 0958' },
+  slug: { p: '\\b[a-z0-9]+(?:-[a-z0-9]+)+\\b', t: 'Posts: my-first-post and ux-pass-2026 but not My_Post' },
+  semver: { p: '\\b\\d+\\.\\d+\\.\\d+(?:-[\\w.]+)?\\b', t: 'Upgrading from 1.2.3 to 2.0.0-beta.1, skipping 1.9' },
+};
+$('presets').addEventListener('change', () => {
+  const preset = PRESETS[$('presets').value];
+  if (!preset) return;
+  $('pattern').value = preset.p;
+  $('test').value = preset.t;
+  render();
+});
+
 $('flags').addEventListener('click', (e) => { const f = e.target.closest('.rx-flag'); if (f) { f.classList.toggle('on'); render(); } });
 $('pattern').addEventListener('input', render);
 $('test').addEventListener('input', render);

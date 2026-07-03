@@ -109,4 +109,43 @@ function render() {
   showOutput('out');
 }
 
-$('token').addEventListener('input', render);
+// ── HMAC signature verification (WebCrypto, fully local) ────────────────────
+const HMAC_ALGS = { HS256: 'SHA-256', HS384: 'SHA-384', HS512: 'SHA-512' };
+
+function b64urlToBytes(str) {
+  const base64 = str.replace(/-/g, '+').replace(/_/g, '/').padEnd(str.length + (4 - str.length % 4) % 4, '=');
+  const bin = atob(base64);
+  return Uint8Array.from(bin, c => c.charCodeAt(0));
+}
+
+async function verifyHmac() {
+  const badge = $('verifyStatus');
+  const token = $('token').value.trim();
+  const secret = $('secret').value;
+  const parts = token.split('.');
+  if (!token || parts.length !== 3 || !secret) { badge.textContent = ''; badge.className = 'dev-badge'; return; }
+
+  let alg;
+  try { alg = decodeJWT(token).algorithm; } catch { badge.textContent = ''; badge.className = 'dev-badge'; return; }
+  if (!HMAC_ALGS[alg]) {
+    badge.textContent = `${alg || 'unknown'} — not an HMAC token`;
+    badge.className = 'dev-badge';
+    return;
+  }
+  try {
+    const key = await crypto.subtle.importKey(
+      'raw', new TextEncoder().encode(secret),
+      { name: 'HMAC', hash: HMAC_ALGS[alg] }, false, ['verify']);
+    const valid = await crypto.subtle.verify(
+      'HMAC', key, b64urlToBytes(parts[2]),
+      new TextEncoder().encode(parts[0] + '.' + parts[1]));
+    badge.textContent = valid ? 'Signature verified ✓' : 'Invalid signature ✗';
+    badge.className = 'dev-badge ' + (valid ? 'ok' : 'bad');
+  } catch (e) {
+    badge.textContent = 'Could not verify';
+    badge.className = 'dev-badge bad';
+  }
+}
+
+$('secret').addEventListener('input', verifyHmac);
+$('token').addEventListener('input', () => { render(); verifyHmac(); });

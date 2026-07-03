@@ -41,6 +41,22 @@
     <div class="rx-flags ts-mt-sm" id="flags">
       <span class="rx-flag on" data-f="g">g</span><span class="rx-flag" data-f="i">i</span><span class="rx-flag" data-f="m">m</span><span class="rx-flag" data-f="s">s</span><span class="rx-flag" data-f="u">u</span>
     </div>
+    <div class="dev-row ts-mt-sm" style="align-items:center">
+      <span class="dev-muted">Presets:</span>
+      <select class="ts-select" id="presets" style="min-width:180px">
+        <option value="">Choose a common pattern…</option>
+        <option value="email">Email address</option>
+        <option value="url">URL</option>
+        <option value="ipv4">IPv4 address</option>
+        <option value="date">Date (YYYY-MM-DD)</option>
+        <option value="time">Time (HH:MM 24h)</option>
+        <option value="uuid">UUID</option>
+        <option value="hexcolor">Hex colour</option>
+        <option value="phone">Phone (intl-ish)</option>
+        <option value="slug">URL slug</option>
+        <option value="semver">Semver version</option>
+      </select>
+    </div>
     <p class="ts-err-msg ts-mt-sm" id="err"></p>
   </div>
 
@@ -58,6 +74,19 @@
   </div>
 
   <div class="ts-card"><p class="ts-card-label">Matches</p><div id="matches" class="ts-code-output"></div></div>
+
+  <div class="ts-card">
+    <p class="ts-card-label">Cheat sheet</p>
+    <div class="rx-cheat">
+      <div><code>.</code> any char</div><div><code>\d</code> digit</div><div><code>\w</code> word char</div>
+      <div><code>\s</code> whitespace</div><div><code>\b</code> word boundary</div><div><code>^</code> line start</div>
+      <div><code>$</code> line end</div><div><code>[abc]</code> char set</div><div><code>[^abc]</code> negated set</div>
+      <div><code>a*</code> 0 or more</div><div><code>a+</code> 1 or more</div><div><code>a?</code> optional</div>
+      <div><code>a{2,4}</code> 2–4 times</div><div><code>(x)</code> capture group</div><div><code>(?:x)</code> non-capturing</div>
+      <div><code>(?&lt;n&gt;x)</code> named group</div><div><code>a|b</code> alternation</div><div><code>(?=x)</code> lookahead</div>
+      <div><code>(?!x)</code> neg. lookahead</div><div><code>(?&lt;=x)</code> lookbehind</div><div><code>*?</code> lazy quantifier</div>
+    </div>
+  </div>
 </main>
 <footer class="ts-footer">
   <span>Built by <a href="https://tapdot.org">tapdot</a></span><span class="ts-footer-dot">·</span>

@@ -863,6 +863,51 @@ const check = (name, ok) => { console.log((ok ? 'PASS' : 'FAIL') + '  ' + name);
   await page.close();
 }
 
+// 52. Dev UX pass: JWT HMAC verification, regex presets, markdown tables.
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/dev/jwt/', { waitUntil: 'networkidle' });
+  // Token signed with HS256, secret "secret": {"sub":"1234567890","name":"John Doe","iat":1516239022}
+  const hs256 = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
+  await page.fill('#token', hs256);
+  await page.fill('#secret', 'your-256-bit-secret');
+  await page.waitForTimeout(300);
+  const status = await page.$eval('#verifyStatus', el => el.textContent);
+  check('JWTRead verifies a valid HS256 signature', status.includes('verified'));
+  await page.fill('#secret', 'wrong-secret');
+  await page.waitForTimeout(300);
+  const statusBad = await page.$eval('#verifyStatus', el => el.textContent);
+  check('JWTRead rejects a wrong HMAC secret', statusBad.includes('Invalid'));
+  check('no JS errors on JWTRead verification', errs.length === 0);
+  await page.close();
+}
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/dev/regex/', { waitUntil: 'networkidle' });
+  await page.selectOption('#presets', 'email');
+  await page.waitForTimeout(150);
+  const count = await page.$eval('#count', el => el.textContent);
+  check('RegexLab email preset loads and matches its sample text', /^[12] match/.test(count) || count.includes('2 matches'));
+  const cheat = await page.$$eval('.rx-cheat div', els => els.length);
+  check('RegexLab shows the cheat sheet', cheat >= 15);
+  check('no JS errors on RegexLab presets', errs.length === 0);
+  await page.close();
+}
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/dev/markdown/', { waitUntil: 'networkidle' });
+  await page.fill('#input', '| Name | Role |\n|------|------|\n| Ada | Engineer |\n| Grace | Admiral |');
+  await page.waitForTimeout(150);
+  const tableRows = await page.$$eval('#preview table tbody tr', els => els.length);
+  const th = await page.$eval('#preview table th', el => el.textContent);
+  check('MarkdownLive renders GFM tables', tableRows === 2 && th === 'Name');
+  check('no JS errors on MarkdownLive tables', errs.length === 0);
+  await page.close();
+}
+
 await browser.close(); srv.close();
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

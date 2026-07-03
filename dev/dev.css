@@ -66,6 +66,10 @@ textarea.ts-code-input {
 
 /* Pill tabs moved to shared/shared.css (used by marketing tools too) */
 
+/* RegexLab cheat sheet */
+.rx-cheat { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; font-size: 12px; color: var(--color-muted); }
+.rx-cheat code { font-family: var(--font-mono); color: var(--color-accent); background: var(--color-bg-soft); padding: 1px 5px; border-radius: 4px; margin-right: 4px; }
+
 /* Data table (CSVExplore, TimezoneNow, cron next runs) */
 .ts-tz-table { width: 100%; border-collapse: collapse; font-size: 13px; font-family: var(--font-mono); }
 .ts-tz-table th {
