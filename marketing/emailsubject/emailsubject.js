@@ -52,12 +52,20 @@ function render() {
   $('spamCount').textContent = spam.length;
   $('sentiment').textContent = subject ? detectSentiment(subject) : '—';
 
-  $('mobilePreview').textContent = subject || 'Your subject line preview';
-  $('preheaderPreview').textContent = preheader || (subject ? subject.slice(0, 90) : 'Preheader text preview');
-  const mobileOver = subject.length > 40, desktopOver = subject.length > 60;
-  $('previewNote').textContent = mobileOver
-    ? `${subject.length - 40} characters will be cut off on mobile (40 char limit).${desktopOver ? ` ${subject.length - 60} cut off on desktop (60 char limit).` : ''}`
-    : 'Fits within the mobile preview limit (40 characters).';
+  // Truncate exactly like real inboxes so the preview is honest.
+  const MOBILE_LIMIT = 35, DESKTOP_LIMIT = 70;
+  const truncate = (s, n) => s.length > n ? s.slice(0, n - 1).trimEnd() + '…' : s;
+  const subj = subject || 'Your subject appears here';
+  const pre = preheader || (subject ? '' : 'Your preheader continues here');
+  $('desktopSubject').textContent = truncate(subj, DESKTOP_LIMIT);
+  $('desktopPreheader').textContent = pre ? '— ' + pre : '';
+  $('mobilePreview').textContent = truncate(subj, MOBILE_LIMIT);
+  $('preheaderPreview').textContent = truncate(pre || subj, 45);
+  const mobileOver = subject.length > MOBILE_LIMIT, desktopOver = subject.length > DESKTOP_LIMIT;
+  $('previewNote').textContent = !subject ? ''
+    : mobileOver
+      ? `${subject.length - MOBILE_LIMIT} characters cut off on mobile${desktopOver ? `, ${subject.length - DESKTOP_LIMIT} on desktop` : ''} — front-load the key words.`
+      : '✓ Fits fully on both mobile and desktop.';
 
   $('spamCard').classList.toggle('ts-hidden', !spam.length);
   $('spamWords').innerHTML = spam.map(w => `<span class="ts-badge warn">${escapeHtml(w)}</span>`).join('');

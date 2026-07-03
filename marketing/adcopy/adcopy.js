@@ -36,6 +36,31 @@ function extractJson(raw) {
   return null;
 }
 
+// Render the variant as it would actually appear on the platform.
+function adMockup(v) {
+  if (platform === 'google') {
+    return `<div class="ad-preview-google">
+      <div class="ad-url"><span class="ad-badge">Ad</span>www.example.com</div>
+      <div class="ad-headline">${escapeHtml(v.headline || '')}</div>
+      <div class="ad-desc">${escapeHtml(v.description || '')}</div>
+    </div>`;
+  }
+  if (platform === 'meta') {
+    return `<div class="ad-preview-meta">
+      <div class="ad-head"><span class="ad-avatar"></span><div><div class="ad-page">Your Brand</div><div class="ad-sponsored">Sponsored</div></div></div>
+      <div class="ad-primary">${escapeHtml(v.primary || '')}</div>
+      <div class="ad-media"></div>
+      <div class="ad-foot"><span class="ad-foot-headline">${escapeHtml(v.headline || '')}</span><span class="ad-cta-btn">${escapeHtml(v.cta || 'Learn more')}</span></div>
+    </div>`;
+  }
+  return `<div class="ad-preview-meta">
+    <div class="ad-head"><span class="ad-avatar"></span><div><div class="ad-page">Your Brand</div><div class="ad-sponsored">Promoted</div></div></div>
+    <div class="ad-primary">${escapeHtml(v.intro || '')}</div>
+    <div class="ad-media"></div>
+    <div class="ad-foot"><span class="ad-foot-headline">${escapeHtml(v.headline || '')}</span></div>
+  </div>`;
+}
+
 function renderVariants(variants) {
   const fields = Object.keys(LIMITS[platform]);
   $('variants').innerHTML = variants.map((v, i) => {
@@ -54,7 +79,7 @@ function renderVariants(variants) {
         </div>
       </div>`;
     }).join('');
-    return `<div class="ts-card"><p class="ts-card-label">Variant ${i + 1}</p>${rows}</div>`;
+    return `<div class="ts-card"><p class="ts-card-label">Variant ${i + 1}</p>${adMockup(v)}${rows}</div>`;
   }).join('');
   showOutput('output');
 }

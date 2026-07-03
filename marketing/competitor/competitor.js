@@ -40,8 +40,9 @@ function renderSummary() {
     return { name: c, sum };
   });
   const max = Math.max(1, ...totals.map(t => t.sum));
+  const leader = Math.max(...totals.map(t => t.sum));
   $('summaryBars').innerHTML = totals.map(t =>
-    `<div class="biz-bar-row"><span class="biz-bar-label">${escapeHtml(t.name)}</span><div class="biz-bar-track"><div class="biz-bar-fill" style="width:${(t.sum / max) * 100}%"></div></div><span class="biz-bar-val">${t.sum}</span></div>`
+    `<div class="biz-bar-row"><span class="biz-bar-label">${escapeHtml(t.name)}${t.sum === leader && leader > 0 && totals.length > 1 ? ' 🏆' : ''}</span><div class="biz-bar-track"><div class="biz-bar-fill" style="width:${(t.sum / max) * 100}%"></div></div><span class="biz-bar-val">${t.sum}</span></div>`
   ).join('');
 }
 

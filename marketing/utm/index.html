@@ -37,13 +37,28 @@
     <p class="ts-card-label">Base URL</p>
     <input class="ts-input" id="baseUrl" placeholder="https://example.com/landing-page" />
     <div class="biz-grid-2 ts-mt-md">
-      <div><label class="ts-label" for="source">Campaign Source *</label><input class="ts-input" id="source" placeholder="google, newsletter, facebook" /></div>
-      <div><label class="ts-label" for="medium">Campaign Medium *</label><input class="ts-input" id="medium" placeholder="cpc, email, social" /></div>
+      <div><label class="ts-label" for="source">Campaign Source *</label><input class="ts-input" id="source" list="sourceList" placeholder="google, newsletter, facebook" /></div>
+      <div><label class="ts-label" for="medium">Campaign Medium *</label><input class="ts-input" id="medium" list="mediumList" placeholder="cpc, email, social" /></div>
       <div><label class="ts-label" for="campaign">Campaign Name *</label><input class="ts-input" id="campaign" placeholder="summer_sale" /></div>
       <div><label class="ts-label" for="term">Campaign Term</label><input class="ts-input" id="term" placeholder="running+shoes (optional)" /></div>
       <div class="cite-field-full"><label class="ts-label" for="content">Campaign Content</label><input class="ts-input" id="content" placeholder="logolink / textlink (optional)" /></div>
     </div>
-    <button class="ts-btn ts-btn-primary ts-mt-md" id="buildBtn">Build URL</button>
+    <datalist id="sourceList">
+      <option value="google"></option><option value="facebook"></option><option value="instagram"></option>
+      <option value="linkedin"></option><option value="twitter"></option><option value="newsletter"></option>
+      <option value="youtube"></option><option value="tiktok"></option><option value="bing"></option><option value="reddit"></option>
+    </datalist>
+    <datalist id="mediumList">
+      <option value="cpc"></option><option value="email"></option><option value="social"></option>
+      <option value="organic"></option><option value="referral"></option><option value="display"></option>
+      <option value="affiliate"></option><option value="qr"></option><option value="paid_social"></option>
+    </datalist>
+    <div class="utm-live ts-mt-md">
+      <p class="ts-card-label" style="margin-bottom:6px">Live preview</p>
+      <div class="ts-mono-output" id="livePreview" style="font-size:12px">Fill in the fields above — your tagged URL appears here as you type.</div>
+      <p class="biz-muted ts-mt-sm" id="liveHint"></p>
+    </div>
+    <button class="ts-btn ts-btn-primary ts-mt-md" id="buildBtn">Copy &amp; save to history</button>
   </div>
 
   <div class="ts-card ts-hidden" id="bulkPane">

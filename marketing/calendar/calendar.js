@@ -25,18 +25,41 @@ function render() {
   const firstDow = new Date(viewYear, viewMonth, 1).getDay();
   const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
 
+  const today = new Date();
+  const todayIso = isoDate(today.getFullYear(), today.getMonth(), today.getDate());
+
   let cells = '';
   for (let i = 0; i < firstDow; i++) cells += '<div class="biz-cal-cell empty"></div>';
   for (let d = 1; d <= daysInMonth; d++) {
     const date = isoDate(viewYear, viewMonth, d);
     const dayPosts = posts.filter(p => p.date === date);
-    cells += `<div class="biz-cal-cell" data-date="${date}">
-      <div class="d">${d}</div>
+    cells += `<div class="biz-cal-cell${date === todayIso ? ' today' : ''}" data-date="${date}">
+      <div class="d">${d}${date === todayIso ? ' · today' : ''}</div>
       ${dayPosts.slice(0, 3).map(p => `<div class="biz-cal-post" data-id="${p.id}">${PLATFORM_ICON[p.platform] || ''} ${escapeHtml((p.copy || '').slice(0, 16) || '(no text)')}</div>`).join('')}
       ${dayPosts.length > 3 ? `<div class="biz-muted" style="font-size:9px">+${dayPosts.length - 3} more</div>` : ''}
     </div>`;
   }
   $('calGrid').innerHTML = cells;
+  renderUpcoming();
+}
+
+// Next 7 days at a glance — saves hunting through the grid.
+function renderUpcoming() {
+  const el = $('upcomingList');
+  if (!el) return;
+  const today = new Date();
+  const todayIso = isoDate(today.getFullYear(), today.getMonth(), today.getDate());
+  const weekOut = new Date(today.getTime() + 7 * 86400000);
+  const weekIso = isoDate(weekOut.getFullYear(), weekOut.getMonth(), weekOut.getDate());
+  const upcoming = getPosts()
+    .filter(p => p.date >= todayIso && p.date <= weekIso)
+    .sort((a, b) => a.date.localeCompare(b.date));
+  el.innerHTML = upcoming.length
+    ? upcoming.map(p => `<div class="biz-row" style="justify-content:space-between;padding:6px 0;border-top:0.5px solid var(--color-border)">
+        <span style="font-size:13px">${PLATFORM_ICON[p.platform] || ''} ${escapeHtml((p.copy || '(no text)').slice(0, 60))}</span>
+        <span class="biz-muted">${p.date}${p.status === 'draft' ? ' · draft' : ''}</span>
+      </div>`).join('')
+    : '<p class="biz-muted">Nothing scheduled in the next 7 days.</p>';
 }
 
 function openEditor(date, post) {

@@ -32,6 +32,8 @@
 .biz-cal-head { font-size: 10px; text-transform: uppercase; color: var(--color-muted); text-align: center; padding: 4px 0; }
 .biz-cal-cell { min-height: 64px; border: 0.5px solid var(--color-border); border-radius: var(--radius-sm); padding: 4px; font-size: 10px; background: var(--color-bg-soft); cursor: pointer; }
 .biz-cal-cell.empty { background: transparent; border-color: transparent; cursor: default; }
+.biz-cal-cell.today { border-color: var(--color-accent); background: var(--color-accent-soft); }
+.biz-cal-cell.today .d { color: var(--color-accent); font-weight: 600; }
 .biz-cal-cell .d { color: var(--color-muted); margin-bottom: 3px; }
 .biz-cal-post { font-size: 9px; padding: 1px 4px; border-radius: 4px; background: var(--color-accent-soft); color: var(--color-accent); margin-bottom: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
@@ -41,3 +43,47 @@
 .biz-ai-status.ok { color: var(--color-success); }
 
 .biz-platform-tabs { display: flex; gap: 6px; flex-wrap: wrap; }
+
+/* UTMBuilder — live preview block */
+.utm-live { border-top: 0.5px solid var(--color-border); padding-top: 14px; }
+
+/* HeadlineScore — length meters + word-balance chips */
+.hl-meters { display: flex; flex-direction: column; gap: 12px; }
+.hl-meter { min-width: 0; }
+.hl-meter-track { position: relative; height: 8px; background: var(--color-bg-soft); border: 0.5px solid var(--color-border); border-radius: 999px; margin-top: 4px; }
+.hl-meter-fill { position: absolute; top: 0; bottom: 0; left: 0; border-radius: 999px; background: var(--color-accent); transition: width 0.2s ease, background 0.2s ease; }
+.hl-meter-ideal { position: absolute; top: -3px; bottom: -3px; border: 1px dashed var(--color-accent); border-radius: 4px; opacity: 0.45; pointer-events: none; }
+.hl-word { display: inline-block; font-size: 13px; padding: 2px 7px; border-radius: 6px; margin: 2px 1px; background: var(--color-bg-soft); color: var(--color-muted); }
+.hl-word-power { background: var(--color-accent-soft); color: var(--color-accent); font-weight: 600; }
+.hl-word-emotional { background: rgba(217,119,6,0.12); color: var(--color-warning); font-weight: 600; }
+.hl-word-number { background: rgba(29,158,117,0.12); color: var(--color-success); font-weight: 600; }
+.hl-word-uncommon { color: var(--color-text); }
+
+/* EmailSubjectTester — Gmail-style inbox preview */
+.inbox-preview { border: 0.5px solid var(--color-border); border-radius: var(--radius-md); overflow: hidden; }
+.inbox-row { display: flex; gap: 10px; align-items: baseline; padding: 12px 14px; background: var(--color-surface); font-size: 13.5px; border-bottom: 0.5px solid var(--color-border); overflow: hidden; white-space: nowrap; }
+.inbox-row:last-child { border-bottom: none; }
+.inbox-row.dim { opacity: 0.45; }
+.inbox-sender { font-weight: 600; color: var(--color-text); flex-shrink: 0; }
+.inbox-subject { font-weight: 600; color: var(--color-text); overflow: hidden; text-overflow: ellipsis; }
+.inbox-preheader { color: var(--color-muted); overflow: hidden; text-overflow: ellipsis; }
+.inbox-device-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-muted); padding: 6px 14px; background: var(--color-bg-soft); }
+.inbox-mobile { max-width: 380px; }
+
+/* AdCopyWriter — ad preview mockups */
+.ad-preview-google { border: 0.5px solid var(--color-border); border-radius: var(--radius-md); padding: 14px 16px; background: var(--color-surface); }
+.ad-preview-google .ad-badge { display: inline-block; font-size: 10px; font-weight: 700; border: 1px solid var(--color-muted); border-radius: 3px; padding: 0 3px; color: var(--color-muted); margin-right: 6px; }
+.ad-preview-google .ad-url { font-size: 12px; color: var(--color-success); }
+.ad-preview-google .ad-headline { font-size: 17px; color: #1a0dab; margin: 3px 0; line-height: 1.3; }
+[data-theme="dark"] .ad-preview-google .ad-headline { color: #8ab4f8; }
+.ad-preview-google .ad-desc { font-size: 13px; color: var(--color-muted); line-height: 1.5; }
+.ad-preview-meta { border: 0.5px solid var(--color-border); border-radius: var(--radius-md); overflow: hidden; background: var(--color-surface); }
+.ad-preview-meta .ad-head { display: flex; gap: 8px; align-items: center; padding: 10px 14px; }
+.ad-preview-meta .ad-avatar { width: 30px; height: 30px; border-radius: 50%; background: var(--color-accent-soft); flex-shrink: 0; }
+.ad-preview-meta .ad-page { font-size: 13px; font-weight: 600; color: var(--color-text); }
+.ad-preview-meta .ad-sponsored { font-size: 11px; color: var(--color-muted); }
+.ad-preview-meta .ad-primary { padding: 0 14px 10px; font-size: 13.5px; color: var(--color-text); line-height: 1.5; }
+.ad-preview-meta .ad-media { height: 90px; background: linear-gradient(135deg, var(--color-accent-soft), var(--color-bg-soft)); }
+.ad-preview-meta .ad-foot { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 10px 14px; background: var(--color-bg-soft); }
+.ad-preview-meta .ad-foot-headline { font-size: 13px; font-weight: 600; color: var(--color-text); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ad-preview-meta .ad-cta-btn { font-size: 12px; font-weight: 600; padding: 6px 12px; border-radius: var(--radius-sm); background: var(--color-surface); border: 0.5px solid var(--color-border); color: var(--color-text); white-space: nowrap; }

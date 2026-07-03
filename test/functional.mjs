@@ -795,6 +795,74 @@ const check = (name, ok) => { console.log((ok ? 'PASS' : 'FAIL') + '  ' + name);
   await page.close();
 }
 
+// 51. Marketing UX pass: UTM live preview, headline word balance, inbox preview, ad mockups.
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/marketing/utm/', { waitUntil: 'networkidle' });
+  await page.fill('#baseUrl', 'example.com/page');
+  await page.fill('#source', 'newsletter');
+  await page.fill('#medium', 'email');
+  await page.fill('#campaign', 'Q3 Launch');
+  await page.waitForTimeout(100);
+  const live = await page.$eval('#livePreview', el => el.textContent);
+  check('UTM live preview builds as you type (protocol auto-added)', live.startsWith('https://example.com/page?'));
+  check('UTM live preview normalizes values (Q3 Launch -> q3_launch)', live.includes('utm_campaign=q3_launch'));
+  check('no JS errors on UTMBuilder live preview', errs.length === 0);
+  await page.close();
+}
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/marketing/headline/', { waitUntil: 'networkidle' });
+  await page.fill('#headline', '7 Proven Ways to Boost Your Productivity Today');
+  await page.waitForTimeout(150);
+  const total = await page.$eval('#totalScore', el => el.textContent);
+  const powerChips = await page.$$eval('.hl-word-power', els => els.length);
+  const numberChips = await page.$$eval('.hl-word-number', els => els.length);
+  check('HeadlineScore scores live without a button click', parseInt(total, 10) > 0);
+  check('HeadlineScore word balance flags power words', powerChips >= 2);
+  check('HeadlineScore word balance flags the number', numberChips === 1);
+  check('no JS errors on HeadlineScore live scoring', errs.length === 0);
+  await page.close();
+}
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/marketing/emailsubject/', { waitUntil: 'networkidle' });
+  await page.fill('#subject', 'This is a very long subject line that will definitely get cut off on mobile devices');
+  await page.waitForTimeout(100);
+  const mobile = await page.$eval('#mobilePreview', el => el.textContent);
+  const desktop = await page.$eval('#desktopSubject', el => el.textContent);
+  check('EmailSubjectTester mobile preview truncates at ~35 chars', mobile.endsWith('…') && mobile.length <= 36);
+  check('EmailSubjectTester desktop preview truncates at ~70 chars', desktop.endsWith('…') && desktop.length <= 71);
+  check('no JS errors on EmailSubjectTester inbox preview', errs.length === 0);
+  await page.close();
+}
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/marketing/adcopy/', { waitUntil: 'networkidle' });
+  await page.fill('#product', 'Acme CRM');
+  await page.click('#genBtn');
+  await page.waitForTimeout(400);
+  const mockups = await page.$$eval('.ad-preview-google', els => els.length);
+  check('AdCopyWriter renders Google ad mockups for each variant', mockups === 3);
+  check('no JS errors on AdCopyWriter mockups', errs.length === 0);
+  await page.close();
+}
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/marketing/calendar/', { waitUntil: 'networkidle' });
+  const todayCell = await page.$$eval('.biz-cal-cell.today', els => els.length);
+  const upcoming = await page.$eval('#upcomingList', el => el.textContent);
+  check('SocialCalendar highlights today', todayCell === 1);
+  check('SocialCalendar shows the next-7-days list', upcoming.length > 0);
+  check('no JS errors on SocialCalendar', errs.length === 0);
+  await page.close();
+}
+
 await browser.close(); srv.close();
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

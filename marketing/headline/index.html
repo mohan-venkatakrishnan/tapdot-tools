@@ -29,9 +29,19 @@
   <div class="ts-privacy-strip"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Scored locally — AI alternatives use on-device AI only</div>
 
   <div class="ts-card">
-    <p class="ts-card-label">Headline</p>
+    <p class="ts-card-label">Headline — scored live as you type</p>
     <input class="ts-input" id="headline" placeholder="7 Proven Ways to Boost Your Productivity Today" />
-    <button class="ts-btn ts-btn-primary ts-mt-md" id="scoreBtn">Score headline</button>
+    <div class="hl-meters ts-mt-md">
+      <div class="hl-meter">
+        <div class="biz-row" style="justify-content:space-between"><span class="biz-muted">Words <span id="wordCount">0</span></span><span class="biz-muted">ideal 6–12</span></div>
+        <div class="hl-meter-track"><div class="hl-meter-fill" id="wordMeter"></div><div class="hl-meter-ideal" style="left:24%;width:24%"></div></div>
+      </div>
+      <div class="hl-meter">
+        <div class="biz-row" style="justify-content:space-between"><span class="biz-muted">Characters <span id="charCount">0</span></span><span class="biz-muted">≤ 60 shows fully in Google</span></div>
+        <div class="hl-meter-track"><div class="hl-meter-fill" id="charMeter"></div><div class="hl-meter-ideal" style="left:0;width:60%"></div></div>
+      </div>
+    </div>
+    <button class="ts-btn ts-btn-primary ts-mt-md" id="scoreBtn">Save to comparison</button>
   </div>
 
   <div class="ts-output" id="output">
@@ -48,6 +58,15 @@
           <div class="ts-stat"><span class="ts-stat-num" id="sSeo">0</span><span class="ts-stat-label">SEO</span></div>
         </div>
       </div>
+      <div id="wordBalance" class="ts-mt-md"></div>
+      <div id="suggestions" class="ts-mt-sm"></div>
+    </div>
+    <div class="ts-card">
+      <div class="biz-row" style="justify-content:space-between">
+        <p class="ts-card-label" style="margin-bottom:0">Compared headlines</p>
+        <button class="ts-btn ts-btn-ghost" id="clearCompare" style="height:30px;padding:0 12px">Clear</button>
+      </div>
+      <div id="compareList"></div>
     </div>
     <div class="ts-card">
       <div class="biz-row" style="justify-content:space-between">

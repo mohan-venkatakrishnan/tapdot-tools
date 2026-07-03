@@ -348,3 +348,30 @@ project's actual architecture — never remove it.
     Hero styles under `.ts-hero*`/`.ts-home-section*` in shared.css.
   - `test/functional.mjs` grew to 125 checks (hero palette, group labels, adcopy +
     contract fallbacks). All 240 layout + 125 functional checks pass.
+- v17: **Deep UX pass — Marketing collection** (per-tool, competitor-referenced;
+  the model for future collection passes).
+  - **UTMBuilder** (ref: Google Campaign URL Builder): live URL preview on every
+    keystroke with "still needed: …" hints, datalist presets for source/medium,
+    forgiving URLs (auto-prepends https://, rejects hostname without a dot), and
+    a normalization note explaining lowercase/underscore rewriting. Build button
+    now copies AND saves to history in one tap.
+  - **HeadlineScore** (ref: CoSchedule Headline Analyzer): scores live as you
+    type; word-balance chips classifying every word (common/uncommon/emotional/
+    power/number); word + character meters with ideal-range markers (6–12 words,
+    ≤60 chars for Google); actionable "to improve" suggestions; a saved-headline
+    comparison list with 🏆 on the best; formula-based rewrites when AI is off.
+  - **EmailSubjectTester** (ref: Mailmeteor/Omnisend previewers): honest Gmail-
+    style inbox previews for desktop (~70 chars, with sender + preheader in-row,
+    a dimmed competing email underneath) and mobile (~35 chars, stacked), with
+    exact cut-off counts.
+  - **AdCopyWriter**: every variant now renders as a real ad mockup — Google SERP
+    ad (Ad badge, blue headline, dark-mode aware) or Meta/LinkedIn feed card
+    (avatar, sponsored label, media placeholder, CTA button) — above the
+    per-field character-limit rows.
+  - Smaller: ROICalculator + CompetitorMatrix mark the winner (🏆); SocialCalendar
+    highlights today and adds a "Next 7 days" list; PersonaBuilder exports any
+    persona as Markdown.
+  - css-audit caught two undefined wrapper classes introduced during this very
+    pass (.utm-live, .hl-meter) — the audit already pays for itself.
+  - `test/functional.mjs` grew to 140 checks. All 240 layout + 140 functional +
+    css-audit pass.

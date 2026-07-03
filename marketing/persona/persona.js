@@ -29,7 +29,10 @@ function personaCard(p, id) {
         <div class="biz-item-title">${escapeHtml(p.name || 'Unnamed persona')}</div>
         <div class="biz-item-meta">${escapeHtml(p.job_title || '')} · ${escapeHtml(p.age || '')} · ${escapeHtml(p.location || '')}</div>
       </div>
-      ${id ? `<button class="ts-btn ts-btn-ghost" data-rm="${id}" style="height:30px;padding:0 10px">Remove</button>` : `<button class="ts-btn ts-btn-secondary" id="saveThisBtn" style="height:30px;padding:0 10px">Save</button>`}
+      <span class="biz-row">
+        ${id ? `<button class="ts-btn ts-btn-ghost" data-rm="${id}" style="height:30px;padding:0 10px">Remove</button>` : `<button class="ts-btn ts-btn-secondary" id="saveThisBtn" style="height:30px;padding:0 10px">Save</button>`}
+        <button class="ts-btn ts-btn-ghost" data-md="${id === null || id === undefined ? 'current' : id}" style="height:30px;padding:0 10px">Copy Markdown</button>
+      </span>
     </div>
     <p style="font-style:italic;color:var(--color-muted);margin:8px 0;font-size:13px">"${escapeHtml(p.quote || '')}"</p>
     <p style="font-size:13px;margin-bottom:10px">${escapeHtml(p.bio || '')}</p>
@@ -99,7 +102,42 @@ async function generate() {
 }
 $('genBtn').addEventListener('click', generate);
 
+function personaMarkdown(p) {
+  const list = (arr) => (arr || []).map(x => `- ${x}`).join('\n');
+  return `# ${p.name || 'Persona'}
+**${p.job_title || ''}** · ${p.age || ''} · ${p.location || ''} · ${p.company_size || ''}
+
+> "${p.quote || ''}"
+
+${p.bio || ''}
+
+## Goals
+${list(p.goals)}
+
+## Frustrations
+${list(p.frustrations)}
+
+## Channels
+${list(p.channels)}
+
+## Buying triggers
+${list(p.buying_triggers)}
+
+## Objections
+${list(p.objections)}
+`;
+}
+
+function handleMdClick(e) {
+  const b = e.target.closest('[data-md]');
+  if (!b) return false;
+  const p = b.dataset.md === 'current' ? currentPersona : getSaved()[+b.dataset.md];
+  if (p) copyText(personaMarkdown(p), b);
+  return true;
+}
+
 $('output').addEventListener('click', (e) => {
+  if (handleMdClick(e)) return;
   if (e.target.id === 'saveThisBtn' && currentPersona) {
     const list = getSaved();
     list.unshift(currentPersona);
@@ -115,6 +153,7 @@ function renderSaved() {
     : '<p class="biz-muted">No saved personas yet.</p>';
 }
 $('saved').addEventListener('click', (e) => {
+  if (handleMdClick(e)) return;
   const b = e.target.closest('[data-rm]'); if (!b) return;
   const list = getSaved();
   list.splice(+b.dataset.rm, 1);

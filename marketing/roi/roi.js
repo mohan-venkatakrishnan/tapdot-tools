@@ -57,9 +57,11 @@ function calc() {
     '</tbody>';
 
   const maxRoi = Math.max(1, ...rows.map(r => isFinite(r.roi) ? Math.abs(r.roi) : 0));
+  const bestRoi = Math.max(...rows.map(r => isFinite(r.roi) ? r.roi : -Infinity));
   $('roiBars').innerHTML = rows.map(r => {
     const pct = isFinite(r.roi) ? Math.min(100, Math.abs(r.roi) / maxRoi * 100) : 0;
-    return `<div class="biz-bar-row"><span class="biz-bar-label">${escapeHtml(r.name)}</span><div class="biz-bar-track"><div class="biz-bar-fill" style="width:${pct}%"></div></div><span class="biz-bar-val">${fmtPct(r.roi)}</span></div>`;
+    const isBest = isFinite(r.roi) && r.roi === bestRoi && rows.length > 1 && r.roi > 0;
+    return `<div class="biz-bar-row"><span class="biz-bar-label">${escapeHtml(r.name)}${isBest ? ' 🏆' : ''}</span><div class="biz-bar-track"><div class="biz-bar-fill" style="width:${pct}%"></div></div><span class="biz-bar-val">${fmtPct(r.roi)}</span></div>`;
   }).join('');
 }
 
