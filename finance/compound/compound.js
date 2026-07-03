@@ -38,7 +38,13 @@ function render() {
   $('totalContrib').textContent = fmtMoney(last.contributions);
   $('totalInterest').textContent = fmtMoney(last.interest);
 
-  renderLineChart($('chart'), results.map(r => r.balance));
+  renderLineChart($('chart'), results.map(r => r.balance), {
+    series: [{ points: results.map(r => r.contributions), color: 'var(--color-muted)' }],
+  });
+  $('chartLegend').innerHTML =
+    '<span class="biz-muted"><span style="display:inline-block;width:18px;height:2px;background:var(--color-accent);vertical-align:middle;margin-right:5px"></span>Total balance</span>' +
+    '<span class="biz-muted" style="margin-left:16px"><span style="display:inline-block;width:18px;border-top:2px dashed var(--color-muted);vertical-align:middle;margin-right:5px"></span>Your contributions</span>' +
+    `<span class="biz-muted" style="margin-left:16px">— the gap is <b class="ts-text-success">${fmtMoney(last.interest)}</b> of interest earned</span>`;
 
   $('table').innerHTML = '<thead><tr><th>Year</th><th>Balance</th><th>Contributions</th><th>Interest</th></tr></thead><tbody>' +
     results.map(r => `<tr><td>${r.year}</td><td>${fmtMoney(r.balance)}</td><td>${fmtMoney(r.contributions)}</td><td class="ts-text-success">${fmtMoney(r.interest)}</td></tr>`).join('') +

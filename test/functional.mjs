@@ -908,6 +908,87 @@ const check = (name, ok) => { console.log((ok ? 'PASS' : 'FAIL') + '  ' + name);
   await page.close();
 }
 
+// 53. Finance/Study/Write/Health/Productivity UX pass checks.
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/finance/compound/', { waitUntil: 'networkidle' });
+  await page.waitForTimeout(150);
+  const legend = await page.$eval('#chartLegend', el => el.textContent);
+  const dashed = await page.$$eval('#chart path[stroke-dasharray]', els => els.length);
+  check('CompoundCalc chart shows a contributions overlay + legend', legend.includes('contributions') && dashed === 1);
+  check('no JS errors on CompoundCalc', errs.length === 0);
+  await page.close();
+}
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/finance/tax/', { waitUntil: 'networkidle' });
+  await page.fill('#income', '1600000');
+  await page.waitForTimeout(150);
+  const marg = await page.$eval('#margRate', el => el.textContent);
+  check('TaxEstimate shows the marginal rate (30% for ₹16L new regime)', marg === '30%');
+  check('no JS errors on TaxEstimate marginal rate', errs.length === 0);
+  await page.close();
+}
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/finance/equity/', { waitUntil: 'networkidle' });
+  await page.waitForTimeout(150);
+  const bars = await page.$$eval('#ownershipBars .biz-bar-row', els => els.length);
+  check('EquityCalc renders ownership bars for all three stakeholders', bars === 3);
+  check('no JS errors on EquityCalc bars', errs.length === 0);
+  await page.close();
+}
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/write/readscore/', { waitUntil: 'networkidle' });
+  await page.fill('#input', 'The cat sat on the mat. The dog was chased by the postman around the yard.');
+  await page.waitForTimeout(500);
+  const ease = await page.$eval('#rEase', el => el.textContent);
+  check('ReadScore analyzes live without a button click', parseInt(ease, 10) > 0);
+  check('no JS errors on ReadScore live analysis', errs.length === 0);
+  await page.close();
+}
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/health/bmi/', { waitUntil: 'networkidle' });
+  await page.click('[data-unit="imperial"]');
+  await page.waitForTimeout(150);
+  const weightLabel = await page.$eval('#weightLabel', el => el.textContent);
+  const bmi = await page.$eval('#bmi', el => el.textContent);
+  // 70kg/175cm converts to ~154lb & 5ft9 -> BMI should stay ~22.9 (rounding tolerance)
+  check('BMICalc imperial toggle converts and stays consistent', weightLabel === 'Weight (lb)' && Math.abs(parseFloat(bmi) - 22.9) < 0.5);
+  check('no JS errors on BMICalc imperial', errs.length === 0);
+  await page.close();
+}
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/productivity/focus/', { waitUntil: 'networkidle' });
+  await page.click('#startPause');
+  await page.waitForTimeout(1500);
+  const title = await page.title();
+  check('FocusTimer shows the countdown in the tab title while running', /\d{2}:\d{2}.*Focus/.test(title));
+  check('no JS errors on FocusTimer title countdown', errs.length === 0);
+  await page.close();
+}
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/study/flashcards/', { waitUntil: 'networkidle' });
+  await page.fill('#notesInput', 'Q: What is 2+2?\nA: 4\nQ: Capital of France?\nA: Paris');
+  await page.click('#createBtn');
+  await page.waitForTimeout(150);
+  const exportVisible = await page.isVisible('#exportBtn');
+  check('FlashForge grid view offers deck export', exportVisible);
+  check('no JS errors on FlashForge export', errs.length === 0);
+  await page.close();
+}
+
 await browser.close(); srv.close();
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

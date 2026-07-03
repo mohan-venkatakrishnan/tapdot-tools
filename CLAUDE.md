@@ -392,3 +392,27 @@ project's actual architecture — never remove it.
     signed with the secret `your-256-bit-secret`, not `secret` — the verify test
     failed on first run for exactly this reason while the implementation was fine.
   - `test/functional.mjs` grew to 148 checks. All suites pass.
+- v19: **Deep UX pass — remaining collections** (Finance, Study, Write, Health,
+  Productivity; Legal/HR/Design audited and already complete — doc downloads and
+  the newest patterns were in place from day one).
+  - **Finance**: `finance/libs/chart.js` now supports overlay series (dashed, same
+    axis). CompoundCalc plots your contributions under the balance line with a
+    legend spelling out the interest gap (the investor.gov insight). TaxEstimate
+    adds a marginal-rate stat next to effective rate. EquityCalc renders ownership
+    bars after the round. CurrencyConvert adds an xe.com-style quick-conversion
+    table (1/10/100/1k/10k both directions).
+  - **Study**: FlashForge decks export/import as JSON, preserving SM-2 scheduling
+    state (`{name, cards}` with q/a/interval/ease/due; import backfills missing
+    scheduling fields). Keyboard shortcuts already existed.
+  - **Write**: ReadScore and ThreadCraft now analyze/split live (300ms debounce)
+    instead of requiring a button click — the Hemingway pattern; buttons kept as
+    explicit triggers.
+  - **Health**: BMICalc metric/imperial toggle (lb + ft/in) that converts current
+    values in place when switching so the person being measured doesn't change;
+    healthy range shown in the active unit.
+  - **Productivity**: FocusTimer shows the live countdown in the tab title
+    (`24:59 · Focus — FocusTimer`) so it's visible from other tabs; restores the
+    original title on pause.
+  - `test/functional.mjs` grew to 162 checks. All 240 layout + 162 functional +
+    css-audit pass. This completes the per-collection UX pass programme (v17–v19)
+    across all 10 collections.

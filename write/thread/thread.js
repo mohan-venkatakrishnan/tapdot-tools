@@ -109,6 +109,12 @@ function renderTweets(tweets, limit) {
 }
 
 document.getElementById('splitBtn').addEventListener('click', buildThread);
+// Live splitting (debounced) — see the thread take shape as you write.
+let threadTimer = null;
+document.getElementById('input').addEventListener('input', () => {
+  clearTimeout(threadTimer);
+  threadTimer = setTimeout(buildThread, 300);
+});
 
 document.getElementById('tweets').addEventListener('click', (e) => {
   const btn = e.target.closest('.ts-copy-btn');

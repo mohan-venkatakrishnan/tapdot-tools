@@ -38,12 +38,16 @@ function renderStats() {
   $('focusThisWeek').textContent = weekFocusMins >= 60 ? `${(weekFocusMins / 60).toFixed(1)}h` : `${Math.round(weekFocusMins)}m`;
 }
 
+const BASE_TITLE = document.title;
+
 function drawRing() {
   const svg = $('ring');
   const r = 96, c = 2 * Math.PI * r;
   const pct = total > 0 ? remaining / total : 0;
   const mm = Math.floor(remaining / 60).toString().padStart(2, '0');
   const ss = Math.floor(remaining % 60).toString().padStart(2, '0');
+  // Countdown in the tab title so you can see it from any other tab.
+  document.title = running ? `${mm}:${ss} · ${mode === 'focus' ? 'Focus' : 'Break'} — FocusTimer` : BASE_TITLE;
   svg.innerHTML = `
     <circle cx="110" cy="110" r="${r}" fill="none" stroke="var(--color-border)" stroke-width="12"/>
     <circle cx="110" cy="110" r="${r}" fill="none" stroke="var(--color-accent)" stroke-width="12"
@@ -106,6 +110,7 @@ function pause() {
   running = false;
   clearInterval(timerHandle);
   $('startPause').textContent = 'Start';
+  document.title = BASE_TITLE;
 }
 function reset() {
   pause();

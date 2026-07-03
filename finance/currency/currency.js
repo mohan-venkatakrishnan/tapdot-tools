@@ -60,6 +60,11 @@ function render() {
   $('result').textContent = converted.toLocaleString(undefined, { maximumFractionDigits: 2 }) + ' ' + to;
   const unitRate = convert(1, from, to, rates);
   $('rateLine').textContent = `1 ${from} = ${unitRate.toFixed(4)} ${to}`;
+  const steps = [1, 10, 100, 1000, 10000];
+  if ($('quickTable')) $('quickTable').innerHTML =
+    `<thead><tr><th>${from}</th><th>${to}</th><th></th><th>${to}</th><th>${from}</th></tr></thead><tbody>` +
+    steps.map(v => `<tr><td>${v.toLocaleString()}</td><td>${convert(v, from, to, rates).toLocaleString(undefined, { maximumFractionDigits: 2 })}</td><td></td><td>${v.toLocaleString()}</td><td>${convert(v, to, from, rates).toLocaleString(undefined, { maximumFractionDigits: 2 })}</td></tr>`).join('') +
+    '</tbody>';
 }
 
 async function init() {

@@ -65,9 +65,9 @@ function buildHighlight(text) {
   }).join('');
 }
 
-document.getElementById('analyzeBtn').addEventListener('click', () => {
+function analyze() {
   const text = document.getElementById('input').value;
-  if (!text.trim()) return;
+  if (!text.trim()) { hideOutput('output'); return; }
   const r = fleschKincaid(text);
 
   document.getElementById('rEase').textContent      = r.ease;
@@ -82,4 +82,12 @@ document.getElementById('analyzeBtn').addEventListener('click', () => {
 
   document.getElementById('highlight').innerHTML = buildHighlight(text);
   showOutput('output');
+}
+
+// Live analysis (debounced) — like Hemingway; the button stays as an explicit trigger.
+let analyzeTimer = null;
+document.getElementById('input').addEventListener('input', () => {
+  clearTimeout(analyzeTimer);
+  analyzeTimer = setTimeout(analyze, 300);
 });
+document.getElementById('analyzeBtn').addEventListener('click', analyze);

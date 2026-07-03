@@ -36,7 +36,18 @@ function render() {
     `<tr><td>New investors</td><td>${Math.round(r.newInvestorShares).toLocaleString()}</td><td>${(r.newInvestorPct * 100).toFixed(2)}%</td></tr>` +
     `<tr><td><strong>Total</strong></td><td><strong>${Math.round(r.totalShares).toLocaleString()}</strong></td><td><strong>100%</strong></td></tr>` +
     '</tbody>';
+  ownershipBars(r);
 }
 
+function ownershipBars(r) {
+  const rows = [
+    ['Existing holders', r.existingPct],
+    ['Option pool', r.optionPct],
+    ['New investors', r.newInvestorPct],
+  ];
+  $('ownershipBars').innerHTML = rows.map(([label, pct]) =>
+    `<div class="biz-bar-row"><span class="biz-bar-label">${label}</span><div class="biz-bar-track"><div class="biz-bar-fill" style="width:${(pct * 100).toFixed(1)}%"></div></div><span class="biz-bar-val">${(pct * 100).toFixed(1)}%</span></div>`
+  ).join('');
+}
 ['existingShares', 'optionPool', 'investment', 'preMoney'].forEach(id => $(id).addEventListener('input', render));
 render();

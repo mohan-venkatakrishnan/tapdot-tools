@@ -287,6 +287,39 @@ document.addEventListener('keydown', (e) => {
   else if (flipped && e.key === '3') rate('easy');
 });
 
+// ── Export / import deck (JSON, keeps scheduling data) ─────────────────────
+
+document.getElementById('exportBtn').addEventListener('click', () => {
+  const blob = new Blob([JSON.stringify({ name: setName, cards }, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `${(setName || 'flashcards').replace(/[^\w-]+/g, '-')}.json`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+});
+document.getElementById('importBtn').addEventListener('click', () =>
+  document.getElementById('importFile').click());
+document.getElementById('importFile').addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const data = JSON.parse(String(reader.result));
+      if (!Array.isArray(data.cards) || !data.cards.every(c => typeof c.q === 'string')) throw new Error('bad format');
+      cards = data.cards.map(c => ({ interval: 1, ease: 2.5, due: Date.now(), ...c }));
+      setName = data.name || 'Imported deck';
+      save();
+      renderGrid();
+      show('viewGrid');
+    } catch {
+      alert('That file is not a FlashForge deck export.');
+    }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+});
+
 // ── Boot ────────────────────────────────────────────────────────────────────
 
 load();

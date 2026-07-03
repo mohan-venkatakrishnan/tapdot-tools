@@ -32,9 +32,16 @@
   </div>
 
   <div class="ts-card">
+    <div class="ts-segment" style="margin-bottom:14px" id="unitTabs">
+      <button class="ts-segment-btn active" data-unit="metric">Metric (kg / cm)</button>
+      <button class="ts-segment-btn" data-unit="imperial">Imperial (lb / ft-in)</button>
+    </div>
     <div class="biz-grid-2">
-      <div><label class="ts-label" for="weight">Weight (kg)</label><input class="ts-input" id="weight" type="number" value="70" /></div>
-      <div><label class="ts-label" for="height">Height (cm)</label><input class="ts-input" id="height" type="number" value="175" /></div>
+      <div><label class="ts-label" for="weight" id="weightLabel">Weight (kg)</label><input class="ts-input" id="weight" type="number" value="70" /></div>
+      <div id="heightMetric"><label class="ts-label" for="height">Height (cm)</label><input class="ts-input" id="height" type="number" value="175" /></div>
+      <div id="heightImperial" class="ts-hidden"><label class="ts-label">Height (ft / in)</label>
+        <div style="display:flex;gap:8px"><input class="ts-input" id="heightFt" type="number" value="5" placeholder="ft" /><input class="ts-input" id="heightIn" type="number" value="9" placeholder="in" /></div>
+      </div>
       <div><label class="ts-label" for="age">Age</label><input class="ts-input" id="age" type="number" value="30" /></div>
       <div><label class="ts-label" for="sex">Sex (for BMR formula)</label>
         <select class="ts-select" id="sex" style="width:100%"><option value="male">Male</option><option value="female">Female</option></select>

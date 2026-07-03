@@ -64,6 +64,8 @@ function render() {
   $('taxOwed').textContent = fmt(tax);
   $('effRate').textContent = income > 0 ? ((tax / income) * 100).toFixed(1) + '%' : '0%';
   $('takeHome').textContent = fmt(income - tax);
+  const marginal = breakdown.length ? breakdown[breakdown.length - 1].rate : 0;
+  if ($('margRate')) $('margRate').textContent = (marginal * 100).toFixed(0) + '%';
 
   $('table').innerHTML = '<thead><tr><th>Bracket</th><th>Rate</th><th>Taxable in bracket</th><th>Tax</th></tr></thead><tbody>' +
     breakdown.map(b => `<tr><td>${fmt(b.from)} – ${b.to === Infinity ? '∞' : fmt(b.to)}</td><td>${(b.rate * 100).toFixed(0)}%</td><td>${fmt(b.taxable)}</td><td>${fmt(b.tax)}</td></tr>`).join('') +
