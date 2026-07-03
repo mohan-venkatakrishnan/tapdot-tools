@@ -44,6 +44,7 @@ const ROUTES = [
   '/finance/', '/finance/compound/', '/finance/budget/', '/finance/mortgage/',
   '/finance/investments/', '/finance/tax/', '/finance/currency/',
   '/finance/equity/', '/finance/networth/',
+  '/finance/loan/', '/finance/retire/', '/finance/inflation/',
   '/legal/', '/legal/contract/', '/legal/nda/', '/legal/privacy-policy/',
   '/legal/terms/', '/legal/copyright/', '/legal/glossary/',
   '/hr/', '/hr/salary/', '/hr/jd/', '/hr/interview/', '/hr/offer/',

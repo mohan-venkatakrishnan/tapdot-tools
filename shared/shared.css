@@ -590,7 +590,9 @@ body {
   border-radius: var(--radius-md);
   padding: 12px 14px;
   text-align: center;
+  min-width: 0; /* let stats shrink inside grids (see CLAUDE.md min-width gotcha) */
 }
+.ts-stat .ts-stat-num { overflow-wrap: anywhere; } /* long values ($43,391 → $41,200) wrap instead of overflowing */
 
 .ts-stat-num {
   display: block;

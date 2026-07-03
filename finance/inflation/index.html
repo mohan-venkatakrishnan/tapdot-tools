@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" data-collection="finance" data-tool="InflationCalc">
+<head>
+  <meta charset="UTF-8" />
+  <script>(function(){try{var t=localStorage.getItem('tapdot-theme');var d=matchMedia('(prefers-color-scheme: dark)').matches;if(t==='dark'||(!t&&d))document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>InflationCalc — Inflation &amp; Purchasing Power Calculator | tapdot</title>
+  <meta name="description" content="See what inflation does to your money: future cost of today's expenses, purchasing-power erosion, and the return you need just to break even. Fully local." />
+  <meta property="og:title" content="InflationCalc — Inflation & Purchasing Power Calculator | tapdot" />
+  <meta property="og:description" content="Future cost, purchasing-power erosion, and break-even return — fully local." />
+  <link rel="canonical" href="https://tools.tapdot.org/finance/inflation/" />
+  <link rel="icon" type="image/png" href="/assets/tapdot-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/shared/shared.css" />
+  <link rel="stylesheet" href="/finance/finance.css" />
+</head>
+<body>
+<nav class="ts-nav">
+  <a href="https://tapdot.org" class="ts-nav-logo"><img src="/assets/tapdot-icon.png" width="22" height="22" alt="tapdot" /><span>tapdot</span></a>
+  <button class="ts-dark-toggle" id="darkToggle" aria-label="Toggle dark mode"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg></button>
+</nav>
+<main class="ts-main">
+  <div class="ts-tool-header">
+    <h1 class="ts-tool-name">InflationCalc</h1>
+    <p class="ts-tool-desc">What inflation quietly does to your money over time.</p>
+  </div>
+
+  <div class="ts-card">
+    <div class="biz-grid-2">
+      <div><label class="ts-label" for="amount">Amount today</label><input class="ts-input" id="amount" type="number" value="10000" /></div>
+      <div><label class="ts-label" for="rate">Inflation rate (% p.a.)</label><input class="ts-input" id="rate" type="number" step="0.5" value="5" /></div>
+      <div><label class="ts-label" for="years">Years</label><input class="ts-input" id="years" type="number" value="20" /></div>
+    </div>
+  </div>
+
+  <div class="ts-stats-grid">
+    <div class="ts-stat"><span class="ts-stat-num" id="futureCost">—</span><span class="ts-stat-label" id="futureCostLabel">Future cost of the same things</span></div>
+    <div class="ts-stat"><span class="ts-stat-num" id="futureValue">—</span><span class="ts-stat-label">What today's amount will buy then</span></div>
+    <div class="ts-stat"><span class="ts-stat-num ts-text-danger" id="erosion">—</span><span class="ts-stat-label">Purchasing power lost</span></div>
+    <div class="ts-stat"><span class="ts-stat-num" id="halfLife">—</span><span class="ts-stat-label">Years for money to halve</span></div>
+  </div>
+
+  <div class="ts-card">
+    <p class="ts-card-label">Purchasing power over time</p>
+    <svg class="biz-chart" id="chart" viewBox="0 0 600 200" preserveAspectRatio="none"></svg>
+    <p class="biz-muted ts-mt-sm" id="note"></p>
+  </div>
+
+  <div class="ts-card">
+    <p class="ts-card-label">Year by year</p>
+    <div class="ts-table-scroll" style="max-height:360px"><table class="ts-table" id="table"></table></div>
+  </div>
+</main>
+<footer class="ts-footer">
+  <span>Built by <a href="https://tapdot.org">tapdot</a></span><span class="ts-footer-dot">·</span>
+  <a href="/privacy.html">Privacy</a><span class="ts-footer-dot">·</span><span>All processing happens in your browser</span>
+</footer>
+<script src="/shared/shared.js"></script>
+<script src="/finance/libs/chart.js"></script>
+<script src="inflation.js" defer></script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "YOUR_CLOUDFLARE_TOKEN"}'></script>
+</body>
+</html>

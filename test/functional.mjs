@@ -989,6 +989,58 @@ const check = (name, ok) => { console.log((ok ? 'PASS' : 'FAIL') + '  ' + name);
   await page.close();
 }
 
+// 54. New finance tools: LoanCalc part-payment impact, RetireCalc gap, InflationCalc erosion.
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/finance/loan/', { waitUntil: 'networkidle' });
+  await page.waitForTimeout(200);
+  // $5,000,000 at 8.5% for 20y -> EMI ~ $43,391
+  const emi = await page.$eval('#emi', el => el.textContent);
+  check('LoanCalc EMI matches the standard formula (~$43,391)',
+    Math.abs(parseFloat(emi.replace(/[$,]/g, '')) - 43391) < 20);
+  const impactVisible = await page.isVisible('#impactCard');
+  const saved = await page.$eval('#interestSaved', el => el.textContent);
+  check('LoanCalc shows part-payment impact with interest saved',
+    impactVisible && parseFloat(saved.replace(/[$,]/g, '')) > 0);
+  // Reduce-EMI strategy should save LESS interest than reduce-tenure
+  const savedTenure = parseFloat(saved.replace(/[$,]/g, ''));
+  await page.click('[data-s="emi"]');
+  await page.waitForTimeout(200);
+  const savedEmi = parseFloat((await page.$eval('#interestSaved', el => el.textContent)).replace(/[$,]/g, ''));
+  check('LoanCalc reduce-tenure saves more interest than reduce-EMI', savedTenure > savedEmi);
+  const dashed = await page.$$eval('#chart path[stroke-dasharray]', els => els.length);
+  check('LoanCalc chart overlays the prepaid projection', dashed === 1);
+  check('no JS errors on LoanCalc', errs.length === 0);
+  await page.close();
+}
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/finance/retire/', { waitUntil: 'networkidle' });
+  await page.waitForTimeout(200);
+  const needed = await page.$eval('#corpusNeeded', el => parseFloat(el.textContent.replace(/[$,]/g, '')));
+  const projected = await page.$eval('#corpusProjected', el => parseFloat(el.textContent.replace(/[$,]/g, '')));
+  const explain = await page.$eval('#explain', el => el.textContent);
+  check('RetireCalc computes a positive corpus needed and projection', needed > 0 && projected > 0);
+  check('RetireCalc explains the calculation in plain English', explain.includes('inflation') && explain.length > 100);
+  check('no JS errors on RetireCalc', errs.length === 0);
+  await page.close();
+}
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/finance/inflation/', { waitUntil: 'networkidle' });
+  await page.waitForTimeout(200);
+  // $10,000 at 5% for 20y -> future cost ~$26,533, halving ~14.2y
+  const cost = await page.$eval('#futureCost', el => parseFloat(el.textContent.replace(/[$,]/g, '')));
+  const half = await page.$eval('#halfLife', el => parseFloat(el.textContent));
+  check('InflationCalc computes future cost (~$26,533 for $10k/5%/20y)', Math.abs(cost - 26533) < 30);
+  check('InflationCalc computes halving time (~14.2y at 5%)', Math.abs(half - 14.2) < 0.2);
+  check('no JS errors on InflationCalc', errs.length === 0);
+  await page.close();
+}
+
 await browser.close(); srv.close();
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

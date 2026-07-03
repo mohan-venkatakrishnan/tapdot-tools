@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" data-collection="finance" data-tool="LoanCalc">
+<head>
+  <meta charset="UTF-8" />
+  <script>(function(){try{var t=localStorage.getItem('tapdot-theme');var d=matchMedia('(prefers-color-scheme: dark)').matches;if(t==='dark'||(!t&&d))document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LoanCalc — Loan EMI, Part-Payment &amp; Payoff Calculator | tapdot</title>
+  <meta name="description" content="Complete loan calculator: EMI, amortisation, interest vs principal projection, and the exact impact of part payments and extra EMIs — reduce tenure or reduce EMI. Fully local." />
+  <meta property="og:title" content="LoanCalc — Loan EMI, Part-Payment & Payoff Calculator | tapdot" />
+  <meta property="og:description" content="EMI, amortisation, and part-payment impact projections for any loan — fully local." />
+  <link rel="canonical" href="https://tools.tapdot.org/finance/loan/" />
+  <link rel="icon" type="image/png" href="/assets/tapdot-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/shared/shared.css" />
+  <link rel="stylesheet" href="/finance/finance.css" />
+</head>
+<body>
+<nav class="ts-nav">
+  <a href="https://tapdot.org" class="ts-nav-logo"><img src="/assets/tapdot-icon.png" width="22" height="22" alt="tapdot" /><span>tapdot</span></a>
+  <button class="ts-dark-toggle" id="darkToggle" aria-label="Toggle dark mode"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg></button>
+</nav>
+<main class="ts-main ts-main-wide">
+  <div class="ts-tool-header">
+    <h1 class="ts-tool-name">LoanCalc</h1>
+    <p class="ts-tool-desc">EMI, amortisation, and the exact impact of part payments — for home loans or any loan.</p>
+  </div>
+  <div class="ts-privacy-strip"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Your loan details never leave your browser</div>
+
+  <div class="ts-workbench">
+    <div>
+      <div class="ts-card">
+        <p class="ts-card-label">Loan</p>
+        <div class="biz-grid-2">
+          <div><label class="ts-label" for="amount">Loan amount</label><input class="ts-input" id="amount" type="number" value="5000000" /></div>
+          <div><label class="ts-label" for="rate">Interest rate (% p.a.)</label><input class="ts-input" id="rate" type="number" step="0.05" value="8.5" /></div>
+          <div><label class="ts-label" for="years">Tenure (years)</label><input class="ts-input" id="years" type="number" value="20" /></div>
+          <div><label class="ts-label" for="extraMonthly">Extra per EMI (optional)</label><input class="ts-input" id="extraMonthly" type="number" value="0" /></div>
+        </div>
+      </div>
+
+      <div class="ts-card">
+        <div class="biz-row" style="justify-content:space-between">
+          <p class="ts-card-label" style="margin-bottom:0">Part payments (lump sums)</p>
+          <button class="ts-btn ts-btn-secondary" id="addPP" style="height:30px;padding:0 12px">+ Add</button>
+        </div>
+        <div id="ppList" class="ts-mt-sm"></div>
+        <p class="ts-card-label ts-mt-md">After a part payment</p>
+        <div class="ts-segment" id="strategyTabs">
+          <button class="ts-segment-btn active" data-s="tenure">Keep EMI, reduce tenure</button>
+          <button class="ts-segment-btn" data-s="emi">Keep tenure, reduce EMI</button>
+        </div>
+        <p class="biz-muted ts-mt-sm">Reducing tenure almost always saves more interest — the comparison below shows exactly how much.</p>
+      </div>
+    </div>
+
+    <div>
+      <div class="ts-stats-grid">
+        <div class="ts-stat"><span class="ts-stat-num" id="emi">—</span><span class="ts-stat-label">Monthly EMI</span></div>
+        <div class="ts-stat"><span class="ts-stat-num" id="totalInterest">—</span><span class="ts-stat-label">Total interest (no prepayment)</span></div>
+        <div class="ts-stat"><span class="ts-stat-num" id="totalPaid">—</span><span class="ts-stat-label">Total paid</span></div>
+        <div class="ts-stat"><span class="ts-stat-num" id="interestPct">—</span><span class="ts-stat-label">Interest as % of loan</span></div>
+      </div>
+
+      <div class="ts-card ts-hidden" id="impactCard">
+        <p class="ts-card-label">With your prepayments</p>
+        <div class="ts-stats-grid">
+          <div class="ts-stat"><span class="ts-stat-num ts-text-success" id="interestSaved">—</span><span class="ts-stat-label">Interest saved</span></div>
+          <div class="ts-stat"><span class="ts-stat-num" id="timeSaved">—</span><span class="ts-stat-label">Paid off earlier</span></div>
+          <div class="ts-stat"><span class="ts-stat-num" id="newEmi">—</span><span class="ts-stat-label">EMI after prepayments</span></div>
+          <div class="ts-stat"><span class="ts-stat-num" id="newPayoff">—</span><span class="ts-stat-label">New payoff time</span></div>
+        </div>
+      </div>
+
+      <div class="ts-card">
+        <p class="ts-card-label">Balance projection</p>
+        <svg class="biz-chart" id="chart" viewBox="0 0 600 200" preserveAspectRatio="none"></svg>
+        <p class="ts-mt-sm" id="chartLegend" style="font-size:12px"></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="ts-card">
+    <p class="ts-card-label">Year-by-year amortisation</p>
+    <div class="ts-table-scroll" style="max-height:420px"><table class="ts-table" id="table"></table></div>
+  </div>
+</main>
+<footer class="ts-footer">
+  <span>Built by <a href="https://tapdot.org">tapdot</a></span><span class="ts-footer-dot">·</span>
+  <a href="/privacy.html">Privacy</a><span class="ts-footer-dot">·</span><span>All processing happens in your browser</span>
+</footer>
+<script src="/shared/shared.js"></script>
+<script src="/finance/libs/chart.js"></script>
+<script src="loan.js" defer></script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "YOUR_CLOUDFLARE_TOKEN"}'></script>
+</body>
+</html>

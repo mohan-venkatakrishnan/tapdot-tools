@@ -416,3 +416,33 @@ project's actual architecture — never remove it.
   - `test/functional.mjs` grew to 162 checks. All 240 layout + 162 functional +
     css-audit pass. This completes the per-collection UX pass programme (v17–v19)
     across all 10 collections.
+- v20: **Three new finance tools** (user request: a complete loan calculator plus
+  more universally useful finance tools). Site now 71 tools; homepage counts and
+  finance hub card updated.
+  - **LoanCalc** (`finance/loan/`) — the comprehensive loan tool: EMI, total
+    interest, interest-as-%-of-loan; unlimited lump-sum part payments (month +
+    amount rows) plus optional extra-per-EMI; a strategy toggle — keep EMI &
+    reduce tenure vs keep tenure & reduce EMI (recomputes EMI after each lump on
+    the remaining original tenure); impact card (interest saved, paid off earlier,
+    EMI change, new payoff); baseline-vs-prepaid balance projection chart using
+    chart.js overlay series; year-by-year amortisation with an interest-share
+    column. Simulation is month-by-month with a guard for EMIs that don't cover
+    interest. Distinct from MortgageCalc (which stays simple: EMI + flat monthly
+    overpayment); LoanCalc is the "everything" tool.
+  - **RetireCalc** (`finance/retire/`) — corpus needed at retirement (expenses
+    inflated to retirement age, then a 30-year drawdown annuity at the REAL
+    post-retirement return, i.e. (1+post)/(1+inflation)−1), corpus projected from
+    current savings + monthly investing, shortfall/surplus, and the monthly
+    investment that closes the gap. Includes a plain-English "how it's calculated"
+    paragraph and a growth chart with the needed-corpus line overlaid.
+  - **InflationCalc** (`finance/inflation/`) — future cost of today's amount,
+    what today's amount will buy then, % purchasing power lost, and the halving
+    time (ln2/ln(1+r)); purchasing-power decay chart + year-by-year table.
+  - Fixed a global mobile bug the new tools surfaced: `.ts-stat` values with long
+    unbreakable strings ("$43,391 → $41,200") overflowed 375px viewports — added
+    `min-width: 0` + `overflow-wrap: anywhere` to `.ts-stat`/`.ts-stat-num` in
+    shared.css (another instance of the v7 min-width gotcha).
+  - `test/regression.mjs` → 249 checks, `test/functional.mjs` → 173 (LoanCalc EMI
+    formula accuracy, part-payment impact, reduce-tenure > reduce-EMI savings
+    invariant, chart overlay; RetireCalc positivity + plain-English explainer;
+    InflationCalc future-cost and halving-time accuracy). All suites pass.
