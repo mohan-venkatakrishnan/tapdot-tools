@@ -1,15 +1,6 @@
 /* dev/dev.css — imported by all dev tools in addition to shared.css */
 
-/* Two-panel workbench (RegexLab, CronLab, MarkdownLive, JSONConvert) */
-.ts-workbench {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-  margin-top: 20px;
-  align-items: start; /* don't stretch cards to the tallest sibling — avoids dead space */
-}
-.ts-workbench > * { min-width: 0; } /* let cards shrink below their content's intrinsic width */
-@media (max-width: 700px) { .ts-workbench { grid-template-columns: 1fr; } }
+/* .ts-workbench moved to shared/shared.css (used by finance/legal/hr tools too) */
 
 .ts-workbench-4 {
   display: grid;
@@ -73,18 +64,7 @@ textarea.ts-code-input {
 .ts-field-row span b { display: block; color: var(--color-text); font-size: 13px; }
 .ts-field-row span.active { background: var(--color-accent-soft); border-color: var(--color-accent); color: var(--color-accent); }
 
-/* Pill tabs */
-.ts-pill-tabs {
-  display: flex; gap: 4px; background: var(--color-bg-soft);
-  border: 0.5px solid var(--color-border); border-radius: var(--radius-lg);
-  padding: 3px; width: fit-content; flex-wrap: wrap;
-}
-.ts-pill-tab {
-  padding: 5px 14px; border-radius: var(--radius-md); font-size: 13px; font-weight: 500;
-  border: none; background: transparent; color: var(--color-muted); cursor: pointer;
-  transition: background var(--transition), color var(--transition);
-}
-.ts-pill-tab.active { background: var(--color-surface); color: var(--color-text); box-shadow: var(--shadow-sm); }
+/* Pill tabs moved to shared/shared.css (used by marketing tools too) */
 
 /* Data table (CSVExplore, TimezoneNow, cron next runs) */
 .ts-tz-table { width: 100%; border-collapse: collapse; font-size: 13px; font-family: var(--font-mono); }

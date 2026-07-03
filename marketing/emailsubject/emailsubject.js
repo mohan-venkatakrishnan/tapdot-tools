@@ -75,15 +75,27 @@ Keep each under 60 characters. Current sentiment: ${sentiment}.
 Original: "${subject}"
 Output ONLY 3 alternatives, one per line, no numbering, no quotes.`;
 
+// Formula-based variants (question, urgency, personalization) for when AI is off.
+function ruleVariants(subject) {
+  const base = subject.replace(/[.!?]+$/, '');
+  const short = base.length > 42 ? base.slice(0, 42).replace(/\s+\S*$/, '') + '…' : base;
+  return [
+    `${short}?`.replace(/\?\?$/, '?'),
+    `Last chance: ${short.charAt(0).toLowerCase() + short.slice(1)}`,
+    `[First name], ${short.charAt(0).toLowerCase() + short.slice(1)}`,
+  ].map(v => v.length > 60 ? v.slice(0, 60) : v);
+}
+
 async function generateVariants() {
   const subject = $('subject').value.trim();
   const status = $('aiStatus');
   if (!subject) { status.className = 'biz-ai-status fallback'; status.textContent = 'Type a subject line first.'; return; }
   const avail = await tapdotAI.availability();
   if (avail === 'unavailable') {
+    const variants = ruleVariants(subject);
+    $('variants').innerHTML = variants.map(l => `<div class="biz-item-card" style="padding:10px 14px;margin-bottom:8px"><div class="biz-row" style="justify-content:space-between"><span>${escapeHtml(l)}</span><button class="ts-copy-btn" data-v="${escapeHtml(l)}">Copy</button></div></div>`).join('');
     status.className = 'biz-ai-status fallback';
-    status.textContent = 'On-device AI unavailable in this browser — enable Chrome\'s built-in AI to generate variants (see BiasCheck for setup steps).';
-    $('variants').innerHTML = '';
+    status.textContent = 'On-device AI unavailable — these variants use proven subject-line formulas instead. Enable Chrome\'s built-in AI for rewrites tailored to your wording.';
     return;
   }
   $('genBtn').disabled = true;

@@ -313,3 +313,38 @@ project's actual architecture — never remove it.
   checks) and `test/functional.mjs` (118 checks) across the entire site — both pass
   with 0 failures, confirming no regressions from the last five collections' worth
   of shared.js/shared.css changes.
+- v16: **UI/UX bug-fix pass + homepage redesign** (driven by user feedback: unstyled
+  buttons on UTMBuilder, default input styles in HR, weak AI fallbacks, cluttered
+  homepage).
+  - **Cross-collection CSS leakage fixed**: `.ts-pill-tabs`/`.ts-pill-tab` and
+    `.ts-workbench` lived only in `dev/dev.css` but were used by marketing/finance/
+    legal/HR pages — those pages rendered browser-default buttons / stacked layouts.
+    Moved to `shared.css`. Same consolidation for `.biz-matrix` + `.biz-rm`
+    (duplicated in marketing.css + finance.css, MISSING from hr.css — the HR
+    default-input bug). Added `.ts-table input/select` quiet styling (ROICalculator)
+    and `.ts-text-success`/`.ts-text-danger` utilities (were used, never defined).
+    **Rule: any `ts-*`/`biz-*` class used by more than one collection MUST live in
+    shared.css, not a collection stylesheet.**
+  - **New `test/css-audit.mjs`**: statically flags (a) classes used in HTML/JS but
+    defined in no CSS file (hard fail) and (b) classless form controls (warnings —
+    many are styled by descendant selectors). Run alongside the other suites.
+  - **AI fallbacks are now functional, not just apologetic** — every AI-dependent
+    tool produces useful output without on-device AI: AdCopyWriter (formula variants
+    trimmed to platform character limits), PersonaBuilder (structured skeleton built
+    from the brief), EmailSubjectTester (question/urgency/personalization formula
+    variants), ContractRead (risk-clause keyword scan: termination, indemnification,
+    auto-renewal, arbitration, liability, etc.). Each fallback message says what
+    you're getting and how to enable full AI. **Pattern for new AI tools: the
+    unavailable branch must DO something useful, never just tell the user to go
+    enable a flag.**
+  - **Search palette knew only 4 collections**: `GROUP_ORDER`/`GROUP_LABELS` in
+    `initSearch` were never updated for the 7 new collections — results sorted by
+    NaN and group headers showed raw slugs. Fixed; also `[data-open-search]` on any
+    element now opens the palette (used by the homepage hero).
+  - **Homepage redesigned as a landing page**: hero (privacy badge, accent headline,
+    hero search bar wired to the Ctrl+K palette, stat chips 68 tools/10 collections/
+    0 accounts/$0) + collections grouped into three sections — "For study & writing",
+    "For work", "For life" — instead of one undifferentiated 10-card wall.
+    Hero styles under `.ts-hero*`/`.ts-home-section*` in shared.css.
+  - `test/functional.mjs` grew to 125 checks (hero palette, group labels, adcopy +
+    contract fallbacks). All 240 layout + 125 functional checks pass.

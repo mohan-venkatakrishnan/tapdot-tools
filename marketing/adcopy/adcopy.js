@@ -59,6 +59,32 @@ function renderVariants(variants) {
   showOutput('output');
 }
 
+// Rule-based fallback: formulaic but usable variants, trimmed to platform limits.
+function trimTo(text, limit) {
+  if (text.length <= limit) return text;
+  const cut = text.slice(0, limit);
+  const lastSpace = cut.lastIndexOf(' ');
+  return (lastSpace > limit * 0.6 ? cut.slice(0, lastSpace) : cut).trim();
+}
+function templateVariants(brief) {
+  const L = LIMITS[platform];
+  const cta = 'Get started today';
+  const combos = [
+    { h: `${brief.product} — built for ${brief.audience}`, d: `${brief.usp}. Made for ${brief.audience}. ${cta}.` },
+    { h: `${brief.usp}`, d: `${brief.product} gives ${brief.audience} ${brief.usp.toLowerCase()}. ${cta}.` },
+    { h: `Meet ${brief.product}`, d: `The way ${brief.audience} get ${brief.usp.toLowerCase()}. Try ${brief.product} now.` },
+  ];
+  return combos.map(c => {
+    const v = {};
+    if ('headline' in L) v.headline = trimTo(c.h, L.headline);
+    if ('description' in L) v.description = trimTo(c.d, L.description);
+    if ('primary' in L) v.primary = trimTo(c.d, L.primary);
+    if ('cta' in L) v.cta = trimTo(cta, L.cta);
+    if ('intro' in L) v.intro = trimTo(c.d, L.intro);
+    return v;
+  });
+}
+
 async function generate() {
   const brief = {
     product: $('product').value.trim() || 'this product',
@@ -69,8 +95,9 @@ async function generate() {
   const status = $('aiStatus');
   const avail = await tapdotAI.availability();
   if (avail === 'unavailable') {
+    renderVariants(templateVariants(brief));
     status.className = 'biz-ai-status fallback';
-    status.textContent = 'On-device AI unavailable in this browser. Enable Chrome\'s built-in AI (see BiasCheck for setup steps) to generate ad copy.';
+    status.textContent = 'On-device AI unavailable — these are formula-based starting points. Enable Chrome\'s built-in AI for tone-aware copy written from your brief.';
     return;
   }
   $('genBtn').disabled = true;

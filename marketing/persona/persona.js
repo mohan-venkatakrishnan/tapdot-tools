@@ -45,6 +45,27 @@ function personaCard(p, id) {
 
 let currentPersona = null;
 
+// Structured skeleton persona built from the brief — real fields the user can
+// refine by hand when on-device AI can't invent the details for them.
+function templatePersona(segment, product, pains) {
+  const painList = pains.split(/[,;]/).map(s => s.trim()).filter(Boolean);
+  while (painList.length < 3) painList.push('(add a frustration)');
+  return {
+    name: 'Alex (rename me)',
+    age: '30–45',
+    job_title: segment,
+    company_size: '(company size)',
+    location: '(location)',
+    goals: [`Succeed as a ${segment}`, `Get more value from ${product}`, '(add a goal)'],
+    frustrations: painList.slice(0, 3),
+    channels: ['(where do they hang out?)', 'e.g. LinkedIn, newsletters', 'e.g. peer communities'],
+    buying_triggers: [`A pain point becomes urgent: ${painList[0]}`, '(add a trigger)'],
+    objections: ['(price? switching cost?)', '(add an objection)'],
+    quote: `As a ${segment}, I need ${product} to just work.`,
+    bio: `A ${segment} evaluating ${product}. Their day-to-day is shaped by: ${pains}.`,
+  };
+}
+
 async function generate() {
   const segment = $('segment').value.trim() || 'a customer';
   const product = $('product').value.trim() || 'the product';
@@ -52,8 +73,10 @@ async function generate() {
   const status = $('aiStatus');
   const avail = await tapdotAI.availability();
   if (avail === 'unavailable') {
+    currentPersona = templatePersona(segment, product, pains);
+    $('output').innerHTML = personaCard(currentPersona, null);
     status.className = 'biz-ai-status fallback';
-    status.textContent = 'On-device AI unavailable in this browser. Enable Chrome\'s built-in AI (see BiasCheck for setup steps) to generate personas.';
+    status.textContent = 'On-device AI unavailable — here is a structured skeleton built from your brief. Fill in the placeholders, or enable Chrome\'s built-in AI for a fully written persona.';
     return;
   }
   $('genBtn').disabled = true;

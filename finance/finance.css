@@ -31,12 +31,4 @@
 .biz-legend-swatch { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
 
 .biz-item-card { background: var(--color-surface); border: 0.5px solid var(--color-border); border-radius: var(--radius-lg); padding: 16px; margin-bottom: 12px; }
-.biz-rm { background: none; border: none; color: var(--color-muted); cursor: pointer; font-size: 15px; }
-.biz-rm:hover { color: var(--color-danger); }
 
-.biz-matrix { width: 100%; border-collapse: collapse; font-size: 13px; }
-.biz-matrix th, .biz-matrix td { border: 0.5px solid var(--color-border); padding: 8px 10px; text-align: center; }
-.biz-matrix th:first-child, .biz-matrix td:first-child { text-align: left; background: var(--color-bg-soft); font-weight: 500; }
-.biz-matrix th { background: var(--color-accent-soft); color: var(--color-accent); font-weight: 600; }
-.biz-matrix input, .biz-matrix select { width: 100%; border: none; background: transparent; text-align: center; font-family: var(--font-body); font-size: 13px; color: var(--color-text); }
-.biz-matrix input:focus, .biz-matrix select:focus { outline: 1px solid var(--color-accent); border-radius: 4px; }

@@ -37,23 +37,31 @@
 
 <main class="ts-main ts-main-wide">
 
-  <div class="ts-tool-header">
-    <h1 class="ts-tool-name">Free tools that respect your privacy</h1>
-    <p class="ts-tool-desc">
-      68 small, fast tools across study, writing, development, marketing, finance,
-      legal, HR, health, design, and productivity. Every one runs entirely in your
-      browser — no account, no ads, nothing you type is ever sent anywhere.
+  <section class="ts-hero">
+    <span class="ts-hero-badge">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      100% in your browser — nothing you type is ever sent anywhere
+    </span>
+    <h1>Free tools that <em>respect your privacy</em></h1>
+    <p class="ts-hero-sub">
+      68 small, fast tools for work, study, and life. No accounts, no ads,
+      no tracking — every tool runs entirely on your device.
     </p>
-  </div>
+    <button class="ts-hero-search" type="button" data-open-search aria-label="Search all tools">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      Search 68 tools…
+      <span class="ts-search-kbd">Ctrl K</span>
+    </button>
+    <div class="ts-hero-stats">
+      <span class="ts-hero-stat"><b>68</b> tools</span>
+      <span class="ts-hero-stat"><b>10</b> collections</span>
+      <span class="ts-hero-stat"><b>0</b> accounts needed</span>
+      <span class="ts-hero-stat"><b>$0</b> forever</span>
+    </div>
+  </section>
 
-  <div class="ts-privacy-strip">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-         stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
-      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-    </svg>
-    Everything runs in your browser — nothing is sent anywhere
-  </div>
-
+  <section class="ts-home-section">
+    <p class="ts-home-section-title">For study &amp; writing</p>
   <div class="ts-hub-grid">
     <a class="ts-hub-card" href="/study/" data-collection="study">
       <span class="ts-hub-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1 3 3 6 3s6-2 6-3v-5"/></svg></span>
@@ -69,6 +77,12 @@
       <div class="ts-hub-card-meta">ReadScore · WordCount Pro · LoremCraft · ThreadCraft</div>
       <div class="ts-hub-card-link" style="margin-top:12px">Open collection →</div>
     </a>
+  </div>
+  </section>
+
+  <section class="ts-home-section">
+    <p class="ts-home-section-title">For work</p>
+  <div class="ts-hub-grid">
     <a class="ts-hub-card" href="/dev/" data-collection="dev">
       <span class="ts-hub-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></span>
       <div class="ts-hub-card-title">Dev tools</div>
@@ -104,18 +118,24 @@
       <div class="ts-hub-card-meta">SalaryBand · JobDescriptionWriter · InterviewKit · +3 more</div>
       <div class="ts-hub-card-link" style="margin-top:12px">Open collection →</div>
     </a>
-    <a class="ts-hub-card" href="/health/" data-collection="health">
-      <span class="ts-hub-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></span>
-      <div class="ts-hub-card-title">Health tools</div>
-      <div class="ts-hub-card-desc">BMI, medication, sleep — private.</div>
-      <div class="ts-hub-card-meta">BMICalc · MedicationLog · SleepLog · +3 more</div>
-      <div class="ts-hub-card-link" style="margin-top:12px">Open collection →</div>
-    </a>
     <a class="ts-hub-card" href="/design/" data-collection="design">
       <span class="ts-hub-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r="0.5"/><circle cx="17.5" cy="10.5" r="0.5"/><circle cx="8.5" cy="7.5" r="0.5"/><circle cx="6.5" cy="12.5" r="0.5"/><path d="M12 2a10 10 0 1 0 0 20c1.1 0 2-.9 2-2 0-.5-.2-1-.6-1.4-.3-.4-.5-.8-.5-1.3 0-1 .8-1.8 1.8-1.8H17a5 5 0 0 0 5-5c0-5-4.5-8.5-10-8.5z"/></svg></span>
       <div class="ts-hub-card-title">Design tools</div>
       <div class="ts-hub-card-desc">Colour, type, icons, gradients — private.</div>
       <div class="ts-hub-card-meta">PaletteForge · IconExplorer · GradientMaker · +3 more</div>
+      <div class="ts-hub-card-link" style="margin-top:12px">Open collection →</div>
+    </a>
+  </div>
+  </section>
+
+  <section class="ts-home-section">
+    <p class="ts-home-section-title">For life</p>
+  <div class="ts-hub-grid">
+    <a class="ts-hub-card" href="/health/" data-collection="health">
+      <span class="ts-hub-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></span>
+      <div class="ts-hub-card-title">Health tools</div>
+      <div class="ts-hub-card-desc">BMI, medication, sleep — private.</div>
+      <div class="ts-hub-card-meta">BMICalc · MedicationLog · SleepLog · +3 more</div>
       <div class="ts-hub-card-link" style="margin-top:12px">Open collection →</div>
     </a>
     <a class="ts-hub-card" href="/productivity/" data-collection="productivity">
@@ -126,6 +146,7 @@
       <div class="ts-hub-card-link" style="margin-top:12px">Open collection →</div>
     </a>
   </div>
+  </section>
 
 </main>
 

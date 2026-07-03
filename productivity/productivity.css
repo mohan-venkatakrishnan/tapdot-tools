@@ -23,7 +23,12 @@
 .matrix-table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 480px; }
 .matrix-table th, .matrix-table td { padding: 8px 10px; border-bottom: 0.5px solid var(--color-border); text-align: center; }
 .matrix-table th:first-child, .matrix-table td:first-child { text-align: left; }
-.matrix-table input[type="number"] { width: 56px; text-align: center; }
+.matrix-table input[type="number"] {
+  width: 56px; text-align: center; border: 0.5px solid var(--color-border);
+  border-radius: var(--radius-sm); background: var(--color-bg-soft);
+  color: var(--color-text); font-family: var(--font-body); font-size: 13px; padding: 4px;
+}
+.matrix-table input[type="number"]:focus { outline: 1px solid var(--color-accent); }
 .matrix-table .winner { color: var(--color-accent); font-weight: 600; }
 .criteria-row { display: flex; gap: 10px; align-items: center; margin-bottom: 8px; min-width: 0; }
 .criteria-row input[type="text"] { flex: 1; min-width: 0; }

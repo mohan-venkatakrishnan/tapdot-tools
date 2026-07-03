@@ -753,6 +753,48 @@ const check = (name, ok) => { console.log((ok ? 'PASS' : 'FAIL') + '  ' + name);
   await page.close();
 }
 
+// 49. Homepage hero: search bar opens the palette; palette groups include new collections.
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/', { waitUntil: 'networkidle' });
+  await page.click('.ts-hero-search');
+  check('hero search bar opens the palette', await page.isVisible('.ts-palette-backdrop'));
+  await page.fill('#tsPaletteInput', 'bmi');
+  await page.waitForTimeout(120);
+  const groups = await page.$$eval('.ts-palette-group', els => els.map(e => e.textContent));
+  check('palette shows the Health group label (not raw slug)', groups.includes('Health'));
+  check('no JS errors on redesigned homepage', errs.length === 0);
+  await page.close();
+}
+
+// 50. AI fallback tools produce usable output without on-device AI (headless Chrome has none).
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/marketing/adcopy/', { waitUntil: 'networkidle' });
+  await page.fill('#product', 'Acme CRM');
+  await page.click('#genBtn');
+  await page.waitForTimeout(400);
+  const variants = await page.$$eval('#variants .ts-card', els => els.length);
+  check('AdCopyWriter renders template variants without AI', variants === 3);
+  check('no JS errors on AdCopyWriter fallback', errs.length === 0);
+  await page.close();
+}
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/legal/contract/', { waitUntil: 'networkidle' });
+  await page.fill('#input', 'The Company may terminate this agreement at any time. Customer shall indemnify the Company against all claims. This agreement automatically renews each year.');
+  await page.click('#summarizeBtn');
+  await page.waitForTimeout(400);
+  const summary = await page.$eval('#summary', el => el.textContent);
+  check('ContractRead clause scan flags termination + indemnification without AI',
+    summary.includes('TERMINATION') && summary.includes('INDEMNIFICATION'));
+  check('no JS errors on ContractRead fallback', errs.length === 0);
+  await page.close();
+}
+
 await browser.close(); srv.close();
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

@@ -428,8 +428,15 @@ function initSearch() {
     '<span class="label">Search tools…</span><span class="ts-search-kbd">Ctrl K</span>';
   if (toggle) toggle.before(trigger); else nav.appendChild(trigger);
 
-  const GROUP_ORDER = { tools: 0, study: 1, write: 2, dev: 3 };
-  const GROUP_LABELS = { tools: 'Tools', study: 'Study', write: 'Write', dev: 'Dev' };
+  const GROUP_ORDER = {
+    tools: 0, study: 1, write: 2, dev: 3, marketing: 4, finance: 5,
+    legal: 6, hr: 7, health: 8, design: 9, productivity: 10,
+  };
+  const GROUP_LABELS = {
+    tools: 'Tools', study: 'Study', write: 'Write', dev: 'Dev', marketing: 'Marketing',
+    finance: 'Finance', legal: 'Legal', hr: 'HR', health: 'Health', design: 'Design',
+    productivity: 'Productivity',
+  };
   let backdrop = null, activeIdx = 0, filtered = [];
 
   // Grouped by collection (each group keeps its own pastel colour), sorted
@@ -445,7 +452,7 @@ function initSearch() {
       else if (item.desc.toLowerCase().includes(q) || item.collection.includes(q)) score = 1;
       return { item, score };
     }).filter(r => r.score > 0);
-    scored.sort((a, b) => (GROUP_ORDER[a.item.collection] - GROUP_ORDER[b.item.collection]) || (b.score - a.score));
+    scored.sort((a, b) => ((GROUP_ORDER[a.item.collection] ?? 99) - (GROUP_ORDER[b.item.collection] ?? 99)) || (b.score - a.score));
     return scored.map(r => r.item);
   }
 
@@ -519,6 +526,8 @@ function initSearch() {
   }
 
   trigger.addEventListener('click', open);
+  // Any on-page element (e.g. the homepage hero search bar) can open the palette:
+  document.querySelectorAll('[data-open-search]').forEach(el => el.addEventListener('click', open));
   document.addEventListener('keydown', (e) => {
     if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); backdrop ? close() : open(); }
   });
@@ -1142,7 +1151,7 @@ function runCount(stepEl) {
 
 function initReveal() {
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  const sel = '.ts-tool-header, .ts-card, .ts-hub-card, .ts-stats-grid, .ts-privacy-strip, .ts-callout, .gc-tab, .hiw2';
+  const sel = '.ts-hero, .ts-home-section-title, .ts-tool-header, .ts-card, .ts-hub-card, .ts-stats-grid, .ts-privacy-strip, .ts-callout, .gc-tab, .hiw2';
   const els = [...document.querySelectorAll(sel)];
   const io = new IntersectionObserver((entries) => {
     entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
