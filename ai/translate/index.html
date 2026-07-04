@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" data-collection="ai" data-tool="AITranslate">
+<head>
+  <meta charset="UTF-8" />
+  <script>(function(){try{var t=localStorage.getItem('tapdot-theme');var d=matchMedia('(prefers-color-scheme: dark)').matches;if(t==='dark'||(!t&&d))document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AITranslate — On-Device Translator | tapdot</title>
+  <meta name="description" content="Translate text between languages using Chrome's built-in on-device AI with automatic language detection. Your text never leaves your machine. Chrome-only." />
+  <meta property="og:title" content="AITranslate — On-Device Translator | tapdot" />
+  <meta property="og:description" content="Translate text between languages using Chrome's built-in on-device AI with automatic language detection. Your text never leaves your machine. Chrome-only." />
+  <link rel="canonical" href="https://tools.tapdot.org/ai/translate/" />
+  <link rel="icon" type="image/png" href="/assets/tapdot-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/shared/shared.css" />
+</head>
+<body>
+<nav class="ts-nav">
+  <a href="https://tapdot.org" class="ts-nav-logo"><img src="/assets/tapdot-icon.png" width="22" height="22" alt="tapdot" /><span>tapdot</span></a>
+  <button class="ts-dark-toggle" id="darkToggle" aria-label="Toggle dark mode"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg></button>
+</nav>
+<main class="ts-main">
+  <div class="ts-tool-header">
+    <h1 class="ts-tool-name">AITranslate</h1>
+    <p class="ts-tool-desc">Translate on your device — with automatic language detection, and nothing uploaded.</p>
+  </div>
+  <div class="ai-gate" id="gate"><span class="ai-gate-icon">⏳</span><div><h3 id="gateTitle">Checking your browser…</h3><p id="gateMsg"></p></div></div>
+  <div id="toolBody" class="ai-disabled">
+    <div class="ts-workbench">
+      <div class="ts-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
+          <p class="ts-card-label" style="margin-bottom:0">From</p>
+          <span class="biz-muted" id="detected" style="font-size:12px;color:var(--color-muted)"></span>
+        </div>
+        <textarea class="ts-textarea" id="input" style="min-height:200px" placeholder="Type or paste text in any language…"></textarea>
+      </div>
+      <div class="ts-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
+          <select class="ts-select" id="targetLang">
+            <option value="en">English</option><option value="hi">Hindi</option><option value="ta">Tamil</option>
+            <option value="es">Spanish</option><option value="fr">French</option><option value="de">German</option>
+            <option value="ja">Japanese</option><option value="zh">Chinese (Simplified)</option><option value="pt">Portuguese</option>
+            <option value="ar">Arabic</option><option value="ru">Russian</option><option value="ko">Korean</option>
+            <option value="it">Italian</option><option value="nl">Dutch</option><option value="tr">Turkish</option>
+          </select>
+          <button class="ts-copy-btn" id="copyOut">Copy</button>
+        </div>
+        <div class="ts-mono-output ts-mt-sm" id="result" style="font-family:var(--font-body);font-size:14px;min-height:200px"></div>
+        <p class="biz-muted ts-mt-sm" id="status" style="font-size:12px;color:var(--color-muted)"></p>
+      </div>
+    </div>
+  </div>
+</main>
+<footer class="ts-footer">
+  <span>Built by <a href="https://tapdot.org">tapdot</a></span><span class="ts-footer-dot">·</span>
+  <a href="/privacy.html">Privacy</a><span class="ts-footer-dot">·</span><span>All processing happens on your device</span>
+</footer>
+<script src="/shared/shared.js"></script>
+<script src="translate.js" defer></script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "YOUR_CLOUDFLARE_TOKEN"}'></script>
+</body>
+</html>

@@ -496,3 +496,39 @@ project's actual architecture — never remove it.
   - Suites: 276 layout / 197 functional / css-audit clean (one false positive —
     CodePlay's starter-example `.card` lives in user-space iframe CSS — added to
     the audit's IGNORE list with a comment).
+- v22: **User-feedback batch + Chrome AI collection (site now 82 tools, 11
+  collections).**
+  - **DiffCheck**: Prev/Next change-block navigation with a position badge and
+    a highlighted current block — no more scrolling to hunt for changes.
+  - **World map**: collision-aware persistent labels (tries above/below/right/
+    left, skips only when every slot clashes — Europe stays readable). Labels
+    live in a SEPARATE SVG layer (.tzm-labelbox): putting them inside marker
+    <g>s inflated the group bounding boxes and broke click targeting (caught by
+    the functional suite). Day/night split now obvious: stronger overlay,
+    dashed terminator edges, sun/moon glyphs.
+  - **TZConvert**: world map first, source-time + converted-times side by side
+    in a workbench; new cities added to the TOP of the list (same in
+    TimezoneNow) so 'Use now' results are visible without scrolling.
+  - **JWTRead → JWTStudio** (it encodes now too): encode tab gains RS256/384/512
+    and ES256/384/512 — PKCS#8 PEM private-key input plus a WebCrypto
+    'Generate test keypair' button that also prints the public key. WebCrypto's
+    ECDSA sign output is already the raw r||s JWS wants.
+  - **View source everywhere**: shared.js injects a GitHub footer link on every
+    page pointing at that tool's exact folder (REPO_URL + pathname) — trust via
+    auditability, ahead of the PayPal donate button.
+  - **Chrome AI collection** (11th collection, coral theme, /ai/): AISummarize
+    (Summarizer API — TL;DR/key-points/teaser/headline × length) and AITranslate
+    (Translator + LanguageDetector, 15 target languages, debounced live).
+    Both start with an explicit support GATE: green when ready, download notice
+    when the model needs fetching, and a greyed-out tool (.ai-disabled) with a
+    plain-English reason when the browser/device can't run it (non-Chrome,
+    mobile, low storage/GPU). Never silently broken.
+  - **Base UI rules added**: .ts-stat-num uses clamp() so long money values
+    shrink instead of wrapping (LoanCalc complaint); stats grid min column
+    150px; LoanCalc part-payment rows are nowrap with fixed/flex splits and a
+    stress test (add 4 rows, desktop + 375px, no overflow).
+  - **Finance charts are interactive**: chart.js grew a hover crosshair +
+    nearest-point tooltip (label + all series values, money-formatted via
+    tapdotMoney); loan/compound/retire/inflation pass meaningful labels.
+  - Suites: 285 layout / 212 functional / css-audit clean.
+

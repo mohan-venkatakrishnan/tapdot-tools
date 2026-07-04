@@ -39,6 +39,7 @@ function render() {
   $('totalInterest').textContent = fmtMoney(last.interest);
 
   renderLineChart($('chart'), results.map(r => r.balance), {
+    label: (i) => 'Year ' + (i + 1),
     series: [{ points: results.map(r => r.contributions), color: 'var(--color-muted)' }],
   });
   $('chartLegend').innerHTML =

@@ -129,6 +129,7 @@ const ICON_PATHS = {
   finance: '<circle cx="12" cy="12" r="9"/><path d="M12 7v10M9.5 9.3c0-1.1 1-2 2.5-2s2.5.9 2.5 1.7c0 2-5 1-5 3 0 .8 1 1.7 2.5 1.7s2.5-.9 2.5-2"/>',
   legal: '<path d="M8.5 8.5L2.5 14.5"/><path d="M13 3l6 6-2.5 2.5-6-6z"/><path d="M8.5 7.5l6 6-1.5 1.5-6-6z"/><path d="M2 20h9"/>',
   hr: '<path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+  ai: '<path d="M12 2a4 4 0 0 1 4 4c2.5.6 4 2.6 4 5a5 5 0 0 1-2 4v3a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-3a5 5 0 0 1-2-4c0-2.4 1.5-4.4 4-5a4 4 0 0 1 4-4z"/><circle cx="9.5" cy="11" r="1"/><circle cx="14.5" cy="11" r="1"/>',
   health: '<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>',
   design: '<path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><circle cx="11" cy="11" r="2"/>',
   productivity: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/>',
@@ -175,6 +176,8 @@ const ICON_PATHS = {
   'SketchPad': '<path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/>',
   'PhotoTune': '<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/><path d="M14 3v4M18 5h-4" stroke-width="1.5"/>',
   'UnitConvert': '<path d="M16 3h5v5M8 21H3v-5"/><path d="M21 3l-7 7M3 21l7-7"/><path d="M14 14h7v7h-7z" stroke-dasharray="2 2"/>',
+  'AISummarize': '<path d="M4 6h16M4 12h10M4 18h6"/>',
+  'AITranslate': '<path d="M5 8l6 6M4 14l6-6 2-3M2 5h12M7 2h1"/><path d="M22 22l-5-10-5 10M14 18h6"/>',
   'LoanCalc': '<path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/>',
   'RetireCalc': '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/>',
   'InflationCalc': '<path d="M23 18l-9.5-9.5-5 5L1 6"/><path d="M17 18h6v-6"/>',
@@ -192,7 +195,7 @@ const ICON_PATHS = {
   'ReadingList': '<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>',
   'JSONLab': '<path d="M8 3H7a2 2 0 0 0-2 2v5a2 2 0 0 1-2 2 2 2 0 0 1 2 2v5a2 2 0 0 0 2 2h1"/><path d="M16 3h1a2 2 0 0 1 2 2v5a2 2 0 0 0 2 2 2 2 0 0 0-2 2v5a2 2 0 0 1-2 2h-1"/>',
   'JSONConvert': '<polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/>',
-  'JWTRead': '<circle cx="7.5" cy="15.5" r="4.5"/><path d="M10.7 12.3L20 3M17 6l2 2M14 9l2 2"/>',
+  'JWTStudio': '<circle cx="7.5" cy="15.5" r="4.5"/><path d="M10.7 12.3L20 3M17 6l2 2M14 9l2 2"/>',
   'YAMLCheck': '<path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>',
   'CSVExplore': '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/>',
   'MarkdownLive': '<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M6 15V9l3 3 3-3v6M17 9v5M14.6 12.4L17 15l2.4-2.6"/>',
@@ -217,7 +220,7 @@ function initFavicon() {
   const color = {
     tools: '#5B6CF0', study: '#12A594', write: '#D97757', dev: '#5B6CF0',
     marketing: '#D6537E', finance: '#4E9B6B', legal: '#5C6FB8', hr: '#B0609E',
-    health: '#4E8FC4', design: '#8A5CD6', productivity: '#3D9AA6',
+    health: '#4E8FC4', design: '#8A5CD6', productivity: '#3D9AA6', ai: '#D96C4F',
   }[col] || '#5B6CF0';
   const paths = ICON_PATHS[tool] || ICON_PATHS[col] || ICON_PATHS.tools;
   const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">' +
@@ -358,7 +361,7 @@ const TOOL_REGISTRY = [
   { name: 'ThreadCraft', url: '/write/thread/', collection: 'write', desc: 'Split long text into a tweet thread' },
   { name: 'JSONLab', url: '/dev/json/', collection: 'dev', desc: 'Format, validate, minify, diff JSON' },
   { name: 'JSONConvert', url: '/dev/jsonconvert/', collection: 'dev', desc: 'JSON to YAML, CSV, XML, TOML' },
-  { name: 'JWTRead', url: '/dev/jwt/', collection: 'dev', desc: 'Decode & inspect JWT tokens' },
+  { name: 'JWTStudio', url: '/dev/jwt/', collection: 'dev', desc: 'Decode & inspect JWT tokens' },
   { name: 'YAMLCheck', url: '/dev/yaml/', collection: 'dev', desc: 'YAML validator & formatter' },
   { name: 'CSVExplore', url: '/dev/csv/', collection: 'dev', desc: 'Sortable, filterable CSV viewer' },
   { name: 'MarkdownLive', url: '/dev/markdown/', collection: 'dev', desc: 'Markdown editor with live preview' },
@@ -435,6 +438,9 @@ const TOOL_REGISTRY = [
   { name: 'MeetingTimer', url: '/productivity/meeting-timer/', collection: 'productivity', desc: 'See the real cost of your meeting, live' },
   { name: 'HabitTracker', url: '/productivity/habits/', collection: 'productivity', desc: 'Daily habits with streaks and a heatmap' },
   { name: 'ReadingList', url: '/productivity/reading/', collection: 'productivity', desc: 'Save articles and books, track status and notes' },
+  { name: 'Chrome AI tools', url: '/ai/', collection: 'ai', desc: 'On-device AI — summarize and translate, Chrome-only' },
+  { name: 'AISummarize', url: '/ai/summarize/', collection: 'ai', desc: 'Summarize long text on-device — TL;DR, key points, headline' },
+  { name: 'AITranslate', url: '/ai/translate/', collection: 'ai', desc: 'Translate between languages on-device with auto-detection' },
   { name: 'Privacy Policy', url: '/privacy.html', collection: 'tools', desc: "What tapdot tools does — and doesn't — collect" },
 ];
 
@@ -454,12 +460,12 @@ function initSearch() {
 
   const GROUP_ORDER = {
     tools: 0, study: 1, write: 2, dev: 3, marketing: 4, finance: 5,
-    legal: 6, hr: 7, health: 8, design: 9, productivity: 10,
+    legal: 6, hr: 7, health: 8, design: 9, productivity: 10, ai: 11,
   };
   const GROUP_LABELS = {
     tools: 'Tools', study: 'Study', write: 'Write', dev: 'Dev', marketing: 'Marketing',
     finance: 'Finance', legal: 'Legal', hr: 'HR', health: 'Health', design: 'Design',
-    productivity: 'Productivity',
+    productivity: 'Productivity', ai: 'Chrome AI',
   };
   let backdrop = null, activeIdx = 0, filtered = [];
 
@@ -605,7 +611,7 @@ function initParallax(bg) {
 const COLLECTION_LABELS = {
   study: 'Study', write: 'Write', dev: 'Dev',
   marketing: 'Marketing', finance: 'Finance', legal: 'Legal', hr: 'HR',
-  health: 'Health', design: 'Design', productivity: 'Productivity',
+  health: 'Health', design: 'Design', productivity: 'Productivity', ai: 'Chrome AI',
 };
 
 function collectionHome() {
@@ -755,7 +761,7 @@ const STEPS = {
     { t: 'Choose a target', d: { k: 'chips', items: ['YAML', 'CSV', 'XML'], on: 0 } },
     { t: 'Get the result', d: { k: 'result', text: 'port: 8080' } },
   ],
-  'JWTRead': [
+  'JWTStudio': [
     { t: 'Paste your token', d: { k: 'text', text: 'eyJhbGciOiJIUzI1Ni...' } },
     { t: 'Decoded locally', d: { k: 'rows', rows: [['alg', 'HS256'], ['sub', '1234']] } },
     { t: 'Check expiry', d: { k: 'chips', items: ['Valid'], on: 0 } },
@@ -1030,6 +1036,16 @@ const STEPS = {
     { t: 'Type an amount', d: { k: 'text', text: '100 cm' } },
     { t: 'Every equivalent at once', d: { k: 'stats', items: [['1', 'm'], ['39.37', 'in']] } },
   ],
+  'AISummarize': [
+    { t: 'Paste a long text', d: { k: 'text', text: '2,400-word article…' } },
+    { t: 'Pick a style', d: { k: 'chips', items: ['TL;DR', 'Key points', 'Headline'], on: 1 } },
+    { t: 'Summarized on-device', d: { k: 'result', text: '• Three key takeaways…' } },
+  ],
+  'AITranslate': [
+    { t: 'Type in any language', d: { k: 'text', text: 'Bonjour, comment ça va ?' } },
+    { t: 'Language auto-detected', d: { k: 'chips', items: ['Detected: French'], on: 0 } },
+    { t: 'Translated locally', d: { k: 'result', text: 'Hello, how are you?' } },
+  ],
   'LoanCalc': [
     { t: 'Enter your loan', d: { k: 'fields', rows: [['Amount', '$500,000'], ['Rate', '8.5%']] } },
     { t: 'Add part payments', d: { k: 'fields', rows: [['Month 24', '$20,000']] } },
@@ -1265,10 +1281,38 @@ function initSpeculation() {
   document.head.appendChild(s);
 }
 
+// ── "View source" link (trust through transparency) ─────────────────────────
+// Every page links to its own folder in the public GitHub repo so anyone can
+// audit exactly what the tool does before trusting it with their data.
+
+const REPO_URL = 'https://github.com/mohan-venkatakrishnan/tapdot-tools/tree/main';
+
+function initSourceLink() {
+  const footer = document.querySelector('.ts-footer');
+  if (!footer || footer.querySelector('.ts-source-link')) return;
+  let path = location.pathname.replace(/index\.html$/, '');
+  if (path.endsWith('/')) path = path.slice(0, -1);
+  const a = document.createElement('a');
+  a.className = 'ts-source-link';
+  a.href = REPO_URL + (path || '');
+  a.target = '_blank';
+  a.rel = 'noopener noreferrer';
+  a.title = "Audit this tool's source code on GitHub";
+  a.innerHTML =
+    '<svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>' +
+    ' View source';
+  const dot = document.createElement('span');
+  dot.className = 'ts-footer-dot';
+  dot.textContent = '·';
+  footer.appendChild(dot);
+  footer.appendChild(a);
+}
+
 // ── Init ─────────────────────────────────────────────────────────────────────
 
 document.addEventListener('DOMContentLoaded', () => {
   initDarkToggle();
+  initSourceLink();
   initFavicon();
   initBackground();
   initBackButton();

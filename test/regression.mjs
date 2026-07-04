@@ -58,6 +58,7 @@ const ROUTES = [
   '/productivity/', '/productivity/focus/', '/productivity/note/',
   '/productivity/decision/', '/productivity/meeting-timer/',
   '/productivity/habits/', '/productivity/reading/', '/productivity/convert/',
+  '/ai/', '/ai/summarize/', '/ai/translate/',
   '/privacy.html',
 ];
 const VIEWPORTS = [

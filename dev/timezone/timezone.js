@@ -87,7 +87,7 @@ function renderAll() { renderMap(); renderClocks(); renderPlanner(); }
 $('add').addEventListener('click', () => {
   const tz = $('tzSelect').value;
   const list = getList();
-  if (!list.includes(tz)) { list.push(tz); setList(list); renderAll(); }
+  if (!list.includes(tz)) { list.unshift(tz); setList(list); renderAll(); }
 });
 $('clocks').addEventListener('click', (e) => {
   const b = e.target.closest('.tz-remove'); if (!b) return;

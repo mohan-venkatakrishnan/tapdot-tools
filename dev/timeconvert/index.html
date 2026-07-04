@@ -29,41 +29,43 @@
   <div class="ts-privacy-strip"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Uses your browser's clock &amp; timezone data — works fully offline</div>
 
   <div class="ts-card">
-    <div class="dev-row" style="justify-content:space-between;flex-wrap:wrap">
-      <div class="dev-row">
-        <div>
-          <label class="ts-label" for="srcDate">Date</label>
-          <input class="ts-input" id="srcDate" type="date" />
-        </div>
-        <div>
-          <label class="ts-label" for="srcTime">Time</label>
-          <input class="ts-input" id="srcTime" type="time" step="60" />
-        </div>
-        <div>
-          <label class="ts-label" for="srcTz">Source timezone</label>
-          <select class="ts-select" id="srcTz" data-searchable></select>
-        </div>
-      </div>
-      <button class="ts-btn ts-btn-secondary" id="nowBtn">Use now</button>
-    </div>
-    <div class="tz-slider-wrap ts-mt-md">
-      <input class="tz-slider" id="slider" type="range" min="0" max="1439" step="5" />
-      <div class="tz-slider-labels"><span>00:00</span><span>06:00</span><span>12:00</span><span>18:00</span><span>23:59</span></div>
-    </div>
-  </div>
-
-  <div class="ts-card">
     <p class="ts-card-label">Click the map to add or remove a target city — hover a dot for its local time</p>
     <div class="tz-map-wrap" id="mapWrap"><div id="map"></div></div>
     <button class="ts-btn ts-btn-ghost ts-mt-sm" id="mapFs">⛶ Fullscreen</button>
   </div>
 
-  <div class="ts-card">
-    <div class="dev-row" style="justify-content:space-between">
-      <p class="ts-card-label" style="margin-bottom:0">Converted times</p>
+  <div class="ts-workbench">
+    <div class="ts-card">
+      <div class="dev-row" style="justify-content:space-between;flex-wrap:wrap">
+        <div class="dev-row">
+          <div>
+            <label class="ts-label" for="srcDate">Date</label>
+            <input class="ts-input" id="srcDate" type="date" />
+          </div>
+          <div>
+            <label class="ts-label" for="srcTime">Time</label>
+            <input class="ts-input" id="srcTime" type="time" step="60" />
+          </div>
+          <div>
+            <label class="ts-label" for="srcTz">Source timezone</label>
+            <select class="ts-select" id="srcTz" data-searchable></select>
+          </div>
+        </div>
+        <button class="ts-btn ts-btn-secondary" id="nowBtn">Use now</button>
+      </div>
+      <div class="tz-slider-wrap ts-mt-md">
+        <input class="tz-slider" id="slider" type="range" min="0" max="1439" step="5" />
+        <div class="tz-slider-labels"><span>00:00</span><span>06:00</span><span>12:00</span><span>18:00</span><span>23:59</span></div>
+      </div>
     </div>
-    <div class="dev-row ts-mt-sm"><select class="ts-select ts-grow" id="tzSelect" data-searchable></select><button class="ts-btn ts-btn-primary" id="add">Add</button></div>
-    <div id="results" class="ts-mt-md"></div>
+
+    <div class="ts-card">
+      <div class="dev-row" style="justify-content:space-between">
+        <p class="ts-card-label" style="margin-bottom:0">Converted times — newest first</p>
+      </div>
+      <div class="dev-row ts-mt-sm"><select class="ts-select ts-grow" id="tzSelect" data-searchable></select><button class="ts-btn ts-btn-primary" id="add">Add</button></div>
+      <div id="results" class="ts-mt-md"></div>
+    </div>
   </div>
 </main>
 <footer class="ts-footer">

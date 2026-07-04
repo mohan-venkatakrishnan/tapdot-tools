@@ -81,6 +81,7 @@ function render() {
   const points = [];
   for (let y = 0; y <= years; y++) points.push(projectCorpus(corpusNow, monthlyInvest, returnPre, y));
   renderLineChart($('chart'), points, {
+    label: (i) => 'Age ' + (Math.round(parseFloat(document.getElementById('ageNow').value) || 0) + i),
     series: [{ points: points.map(() => corpusNeeded), color: 'var(--color-danger)' }],
   });
 }

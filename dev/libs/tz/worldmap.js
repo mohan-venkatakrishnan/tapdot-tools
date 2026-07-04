@@ -81,7 +81,14 @@ function tzmNightOverlay(date) {
     rects = `<rect class="tzm-night" x="${x1}" y="0" width="${TZMAP_W - x1}" height="${TZMAP_H}"/>` +
             `<rect class="tzm-night" x="0" y="0" width="${x2}" height="${TZMAP_H}"/>`;
   }
-  return `<g style="filter:url(#tzmBlur)" opacity="0.42">${rects}</g>`;
+  // Dashed terminator edges + sun/moon markers make the day/night split obvious.
+  const midNight = tzmX(((center % 360) + 360) % 360 > 180 ? center - 360 : center);
+  const midDay = tzmX(((subsolarLon + 540) % 360) - 180);
+  return `<g style="filter:url(#tzmBlur)" opacity="0.75">${rects}</g>` +
+    `<line class="tzm-terminator" x1="${x1}" y1="0" x2="${x1}" y2="${TZMAP_H}"/>` +
+    `<line class="tzm-terminator" x1="${x2}" y1="0" x2="${x2}" y2="${TZMAP_H}"/>` +
+    `<text class="tzm-suntag" x="${midDay}" y="14" text-anchor="middle">☀</text>` +
+    `<text class="tzm-suntag" x="${midNight}" y="14" text-anchor="middle">☾</text>`;
 }
 
 function tzmArcPath(a, b) {
@@ -110,15 +117,40 @@ function renderWorldMap(container, opts) {
     arcs += `<path class="tzm-arc" style="animation-delay:${i * 0.15}s" d="${tzmArcPath(selCoords[i], selCoords[i + 1])}"/>`;
   }
 
-  let markers = '';
+  // Collision-aware label placement for selected cities: try above, below,
+  // right, left; skip only if every slot overlaps an already placed label
+  // (dense clusters like Europe otherwise stack unreadably).
+  const placedBoxes = [];
+  function labelSlot(x, y, name) {
+    const w = name.length * 5.4 + 6, h = 11;
+    const slots = [
+      { lx: x, ly: y - 10, anchor: 'middle' },
+      { lx: x, ly: y + 17, anchor: 'middle' },
+      { lx: x + 10, ly: y + 3, anchor: 'start' },
+      { lx: x - 10, ly: y + 3, anchor: 'end' },
+    ];
+    for (const s of slots) {
+      const left = s.anchor === 'middle' ? s.lx - w / 2 : s.anchor === 'start' ? s.lx : s.lx - w;
+      const box = { x1: left, y1: s.ly - h, x2: left + w, y2: s.ly + 2 };
+      if (box.y1 < 0 || box.y2 > TZMAP_H || box.x1 < 0 || box.x2 > TZMAP_W) continue;
+      const clash = placedBoxes.some(b => !(box.x2 < b.x1 || box.x1 > b.x2 || box.y2 < b.y1 || box.y1 > b.y2));
+      if (!clash) { placedBoxes.push(box); return s; }
+    }
+    return null;
+  }
+
+  // Labels live in their OWN layer, not inside the marker <g> — putting them in
+  // the marker group inflates its bounding box and breaks click targeting.
+  let markers = '', labels = '';
   cities.forEach(([name, tz, lat, lon], i) => {
     const isSel = selSet.has(tz);
     const x = tzmX(lon), y = tzmY(lat);
-    // Selected cities get a persistent name label (flipped below the dot near the top edge).
-    const labelY = tzmY(lat) < 20 ? 16 : -10;
+    if (isSel) {
+      const slot = labelSlot(x, y, name);
+      if (slot) labels += `<text class="tzm-label" x="${slot.lx.toFixed(1)}" y="${slot.ly.toFixed(1)}" text-anchor="${slot.anchor}">${name}</text>`;
+    }
     markers += `<g class="tzm-marker${isSel ? ' on' : ''}" data-tz="${tz}" data-name="${name}" transform="translate(${x},${y})" style="animation-delay:${(i % 12) * 0.18}s">
       <circle class="tzm-hit" r="7"/><circle class="tzm-ring"/><circle class="tzm-dot"/>
-      ${isSel ? `<text class="tzm-label" x="0" y="${labelY}" text-anchor="middle">${name}</text>` : ''}
     </g>`;
   });
 
@@ -131,6 +163,7 @@ function renderWorldMap(container, opts) {
       <rect class="tzm-sweep" x="-60" y="0" width="60" height="${TZMAP_H}"/>
       <g class="tzm-arcs">${arcs}</g>
       <g class="tzm-markers">${markers}</g>
+      <g class="tzm-labelbox">${labels}</g>
     </svg>
     <div class="tzm-tip" hidden></div>`;
 

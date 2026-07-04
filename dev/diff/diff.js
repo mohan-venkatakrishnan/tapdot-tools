@@ -27,20 +27,49 @@ function diffLines(a, b) {
 }
 
 let diffTimer = null;
+let blockCount = 0, currentBlock = -1;
+
 function render() {
   const left = $('left').value, right = $('right').value;
+  blockCount = 0; currentBlock = -1;
+  updateNav();
   if (!left && !right) { $('diffOut').innerHTML = '<span class="dev-muted">Paste text on both sides to compare.</span>'; $('diffStats').textContent = ''; return; }
   const ops = diffLines(left, right);
   if (!ops) { $('diffOut').innerHTML = '<span class="dev-muted">Too large to diff in the browser — try smaller sections.</span>'; return; }
-  let add = 0, del = 0;
+  let add = 0, del = 0, inBlock = false;
   $('diffOut').innerHTML = ops.map(op => {
-    if (op.type === 'add') { add++; return `<div class="diff-add">+ ${escapeHtml(op.line)}</div>`; }
-    if (op.type === 'del') { del++; return `<div class="diff-del">− ${escapeHtml(op.line)}</div>`; }
+    const changed = op.type !== 'same';
+    // The first changed line after a run of unchanged lines starts a new block.
+    let anchor = '';
+    if (changed && !inBlock) { anchor = ` data-block="${blockCount}"`; blockCount++; }
+    inBlock = changed;
+    if (op.type === 'add') { add++; return `<div class="diff-add"${anchor}>+ ${escapeHtml(op.line)}</div>`; }
+    if (op.type === 'del') { del++; return `<div class="diff-del"${anchor}>− ${escapeHtml(op.line)}</div>`; }
     return `<div class="diff-same">  ${escapeHtml(op.line)}</div>`;
   }).join('');
   $('diffStats').textContent = add + del === 0 ? 'Identical' : `+${add} −${del}`;
   $('diffStats').className = 'dev-badge ' + (add + del === 0 ? 'ok' : '');
+  updateNav();
 }
+
+function updateNav() {
+  $('diffPos').textContent = blockCount ? `${currentBlock + 1 > 0 ? currentBlock + 1 : '–'} / ${blockCount} changes` : '';
+  $('prevDiff').disabled = blockCount === 0;
+  $('nextDiff').disabled = blockCount === 0;
+}
+
+function jumpTo(idx) {
+  if (!blockCount) return;
+  currentBlock = ((idx % blockCount) + blockCount) % blockCount;
+  const el = $('diffOut').querySelector(`[data-block="${currentBlock}"]`);
+  if (!el) return;
+  document.querySelectorAll('.diff-current').forEach(x => x.classList.remove('diff-current'));
+  el.classList.add('diff-current');
+  el.scrollIntoView({ block: 'center', behavior: 'smooth' });
+  updateNav();
+}
+$('nextDiff').addEventListener('click', () => jumpTo(currentBlock + 1));
+$('prevDiff').addEventListener('click', () => jumpTo(currentBlock - 1));
 
 ['left', 'right'].forEach(id => $(id).addEventListener('input', () => {
   clearTimeout(diffTimer);

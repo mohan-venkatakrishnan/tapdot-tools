@@ -53,10 +53,10 @@ function renderPP() {
     ? partPayments.map((p, i) => `
       <div class="biz-row" style="margin-bottom:8px">
         <span class="biz-muted">Month</span>
-        <input class="ts-input" type="number" min="1" value="${p.month}" data-pp="${i}" data-f="month" style="width:80px" />
+        <input class="ts-input" type="number" min="1" value="${p.month}" data-pp="${i}" data-f="month" style="width:72px;flex-shrink:0;min-width:0" />
         <span class="biz-muted">Amount</span>
-        <input class="ts-input" type="number" min="0" value="${p.amount}" data-pp="${i}" data-f="amount" style="width:130px;flex:1;min-width:0" />
-        <button class="biz-rm" data-rm="${i}" aria-label="Remove part payment">✕</button>
+        <input class="ts-input" type="number" min="0" value="${p.amount}" data-pp="${i}" data-f="amount" style="flex:1 1 90px;min-width:60px" />
+        <button class="biz-rm" data-rm="${i}" aria-label="Remove part payment" style="flex-shrink:0">✕</button>
       </div>`).join('')
     : '<p class="biz-muted">No part payments yet — add one to see the impact.</p>';
 
@@ -114,7 +114,7 @@ function render() {
     return out;
   };
   const basePoints = yearlyBalance(base, base.payoffMonths);
-  const opts = {};
+  const opts = { label: (i) => i === 0 ? 'Start' : 'Year ' + i };
   if (hasPrepay) {
     const prePoints = yearlyBalance(withPre, base.payoffMonths);
     while (prePoints.length < basePoints.length) prePoints.push(0);

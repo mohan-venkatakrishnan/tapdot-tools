@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en" data-collection="dev" data-tool="JWTRead">
+<html lang="en" data-collection="dev" data-tool="JWTStudio">
 <head>
   <meta charset="UTF-8" />
   <script>(function(){try{var t=localStorage.getItem('tapdot-theme');var d=matchMedia('(prefers-color-scheme: dark)').matches;if(t==='dark'||(!t&&d))document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>JWTRead — JWT Token Decoder | tapdot</title>
-  <meta name="description" content="Decode and inspect JWT tokens in your browser. No server. jwt.io sends your token to their servers — JWTRead never does." />
-  <meta property="og:title" content="JWTRead — JWT Token Decoder | tapdot" />
+  <title>JWTStudio — Decode, Verify &amp; Sign JWTs | tapdot</title>
+  <meta name="description" content="Decode, verify, and sign JWTs (HS/RS/ES) entirely in your browser — tokens, secrets, and keys are never stored or sent to any server." />
+  <meta property="og:title" content="JWTStudio — Decode, Verify &amp; Sign JWTs | tapdot" />
   <meta property="og:description" content="Decode & inspect JWTs entirely client-side. Your token never leaves the browser." />
   <link rel="canonical" href="https://tools.tapdot.org/dev/jwt/" />
   <link rel="icon" type="image/png" href="/assets/tapdot-icon.png" />
@@ -23,7 +23,7 @@
 </nav>
 <main class="ts-main ts-main-wide">
   <div class="ts-tool-header">
-    <h1 class="ts-tool-name">JWTRead</h1>
+    <h1 class="ts-tool-name">JWTStudio</h1>
     <p class="ts-tool-desc">Decode, verify, and create JWT tokens — entirely in your browser.</p>
   </div>
   <div class="ts-privacy-strip"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Tokens and secrets are processed locally and never stored or sent to any server — unlike online JWT sites, there is no backend here at all</div>
@@ -52,8 +52,21 @@
 }</textarea>
         <div class="biz-row ts-mt-md" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
           <label class="ts-label" style="margin:0" for="encAlg">Algorithm</label>
-          <select class="ts-select" id="encAlg"><option>HS256</option><option>HS384</option><option>HS512</option></select>
+          <select class="ts-select" id="encAlg">
+            <optgroup label="HMAC (shared secret)"><option>HS256</option><option>HS384</option><option>HS512</option></optgroup>
+            <optgroup label="RSA (private key)"><option>RS256</option><option>RS384</option><option>RS512</option></optgroup>
+            <optgroup label="ECDSA (private key)"><option>ES256</option><option>ES384</option><option>ES512</option></optgroup>
+          </select>
           <input class="ts-input" id="encSecret" placeholder="Secret" style="flex:1;min-width:120px" value="your-256-bit-secret" />
+        </div>
+        <div id="pemWrap" class="ts-hidden ts-mt-sm">
+          <div class="dev-row" style="justify-content:space-between">
+            <label class="ts-label" style="margin:0" for="encPem">Private key (PEM, PKCS#8)</label>
+            <button class="ts-btn ts-btn-ghost" id="genKeyBtn" style="height:28px;padding:0 10px">Generate test keypair</button>
+          </div>
+          <textarea class="ts-textarea ts-code-input" id="encPem" style="min-height:120px" placeholder="-----BEGIN PRIVATE KEY-----&#10;…&#10;-----END PRIVATE KEY-----"></textarea>
+          <p class="dev-muted ts-mt-sm">Only use TEST keys here. Signing happens locally via WebCrypto, but production private keys should never be pasted into any browser tool. The generated keypair's public key appears below so you can verify elsewhere.</p>
+          <div class="ts-code-output ts-hidden ts-mt-sm" id="pubOut" style="white-space:pre-wrap;word-break:break-all"></div>
         </div>
         <p class="ts-err-msg ts-mt-sm" id="encErr"></p>
       </div>
@@ -63,7 +76,7 @@
           <button class="ts-copy-btn" id="encCopy">Copy</button>
         </div>
         <div class="ts-code-output" id="encOut" style="white-space:pre-wrap;word-break:break-all"></div>
-        <p class="dev-muted ts-mt-sm">Signed with WebCrypto HMAC in this tab. The secret never leaves your machine — but only sign with test/dev secrets in any browser tool, including this one.</p>
+        <p class="dev-muted ts-mt-sm">Signed with WebCrypto in this tab (HMAC, RSA, or ECDSA). The secret never leaves your machine — but only sign with test/dev secrets in any browser tool, including this one.</p>
       </div>
     </div>
   </div>

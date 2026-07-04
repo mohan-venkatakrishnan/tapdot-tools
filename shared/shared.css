@@ -579,7 +579,7 @@ body {
 
 .ts-stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 10px;
   margin-bottom: 16px;
 }
@@ -592,11 +592,14 @@ body {
   text-align: center;
   min-width: 0; /* let stats shrink inside grids (see CLAUDE.md min-width gotcha) */
 }
-.ts-stat .ts-stat-num { overflow-wrap: anywhere; } /* long values ($43,391 → $41,200) wrap instead of overflowing */
+/* Base rule: stat values SHRINK to fit rather than wrapping to a new line.
+   clamp() scales with viewport; overflow-wrap stays as a last-resort guard
+   against pathological strings so nothing ever overflows the card. */
+.ts-stat .ts-stat-num { overflow-wrap: anywhere; }
 
 .ts-stat-num {
   display: block;
-  font-size: 24px;
+  font-size: clamp(16px, 1.4vw + 10px, 24px);
   font-weight: 600;
   color: var(--color-text);
   letter-spacing: -0.02em;
@@ -1369,3 +1372,36 @@ body {
   .hiw2-step .d-sweep { display: none; }
   ::view-transition-old(root), ::view-transition-new(root) { animation: none; }
 }
+
+/* GitHub source link in the footer */
+.ts-source-link { display: inline-flex; align-items: center; gap: 5px; color: var(--color-muted); text-decoration: none; }
+.ts-source-link:hover { color: var(--color-accent); }
+
+/* AI collection — soft coral, distinct from everything else */
+[data-collection="ai"] {
+  --color-accent:       #D96C4F;
+  --color-accent-soft:  #FBEEE9;
+  --color-accent-dark:  #B8532F;
+  --glow-1: rgba(217, 108, 79, 0.22);
+  --glow-2: rgba(240, 160, 130, 0.16);
+  --grad-a: #D96C4F;
+  --grad-b: #F0A082;
+}
+[data-theme="dark"][data-collection="ai"] {
+  --color-accent:       #F09A7E;
+  --color-accent-soft:  #2C1A14;
+  --color-accent-dark:  #F7B9A4;
+  --glow-1: rgba(240, 154, 126, 0.18);
+  --glow-2: rgba(200, 110, 80, 0.13);
+  --grad-a: #F09A7E;
+  --grad-b: #F7C4B0;
+}
+
+/* Chrome AI support gate */
+.ai-gate { border: 0.5px solid var(--color-border); border-radius: var(--radius-lg); padding: 16px 18px; margin-bottom: 16px; display: flex; gap: 12px; align-items: flex-start; }
+.ai-gate.ok { border-color: var(--color-success); background: rgba(29,158,117,0.06); }
+.ai-gate.no { border-color: var(--color-warning); background: rgba(217,119,6,0.06); }
+.ai-gate-icon { font-size: 20px; flex-shrink: 0; }
+.ai-gate h3 { font-size: 14px; margin: 0 0 4px; color: var(--color-text); }
+.ai-gate p { font-size: 13px; color: var(--color-muted); line-height: 1.6; margin: 0; }
+.ai-disabled { opacity: 0.45; pointer-events: none; filter: grayscale(0.7); }

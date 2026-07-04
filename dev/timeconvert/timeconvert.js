@@ -121,7 +121,7 @@ $('nowBtn').addEventListener('click', setNow);
 $('add').addEventListener('click', () => {
   const tz = $('tzSelect').value;
   const list = getTargets();
-  if (tz !== $('srcTz').value && !list.includes(tz)) { list.push(tz); setTargets(list); render(); }
+  if (tz !== $('srcTz').value && !list.includes(tz)) { list.unshift(tz); setTargets(list); render(); }
 });
 $('results').addEventListener('click', (e) => {
   const b = e.target.closest('.tzc-remove'); if (!b) return;

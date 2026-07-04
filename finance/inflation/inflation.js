@@ -22,7 +22,7 @@ function render() {
 
   const points = [];
   for (let y = 0; y <= years; y++) points.push(amount / Math.pow(1 + r, y));
-  renderLineChart($('chart'), points);
+  renderLineChart($('chart'), points, { label: (i) => 'Year ' + i });
   $('note').textContent = r > 0
     ? `At ${rate}% inflation, money loses half its purchasing power roughly every ${halfLife.toFixed(1)} years. To just stand still, your savings must earn at least ${rate}% after tax.`
     : 'With 0% inflation, purchasing power stays flat — adjust the rate to see the effect.';

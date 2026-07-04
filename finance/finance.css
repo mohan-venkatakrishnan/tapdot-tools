@@ -32,3 +32,16 @@
 
 .biz-item-card { background: var(--color-surface); border: 0.5px solid var(--color-border); border-radius: var(--radius-lg); padding: 16px; margin-bottom: 12px; }
 
+
+/* Interactive chart hover */
+.biz-chart-cursor { stroke: var(--color-muted); stroke-width: 1; stroke-dasharray: 3 3; }
+.biz-chart-focus { fill: var(--color-surface); stroke: var(--color-accent); stroke-width: 2.5; }
+.biz-chart-tip {
+  position: absolute; transform: translate(-50%, -100%); pointer-events: none; z-index: 5;
+  background: var(--color-surface); border: 0.5px solid var(--color-border); border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-md); padding: 5px 10px; font-family: var(--font-mono); font-size: 12px;
+  color: var(--color-text); white-space: nowrap;
+}
+.biz-chart-tip b { color: var(--color-muted); font-weight: 500; margin-right: 6px; }
+.biz-chart-tip-extra { color: var(--color-muted); margin-left: 8px; }
+.biz-chart-tip-extra::before { content: '· '; }

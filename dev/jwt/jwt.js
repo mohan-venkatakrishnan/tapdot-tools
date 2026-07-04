@@ -1,4 +1,4 @@
-// JWTRead — decode JWTs client-side (atob), no library
+// JWTStudio — decode JWTs client-side (atob), no library
 
 function highlightJSON(json) {
   return json
@@ -160,6 +160,27 @@ function b64urlJson(obj) {
   return b64url(new TextEncoder().encode(JSON.stringify(obj)));
 }
 
+// RSA/ECDSA parameters per JWS alg. WebCrypto's ECDSA sign already returns the
+// raw r||s concatenation JWS expects; RSASSA-PKCS1-v1_5 output is used as-is.
+const ASYM_ALGS = {
+  RS256: { import: { name: 'RSASSA-PKCS1-v1_5', hash: 'SHA-256' }, sign: { name: 'RSASSA-PKCS1-v1_5' } },
+  RS384: { import: { name: 'RSASSA-PKCS1-v1_5', hash: 'SHA-384' }, sign: { name: 'RSASSA-PKCS1-v1_5' } },
+  RS512: { import: { name: 'RSASSA-PKCS1-v1_5', hash: 'SHA-512' }, sign: { name: 'RSASSA-PKCS1-v1_5' } },
+  ES256: { import: { name: 'ECDSA', namedCurve: 'P-256' }, sign: { name: 'ECDSA', hash: 'SHA-256' } },
+  ES384: { import: { name: 'ECDSA', namedCurve: 'P-384' }, sign: { name: 'ECDSA', hash: 'SHA-384' } },
+  ES512: { import: { name: 'ECDSA', namedCurve: 'P-521' }, sign: { name: 'ECDSA', hash: 'SHA-512' } },
+};
+
+function pemToPkcs8(pem) {
+  const b64 = pem.replace(/-----(BEGIN|END) PRIVATE KEY-----/g, '').replace(/\s+/g, '');
+  return Uint8Array.from(atob(b64), c => c.charCodeAt(0)).buffer;
+}
+function derToPem(buf, label) {
+  const b64 = btoa(String.fromCharCode(...new Uint8Array(buf)));
+  const lines = b64.match(/.{1,64}/g).join('\n');
+  return `-----BEGIN ${label}-----\n${lines}\n-----END ${label}-----`;
+}
+
 async function encodeJwt() {
   const err = $('encErr');
   let payload;
@@ -170,6 +191,22 @@ async function encodeJwt() {
   const secret = $('encSecret').value;
   const header = { alg, typ: 'JWT' };
   const signingInput = b64urlJson(header) + '.' + b64urlJson(payload);
+
+  if (ASYM_ALGS[alg]) {
+    const pem = $('encPem').value.trim();
+    if (!pem) { $('encOut').textContent = ''; err.textContent = 'Paste a PKCS#8 private key, or click "Generate test keypair".'; return; }
+    try {
+      const spec = ASYM_ALGS[alg];
+      const key = await crypto.subtle.importKey('pkcs8', pemToPkcs8(pem), spec.import, false, ['sign']);
+      const sig = await crypto.subtle.sign(spec.sign, key, new TextEncoder().encode(signingInput));
+      $('encOut').textContent = signingInput + '.' + b64url(new Uint8Array(sig));
+    } catch (e) {
+      err.textContent = `Could not sign with ${alg}: ${e.message}. Check the key matches the algorithm (e.g. ES256 needs a P-256 key).`;
+      $('encOut').textContent = '';
+    }
+    return;
+  }
+
   if (!secret) { $('encOut').textContent = signingInput + '.'; return; }
   try {
     const key = await crypto.subtle.importKey(
@@ -181,7 +218,32 @@ async function encodeJwt() {
     err.textContent = 'Could not sign: ' + e.message;
   }
 }
-['encPayload', 'encAlg', 'encSecret'].forEach(id => $(id).addEventListener('input', encodeJwt));
+function syncEncMode() {
+  const asym = !!ASYM_ALGS[$('encAlg').value];
+  $('pemWrap').classList.toggle('ts-hidden', !asym);
+  $('encSecret').style.display = asym ? 'none' : '';
+}
+
+$('genKeyBtn').addEventListener('click', async () => {
+  const alg = $('encAlg').value;
+  const spec = ASYM_ALGS[alg];
+  if (!spec) return;
+  $('encErr').textContent = '';
+  const genParams = spec.import.name === 'ECDSA'
+    ? { name: 'ECDSA', namedCurve: spec.import.namedCurve }
+    : { name: 'RSASSA-PKCS1-v1_5', modulusLength: 2048, publicExponent: new Uint8Array([1, 0, 1]), hash: spec.import.hash };
+  const pair = await crypto.subtle.generateKey(genParams, true, ['sign', 'verify']);
+  const priv = await crypto.subtle.exportKey('pkcs8', pair.privateKey);
+  const pub = await crypto.subtle.exportKey('spki', pair.publicKey);
+  $('encPem').value = derToPem(priv, 'PRIVATE KEY');
+  $('pubOut').textContent = 'Public key (share this to verify):\n' + derToPem(pub, 'PUBLIC KEY');
+  $('pubOut').classList.remove('ts-hidden');
+  encodeJwt();
+});
+
+['encPayload', 'encSecret', 'encPem'].forEach(id => $(id).addEventListener('input', encodeJwt));
+$('encAlg').addEventListener('input', () => { syncEncMode(); encodeJwt(); });
+syncEncMode();
 $('encCopy').addEventListener('click', (e) => copyText($('encOut').textContent, e.target));
 
 $('jwtModeTabs').addEventListener('click', (e) => {

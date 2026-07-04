@@ -24,7 +24,7 @@ const check = (name, ok) => { console.log((ok ? 'PASS' : 'FAIL') + '  ' + name);
   await page.fill('#tsPaletteInput', 'jwt');
   await page.waitForTimeout(120);
   const items = await page.$$eval('.ts-palette-item .pi-name', els => els.map(e => e.textContent));
-  check('search "jwt" finds JWTRead', items.includes('JWTRead'));
+  check('search "jwt" finds JWTStudio', items.includes('JWTStudio'));
   await page.keyboard.press('Escape');
   await page.waitForTimeout(120);
   check('Escape closes palette', !(await page.isVisible('.ts-palette-backdrop')));
@@ -85,7 +85,7 @@ const check = (name, ok) => { console.log((ok ? 'PASS' : 'FAIL') + '  ' + name);
   check('claims table lists sub/exp/iat', ['sub', 'exp', 'iat'].every(c => rows.includes(c)));
   const badge = await page.$eval('#expiry', el => el.textContent);
   check('expiry badge shows "Expires in"', badge.includes('Expires in'));
-  check('no JS errors on JWTRead', errs.length === 0);
+  check('no JS errors on JWTStudio', errs.length === 0);
   await page.close();
 }
 
@@ -874,12 +874,12 @@ const check = (name, ok) => { console.log((ok ? 'PASS' : 'FAIL') + '  ' + name);
   await page.fill('#secret', 'your-256-bit-secret');
   await page.waitForTimeout(300);
   const status = await page.$eval('#verifyStatus', el => el.textContent);
-  check('JWTRead verifies a valid HS256 signature', status.includes('verified'));
+  check('JWTStudio verifies a valid HS256 signature', status.includes('verified'));
   await page.fill('#secret', 'wrong-secret');
   await page.waitForTimeout(300);
   const statusBad = await page.$eval('#verifyStatus', el => el.textContent);
-  check('JWTRead rejects a wrong HMAC secret', statusBad.includes('Invalid'));
-  check('no JS errors on JWTRead verification', errs.length === 0);
+  check('JWTStudio rejects a wrong HMAC secret', statusBad.includes('Invalid'));
+  check('no JS errors on JWTStudio verification', errs.length === 0);
   await page.close();
 }
 {
@@ -1174,6 +1174,95 @@ const check = (name, ok) => { console.log((ok ? 'PASS' : 'FAIL') + '  ' + name);
   const fsBtn = await page.isVisible('#mapFs');
   check('TimezoneNow offers a fullscreen button', fsBtn);
   check('no JS errors on TimezoneNow labels/fullscreen', errs.length === 0);
+  await page.close();
+}
+
+// 56. v22 batch: diff navigation, JWTStudio rename + keygen, source links, AI gates, TZ order.
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/dev/diff/', { waitUntil: 'networkidle' });
+  await page.fill('#left', 'a\nb\nc\nd\ne\nf');
+  await page.fill('#right', 'a\nX\nc\nd\nY\nf');
+  await page.waitForTimeout(400);
+  const pos0 = await page.$eval('#diffPos', el => el.textContent);
+  check('DiffCheck reports change-block count', pos0.includes('/ 2 changes'));
+  await page.click('#nextDiff');
+  await page.waitForTimeout(100);
+  const current = await page.$$eval('.diff-current', els => els.length);
+  const pos1 = await page.$eval('#diffPos', el => el.textContent);
+  check('DiffCheck Next jumps to and highlights the first change', current === 1 && pos1.startsWith('1 /'));
+  check('no JS errors on DiffCheck navigation', errs.length === 0);
+  await page.close();
+}
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/dev/jwt/', { waitUntil: 'networkidle' });
+  const h1 = await page.$eval('.ts-tool-name', el => el.textContent);
+  check('JWT tool renamed to JWTStudio', h1 === 'JWTStudio');
+  await page.click('[data-jm="encode"]');
+  await page.selectOption('#encAlg', 'ES256');
+  await page.waitForTimeout(100);
+  const pemVisible = await page.isVisible('#pemWrap');
+  check('JWTStudio shows the PEM key area for ES256', pemVisible);
+  await page.click('#genKeyBtn');
+  await page.waitForTimeout(1500);
+  const token = await page.$eval('#encOut', el => el.textContent);
+  check('JWTStudio generates an ES256 keypair and signs a 3-part token', token.split('.').length === 3 && token.length > 60);
+  check('no JS errors on JWTStudio ES256', errs.length === 0);
+  await page.close();
+}
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/finance/loan/', { waitUntil: 'networkidle' });
+  const srcLink = await page.$eval('.ts-source-link', el => el.getAttribute('href'));
+  check('Every tool footer links to its GitHub source folder',
+    srcLink === 'https://github.com/mohan-venkatakrishnan/tapdot-tools/tree/main/finance/loan');
+  // add-more-inputs stress: add 4 part payments, page must not overflow
+  for (let i = 0; i < 4; i++) await page.click('#addPP');
+  await page.waitForTimeout(200);
+  const docW = await page.evaluate(() => document.documentElement.scrollWidth);
+  const winW = await page.evaluate(() => window.innerWidth);
+  check('LoanCalc stays within viewport after adding many part payments', docW <= winW + 1);
+  check('no JS errors on LoanCalc add stress', errs.length === 0);
+  await page.close();
+}
+{
+  const page = await browser.newPage({ viewport: { width: 375, height: 800 } });
+  await page.goto('http://localhost:8140/finance/loan/', { waitUntil: 'networkidle' });
+  for (let i = 0; i < 3; i++) await page.click('#addPP');
+  await page.waitForTimeout(200);
+  const docW = await page.evaluate(() => document.documentElement.scrollWidth);
+  check('LoanCalc mobile: no overflow with added part-payment rows', docW <= 376);
+  await page.close();
+}
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/ai/summarize/', { waitUntil: 'networkidle' });
+  await page.waitForTimeout(400);
+  const gateTitle = await page.$eval('#gateTitle', el => el.textContent);
+  const gateMsg = await page.$eval('#gateMsg', el => el.textContent);
+  check('AISummarize gate reports a definitive supported/unsupported state',
+    gateTitle !== 'Checking your browser…' && gateMsg.length > 40);
+  check('no JS errors on AISummarize gate', errs.length === 0);
+  await page.close();
+}
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/dev/timeconvert/', { waitUntil: 'networkidle' });
+  await page.waitForTimeout(300);
+  // Map card should come before the converted-times card in DOM order.
+  const order = await page.evaluate(() => {
+    const map = document.getElementById('mapWrap');
+    const results = document.getElementById('results');
+    return map.compareDocumentPosition(results) & Node.DOCUMENT_POSITION_FOLLOWING ? 'map-first' : 'results-first';
+  });
+  check('TZConvert shows the world map before the converted times', order === 'map-first');
+  check('no JS errors on TZConvert layout', errs.length === 0);
   await page.close();
 }
 
