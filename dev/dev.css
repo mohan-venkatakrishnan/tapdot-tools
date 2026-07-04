@@ -60,8 +60,9 @@ textarea.ts-code-input {
 .ts-field-row span {
   text-align: center; padding: 6px 4px; background: var(--color-bg-soft);
   border-radius: var(--radius-sm); border: 0.5px solid var(--color-border);
+  min-width: 0; overflow-wrap: anywhere;
 }
-.ts-field-row span b { display: block; color: var(--color-text); font-size: 13px; }
+.ts-field-row span b { display: block; color: var(--color-text); font-size: 13px; overflow-wrap: anywhere; word-break: break-word; }
 .ts-field-row span.active { background: var(--color-accent-soft); border-color: var(--color-accent); color: var(--color-accent); }
 
 /* Pill tabs moved to shared/shared.css (used by marketing tools too) */

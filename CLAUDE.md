@@ -551,3 +551,63 @@ project's actual architecture — never remove it.
     tapdotMoney); loan/compound/retire/inflation pass meaningful labels.
   - Suites: 285 layout / 212 functional / css-audit clean.
 
+- v23: **PRD-driven batch** (`tools tapdot prd 1.md` — a feedback doc with embedded
+  screenshots; extract text with `grep -v "^\[image"` before reading, the base64 image
+  defs blow up token budget otherwise). Site now 86 tools + a non-tool Browse page.
+  - **Light mode softened**: was near-white/near-black (#FFFFFF text on #0F0F1A) —
+    user feedback "too bright" vs tapdot.org's mellower light mode. Retuned to a warm
+    off-white (#FAF9F6 bg, #262521 text) across all light-mode tokens.
+  - **Stat-number overflow (real bug, not cosmetic)**: `clamp()`'s minimum still didn't
+    fit long lakh/crore-formatted values (₹1,04,13,879) on narrow cards — the visible
+    "wrap" was `overflow-wrap: anywhere` breaking mid-digit-group. Fixed generically:
+    `initStatFit()` in shared.js measures every `.ts-stat-num` and steps its font-size
+    down (24px→10px) until it fits on one line, re-triggered via a MutationObserver on
+    `document.body` (tool scripts already re-render stat text on input, no per-tool
+    changes needed) + on resize. **Any new stat display gets this for free** — don't
+    hand-roll font sizing for numbers again.
+  - **AITranslate box alignment**: added matching "To" label above the target-language
+    select (the From/To columns had mismatched header heights) — `.ai-translate-col`/
+    `.ai-translate-head` in shared.css.
+  - **Search palette decluttered**: the default (empty-query) list no longer includes
+    the root "Tools" hub or "Privacy Policy" — still findable by typing, just not
+    competing with real tools at the top of an empty search.
+  - **Browse page** (`/browse/`) — every registry tool as a pastel card grouped by
+    collection (reuses `TOOL_REGISTRY`/`ICONS`/`COLLECTION_LABELS`, no new data source),
+    with a collection filter segment and a name/desc search box. Linked from the
+    homepage hero ("browse every tool as pastel cards").
+  - **Homepage 3D flourish**: `initCardTilt()` — a light perspective tilt on hub cards
+    following the cursor (skipped for `prefers-reduced-motion` and touch/no-hover
+    devices). Deliberately subtle, not a gimmick.
+  - **IconExplorer**: +36 icons (business, education, transport, food, extra shapes) —
+    161 total, still hand-authored/curated, not a bundled library (see v13 rationale).
+  - **Health animations**: WaterIntake gets a tumbler-style pour splash (droplet
+    particles + ring pulse) on logging; CycleTracker's stats glow briefly after logging
+    a period. Both respect `prefers-reduced-motion`.
+  - **4 new dev tools** (from the PRD's "New tool suggestion" list — a large wishlist;
+    shipped the quick, high-value, no-new-dependency subset and left WASM-heavy asks
+    — bcrypt/Argon2, MozJPEG image compression — explicitly deferred, noted below):
+    - **TimestampConvert**: Unix timestamp ⇄ date, live-ticking current epoch,
+      timestamp→date across 7 common zones + ISO 8601, date→timestamp for any IANA
+      zone (iterative offset convergence via `Intl.DateTimeFormat`, no timezone lib).
+    - **JSONCSV**: JSON array-of-objects ⇄ CSV, dotted-path flattening for nested
+      objects, RFC-4180-ish quoting, a from-scratch quoted-field CSV parser.
+    - **HashGen**: SHA-1/256/384/512 for text or files via `crypto.subtle.digest`,
+      with an explicit callout that these are wrong for password storage (that needs
+      bcrypt/Argon2/scrypt — deliberately not implemented here, no WASM bundled).
+    - **KeyGen**: RSA (2048/4096) and ECDSA (P-256/P-384) keypair generation via
+      WebCrypto, exported as PKCS#8/SPKI PEM — dev/test use only, disclosed as such.
+  - Deferred from the PRD (documented, not silently dropped): bcrypt/Argon2 hashing,
+    client-side image-to-Base64 (partially covered by Base64Tool for text; a
+    file→dataURI variant is a natural PhotoTune/Base64Tool follow-up), on-device image
+    compression (MozJPEG/WebP — needs a WASM codec we don't bundle), SVG bloat
+    stripper, voice-to-text (WebSpeech API), additional Chrome AI tools beyond
+    Summarize/Translate (Writer/Rewriter/Prompt-API-direct/bulk sentiment/ELI5/jargon
+    decoder — same gate pattern as AISummarize/AITranslate would apply cleanly to
+    these later), SQL obfuscator (distinct from the existing SQLFormat pretty-printer),
+    a full sitemap-style "graph view."
+  - Caught and fixed a self-inflicted test bug during this pass: a functional check
+    asserted the mobile 376px overflow threshold against the DEFAULT (1280px) Playwright
+    viewport — a copy-paste mistake in the test, not a product bug. Removed the
+    incorrect assertion; the real mobile-viewport overflow check for the same tool
+    already existed and passes.
+  - Suites: 300 layout / 232 functional / css-audit clean.

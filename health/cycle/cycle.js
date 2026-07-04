@@ -72,6 +72,12 @@ $('logStart').addEventListener('click', () => {
   saveHistory(history);
   $('logDate').value = '';
   render();
+  const grid = document.querySelector('.ts-stats-grid');
+  if (grid && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    grid.classList.remove('ct-updated');
+    void grid.offsetWidth;
+    grid.classList.add('ct-updated');
+  }
 });
 $('cycleLen').addEventListener('input', render);
 $('periodLen').addEventListener('input', render);

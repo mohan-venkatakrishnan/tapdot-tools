@@ -176,6 +176,10 @@ const ICON_PATHS = {
   'SketchPad': '<path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/>',
   'PhotoTune': '<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/><path d="M14 3v4M18 5h-4" stroke-width="1.5"/>',
   'UnitConvert': '<path d="M16 3h5v5M8 21H3v-5"/><path d="M21 3l-7 7M3 21l7-7"/><path d="M14 14h7v7h-7z" stroke-dasharray="2 2"/>',
+  'TimestampConvert': '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/><path d="M12 2v2M12 20v2"/>',
+  'JSONCSV': '<path d="M8 3H7a2 2 0 0 0-2 2v5a2 2 0 0 1-2 2 2 2 0 0 1 2 2v5a2 2 0 0 0 2 2h1"/><path d="M16 3h1a2 2 0 0 1 2 2v5a2 2 0 0 0 2 2 2 2 0 0 0-2 2v5a2 2 0 0 1-2 2h-1"/><line x1="12" y1="8" x2="12" y2="16"/>',
+  'HashGen': '<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/><line x1="12" y1="15" x2="12" y2="17"/>',
+  'KeyGen': '<circle cx="8" cy="8" r="5"/><path d="M12.5 12.5L22 22M17 17l3 3M14 14l3 3"/>',
   'AISummarize': '<path d="M4 6h16M4 12h10M4 18h6"/>',
   'AITranslate': '<path d="M5 8l6 6M4 14l6-6 2-3M2 5h12M7 2h1"/><path d="M22 22l-5-10-5 10M14 18h6"/>',
   'LoanCalc': '<path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/>',
@@ -439,8 +443,14 @@ const TOOL_REGISTRY = [
   { name: 'HabitTracker', url: '/productivity/habits/', collection: 'productivity', desc: 'Daily habits with streaks and a heatmap' },
   { name: 'ReadingList', url: '/productivity/reading/', collection: 'productivity', desc: 'Save articles and books, track status and notes' },
   { name: 'Chrome AI tools', url: '/ai/', collection: 'ai', desc: 'On-device AI — summarize and translate, Chrome-only' },
+  { name: 'Browse all tools', url: '/browse/', collection: 'tools', desc: 'Every tool in one pastel card view, grouped by collection' },
+  { name: 'TimestampConvert', url: '/dev/timestamp/', collection: 'dev', desc: 'Unix timestamp <-> date, live, across timezones' },
+  { name: 'JSONCSV', url: '/dev/jsoncsv/', collection: 'dev', desc: 'Convert JSON arrays to CSV and back' },
+  { name: 'HashGen', url: '/dev/hashgen/', collection: 'dev', desc: 'SHA-1/256/384/512 hashes for text or files' },
+  { name: 'KeyGen', url: '/dev/keygen/', collection: 'dev', desc: 'RSA/ECDSA keypair generator, exported as PEM' },
   { name: 'AISummarize', url: '/ai/summarize/', collection: 'ai', desc: 'Summarize long text on-device — TL;DR, key points, headline' },
   { name: 'AITranslate', url: '/ai/translate/', collection: 'ai', desc: 'Translate between languages on-device with auto-detection' },
+  { name: 'Browse all tools', url: '/browse/', collection: 'tools', desc: 'Every tool in one pastel card view, grouped by collection' },
   { name: 'Privacy Policy', url: '/privacy.html', collection: 'tools', desc: "What tapdot tools does — and doesn't — collect" },
 ];
 
@@ -473,7 +483,10 @@ function initSearch() {
   // by relevance within a group.
   function results(query) {
     const q = query.trim().toLowerCase();
-    const scored = TOOL_REGISTRY.map(item => {
+    // With no query, don't clutter the default list with meta pages (the root
+    // hub, privacy policy) ahead of actual tools — they're still findable by typing.
+    const pool = q ? TOOL_REGISTRY : TOOL_REGISTRY.filter(item => item.collection !== 'tools');
+    const scored = pool.map(item => {
       if (!q) return { item, score: 1 };
       const name = item.name.toLowerCase();
       let score = -1;
@@ -564,6 +577,24 @@ function initSearch() {
 }
 
 // ── Futuristic background ────────────────────────────────────────────────────
+
+// Subtle 3D tilt on hover for the root homepage's hub cards — a light-touch
+// answer to "redesign the homepage with 3D animations" without turning it
+// into a gimmick. Skips entirely for reduced-motion and touch-only devices.
+function initCardTilt() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (window.matchMedia('(hover: none)').matches) return;
+  document.querySelectorAll('.ts-hub-card').forEach(card => {
+    card.style.transformStyle = 'preserve-3d';
+    card.addEventListener('mousemove', (e) => {
+      const r = card.getBoundingClientRect();
+      const px = (e.clientX - r.left) / r.width - 0.5;
+      const py = (e.clientY - r.top) / r.height - 0.5;
+      card.style.transform = `perspective(700px) rotateX(${(-py * 7).toFixed(2)}deg) rotateY(${(px * 7).toFixed(2)}deg) translateY(-2px)`;
+    });
+    card.addEventListener('mouseleave', () => { card.style.transform = ''; });
+  });
+}
 
 function initBackground() {
   if (document.querySelector('.ts-bg')) return;
@@ -1036,6 +1067,26 @@ const STEPS = {
     { t: 'Type an amount', d: { k: 'text', text: '100 cm' } },
     { t: 'Every equivalent at once', d: { k: 'stats', items: [['1', 'm'], ['39.37', 'in']] } },
   ],
+  'TimestampConvert': [
+    { t: 'See the live Unix clock', d: { k: 'count', to: 1773081755, label: 'seconds since epoch' } },
+    { t: 'Convert either direction', d: { k: 'chips', items: ['Timestamp → Date', 'Date → Timestamp'], on: 0 } },
+    { t: 'Across every timezone', d: { k: 'table', rows: [['UTC', '06:30'], ['Asia/Kolkata', '12:00']] } },
+  ],
+  'JSONCSV': [
+    { t: 'Paste a JSON array', d: { k: 'fields', rows: [['name', 'Ada Lovelace'], ['role', 'Engineer']] } },
+    { t: 'Get clean CSV', d: { k: 'result', text: 'name,role\nAda Lovelace,Engineer' } },
+    { t: 'Or convert back', d: { k: 'chips', items: ['JSON → CSV', 'CSV → JSON'], on: 1 } },
+  ],
+  'HashGen': [
+    { t: 'Type text or pick a file', d: { k: 'text', text: 'password123' } },
+    { t: 'Hashed with WebCrypto', d: { k: 'chips', items: ['SHA-256', 'SHA-512'], on: 0 } },
+    { t: 'Copy any digest', d: { k: 'result', text: 'ef92b778bafe...' } },
+  ],
+  'KeyGen': [
+    { t: 'Pick RSA or ECDSA', d: { k: 'chips', items: ['RSA 2048', 'ECDSA P-256'], on: 1 } },
+    { t: 'Generated locally', d: { k: 'result', text: '-----BEGIN PRIVATE KEY-----' } },
+    { t: 'Public key too', d: { k: 'text', text: '-----BEGIN PUBLIC KEY-----' } },
+  ],
   'AISummarize': [
     { t: 'Paste a long text', d: { k: 'text', text: '2,400-word article…' } },
     { t: 'Pick a style', d: { k: 'chips', items: ['TL;DR', 'Key points', 'Headline'], on: 1 } },
@@ -1247,6 +1298,41 @@ function runCount(stepEl) {
   requestAnimationFrame(tick);
 }
 
+// ── Stat-number auto-fit (shrink-to-fit, never wrap) ────────────────────────
+// clamp() alone can't know a specific string's length (e.g. a lakh-formatted
+// ₹1,04,13,879 is much longer than $1.2M), so long values still wrapped
+// mid-digit-group on narrow cards. This measures each .ts-stat-num after
+// every re-render and steps the font-size down until it fits on one line.
+
+function fitStatNum(el) {
+  const max = 24, min = 10;
+  el.style.fontSize = max + 'px';
+  let size = max;
+  while (el.scrollWidth > el.clientWidth && size > min) {
+    size -= 1;
+    el.style.fontSize = size + 'px';
+  }
+}
+
+function fitAllStatNums() {
+  document.querySelectorAll('.ts-stat-num').forEach(fitStatNum);
+}
+
+function initStatFit() {
+  if (!document.querySelector('.ts-stat-num')) return;
+  let scheduled = false;
+  const schedule = () => {
+    if (scheduled) return;
+    scheduled = true;
+    requestAnimationFrame(() => { scheduled = false; fitAllStatNums(); });
+  };
+  schedule();
+  // Tool scripts re-render stat text on every input — watch for that instead
+  // of requiring every tool to call a fit function itself.
+  new MutationObserver(schedule).observe(document.body, { childList: true, subtree: true, characterData: true });
+  window.addEventListener('resize', schedule);
+}
+
 // ── Scroll reveal ─────────────────────────────────────────────────────────
 
 function initReveal() {
@@ -1315,6 +1401,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initSourceLink();
   initFavicon();
   initBackground();
+  initCardTilt();
   initBackButton();
   initBreadcrumb();
   initSearch();
@@ -1323,4 +1410,5 @@ document.addEventListener('DOMContentLoaded', () => {
   initWalkthrough();
   initReveal();
   initSpeculation();
+  initStatFit();
 });

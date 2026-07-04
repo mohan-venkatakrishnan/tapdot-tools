@@ -1266,6 +1266,110 @@ const check = (name, ok) => { console.log((ok ? 'PASS' : 'FAIL') + '  ' + name);
   await page.close();
 }
 
+// 57. PRD batch: search noise, stat auto-fit, browse page, and 4 new dev tools.
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/', { waitUntil: 'networkidle' });
+  await page.click('.ts-search-trigger');
+  await page.waitForTimeout(150);
+  const defaultNames = await page.$$eval('.ts-palette-item .pi-name', els => els.map(e => e.textContent));
+  check('Search palette default list excludes "Tools" and "Privacy Policy"',
+    !defaultNames.includes('Privacy Policy') && !defaultNames.some(n => n === 'Tools'));
+  await page.fill('#tsPaletteInput', 'privacy');
+  await page.waitForTimeout(150);
+  const foundPrivacy = await page.$$eval('.ts-palette-item .pi-name', els => els.map(e => e.textContent));
+  check('Search palette still finds Privacy Policy when typed', foundPrivacy.includes('Privacy Policy'));
+  check('no JS errors on search palette', errs.length === 0);
+  await page.close();
+}
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/finance/equity/', { waitUntil: 'networkidle' });
+  await page.fill('#preMoney', '10413879');
+  await page.waitForTimeout(400);
+  const overflowing = await page.$$eval('.ts-stat-num', els =>
+    els.filter(el => el.scrollWidth > el.clientWidth + 1).length);
+  check('Stat numbers auto-shrink to fit instead of wrapping (EquityCalc large ₹ value)', overflowing === 0);
+  check('no JS errors on stat auto-fit', errs.length === 0);
+  await page.close();
+}
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/browse/', { waitUntil: 'networkidle' });
+  await page.waitForTimeout(200);
+  const cardCount = await page.$$eval('.browse-card', els => els.length);
+  check('Browse page lists a large number of tool cards', cardCount > 50);
+  await page.fill('#browseSearch', 'jwt');
+  await page.waitForTimeout(150);
+  const filtered = await page.$$eval('.browse-card', els => els.length);
+  check('Browse page search filters the card list', filtered >= 1 && filtered < cardCount);
+  check('no JS errors on Browse page', errs.length === 0);
+  await page.close();
+}
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/dev/timestamp/', { waitUntil: 'networkidle' });
+  await page.fill('#tsInput', '1773081600');
+  await page.selectOption('#unit', 's');
+  await page.waitForTimeout(200);
+  const utcRow = await page.$eval('#tsOut', el => el.textContent);
+  check('TimestampConvert converts a known timestamp to UTC correctly', utcRow.includes('2026'));
+  check('no JS errors on TimestampConvert', errs.length === 0);
+  await page.close();
+}
+{
+  const page = await browser.newPage({ viewport: { width: 375, height: 800 } });
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/dev/timestamp/', { waitUntil: 'networkidle' });
+  await page.waitForTimeout(300);
+  const docW = await page.evaluate(() => document.documentElement.scrollWidth);
+  check('TimestampConvert has no horizontal overflow on mobile', docW <= 376);
+  check('no JS errors on TimestampConvert mobile', errs.length === 0);
+  await page.close();
+}
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/dev/jsoncsv/', { waitUntil: 'networkidle' });
+  await page.waitForTimeout(200);
+  const csv = await page.$eval('#output', el => el.textContent);
+  check('JSONCSV converts the default JSON sample to CSV', csv.includes('name,role,years') && csv.includes('Ada Lovelace'));
+  await page.click('[data-mode="c2j"]');
+  await page.waitForTimeout(200);
+  const json = await page.$eval('#output', el => el.textContent);
+  check('JSONCSV converts CSV back to JSON', json.includes('"name"') && json.includes('Ada Lovelace'));
+  check('no JS errors on JSONCSV', errs.length === 0);
+  await page.close();
+}
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/dev/hashgen/', { waitUntil: 'networkidle' });
+  await page.fill('#input', 'hello');
+  await page.waitForTimeout(400);
+  const text = await page.$eval('#hashList', el => el.textContent);
+  // Known SHA-256("hello")
+  check('HashGen computes the correct SHA-256 for "hello"',
+    text.includes('2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824'));
+  check('no JS errors on HashGen', errs.length === 0);
+  await page.close();
+}
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/dev/keygen/', { waitUntil: 'networkidle' });
+  await page.waitForTimeout(2500);
+  const priv = await page.$eval('#privOut', el => el.textContent);
+  const pub = await page.$eval('#pubOut', el => el.textContent);
+  check('KeyGen generates a PEM private and public key by default', priv.includes('BEGIN PRIVATE KEY') && pub.includes('BEGIN PUBLIC KEY'));
+  check('no JS errors on KeyGen', errs.length === 0);
+  await page.close();
+}
+
 await browser.close(); srv.close();
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

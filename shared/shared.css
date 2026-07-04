@@ -4,12 +4,14 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --color-bg:           #FFFFFF;
-  --color-bg-soft:      #F8F8FB;
-  --color-surface:      #FFFFFF;
-  --color-border:       #E5E5F0;
-  --color-text:         #0F0F1A;
-  --color-muted:        #6B6B80;
+  /* Softened from pure white/near-black per user feedback ("too bright") —
+     a warm, slightly muted off-white closer to tapdot.org's light mode. */
+  --color-bg:           #FAF9F6;
+  --color-bg-soft:      #F2F1ED;
+  --color-surface:      #FEFDFB;
+  --color-border:       #E4E2DC;
+  --color-text:         #262521;
+  --color-muted:        #6E6C64;
   --color-accent:       #5B6CF0;
   --color-accent-soft:  #EEF0FF;
   --color-accent-dark:  #4555E0;
@@ -1405,3 +1407,28 @@ body {
 .ai-gate h3 { font-size: 14px; margin: 0 0 4px; color: var(--color-text); }
 .ai-gate p { font-size: 13px; color: var(--color-muted); line-height: 1.6; margin: 0; }
 .ai-disabled { opacity: 0.45; pointer-events: none; filter: grayscale(0.7); }
+
+/* AITranslate column alignment */
+.ai-translate-col { display: flex; flex-direction: column; min-width: 0; }
+.ai-translate-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 8px; min-height: 22px; }
+.ai-translate-col .ts-textarea { flex: 1; }
+
+/* Browse-all-tools page */
+.browse-controls { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin: 20px 0; }
+.browse-group { margin-bottom: 32px; }
+.browse-group-title { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-accent); margin-bottom: 12px; }
+.browse-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 12px; }
+.browse-card {
+  display: flex; flex-direction: column; gap: 6px; padding: 16px;
+  background: var(--color-accent-soft); border: 0.5px solid var(--color-border);
+  border-radius: var(--radius-lg); text-decoration: none; color: inherit;
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+.browse-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.browse-card-icon { color: var(--color-accent); }
+.browse-card-icon svg { width: 20px; height: 20px; }
+.browse-card-name { font-weight: 600; font-size: 14px; color: var(--color-text); }
+.browse-card-desc { font-size: 12px; color: var(--color-muted); line-height: 1.5; }
+.ts-hero-browse-link { display: inline-block; margin-top: 14px; font-size: 13px; color: var(--color-accent); text-decoration: none; }
+.ts-hero-browse-link:hover { text-decoration: underline; }
+.browse-grid { display: flex; flex-direction: column; }

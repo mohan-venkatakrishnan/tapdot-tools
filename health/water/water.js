@@ -47,6 +47,22 @@ function render() {
   $('streak').textContent = calcStreak(log);
 }
 
+function pourSplash() {
+  const wrap = $('ring').closest('.ring-wrap');
+  if (!wrap || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  wrap.classList.remove('wi-pour');
+  void wrap.offsetWidth; // restart the animation on repeated clicks
+  wrap.classList.add('wi-pour');
+  for (let i = 0; i < 4; i++) {
+    const drop = document.createElement('span');
+    drop.className = 'wi-droplet';
+    drop.style.left = (35 + Math.random() * 30) + '%';
+    drop.style.animationDelay = (i * 0.06) + 's';
+    wrap.appendChild(drop);
+    drop.addEventListener('animationend', () => drop.remove());
+  }
+}
+
 function addAmount(amt) {
   if (!amt || amt <= 0) return;
   const log = loadLog();
@@ -55,6 +71,7 @@ function addAmount(amt) {
   log[key].push({ amt, t: Date.now() });
   saveLog(log);
   render();
+  pourSplash();
 }
 
 document.querySelectorAll('[data-amt]').forEach(btn => {

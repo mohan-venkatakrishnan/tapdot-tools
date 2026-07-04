@@ -152,4 +152,50 @@ const ICON_LIBRARY = [
   { name: 'minus', category: 'misc', paths: '<line x1="5" y1="12" x2="19" y2="12"/>' },
   { name: 'more-horizontal', category: 'misc', paths: '<circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/>' },
   { name: 'more-vertical', category: 'misc', paths: '<circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/>' },
+
+  // business & finance
+  { name: 'briefcase-2', category: 'business', paths: '<rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><line x1="2" y1="13" x2="22" y2="13"/>' },
+  { name: 'chart-bar', category: 'business', paths: '<line x1="4" y1="20" x2="20" y2="20"/><rect x="6" y="12" width="3" height="8"/><rect x="11" y="7" width="3" height="13"/><rect x="16" y="15" width="3" height="5"/>' },
+  { name: 'chart-pie', category: 'business', paths: '<path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/>' },
+  { name: 'presentation', category: 'business', paths: '<rect x="3" y="3" width="18" height="12" rx="1"/><line x1="12" y1="15" x2="12" y2="21"/><line x1="8" y1="21" x2="16" y2="21"/>' },
+  { name: 'handshake', category: 'business', paths: '<path d="M2 12l5-4 4 3 4-3 5 4"/><path d="M6 8l3 6 3-2 3 2 3-6"/>' },
+  { name: 'invoice', category: 'business', paths: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><polyline points="14 2 14 8 20 8"/><path d="M9 13h6M9 17h4"/>' },
+  { name: 'wallet', category: 'business', paths: '<path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4z"/>' },
+  { name: 'piggy-bank', category: 'business', paths: '<path d="M19 5c-1.5-1-3-1-4-1a5 5 0 0 0-5 5v1c-2 0-4 1-4 3s2 3 4 3v2h2v-2h4v2h2v-2c2-1 3-2 3-4z"/><circle cx="16" cy="9" r="0.6"/>' },
+
+  // education
+  { name: 'graduation-cap', category: 'education', paths: '<path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1 3 3 6 3s6-2 6-3v-5"/>' },
+  { name: 'book-open', category: 'education', paths: '<path d="M2 4h7a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 4h-7a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h8z"/>' },
+  { name: 'pencil', category: 'education', paths: '<path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z"/>' },
+  { name: 'calculator', category: 'education', paths: '<rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="11" x2="8" y2="11.01"/><line x1="12" y1="11" x2="12" y2="11.01"/><line x1="16" y1="11" x2="16" y2="11.01"/><line x1="8" y1="15" x2="8" y2="15.01"/><line x1="12" y1="15" x2="12" y2="15.01"/><line x1="16" y1="15" x2="16" y2="18"/><line x1="8" y1="18" x2="12" y2="18"/>' },
+  { name: 'ruler', category: 'education', paths: '<path d="M21.3 15.3L8.7 2.7a1 1 0 0 0-1.4 0L2.7 7.3a1 1 0 0 0 0 1.4l12.6 12.6a1 1 0 0 0 1.4 0l4.6-4.6a1 1 0 0 0 0-1.4z"/><path d="M14.5 5.5l2 2M11.5 8.5l2 2M8.5 11.5l2 2"/>' },
+
+  // transport
+  { name: 'car', category: 'transport', paths: '<path d="M5 17h14M5 17a2 2 0 1 0 0-4h14a2 2 0 1 0 0 4M5 17v2a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-2m8 0v2a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-2"/><path d="M5 13l2-6h10l2 6"/>' },
+  { name: 'plane', category: 'transport', paths: '<path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4z"/>' },
+  { name: 'train', category: 'transport', paths: '<rect x="4" y="3" width="16" height="14" rx="2"/><line x1="4" y1="11" x2="20" y2="11"/><circle cx="8.5" cy="14.5" r="0.7"/><circle cx="15.5" cy="14.5" r="0.7"/><path d="M8 21l-2-4M18 21l-2-4"/>' },
+  { name: 'ship', category: 'transport', paths: '<path d="M2 21c1.5 1 3 1 4.5 0s3-1 4.5 0 3 1 4.5 0 3-1 4.5 0"/><path d="M4 18l-1-6h18l-1 6"/><path d="M6 12V6h6l4 6"/>' },
+  { name: 'bike', category: 'transport', paths: '<circle cx="6" cy="17" r="3.5"/><circle cx="18" cy="17" r="3.5"/><path d="M6 17l3-9h5l4 9M9 8h3"/>' },
+  { name: 'fuel', category: 'transport', paths: '<line x1="3" y1="22" x2="15" y2="22"/><line x1="4" y1="9" x2="14" y2="9"/><path d="M14 22V4a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v18"/><path d="M14 13h2a2 2 0 0 1 2 2v2a1.5 1.5 0 0 0 3 0V9l-3-3"/>' },
+
+  // food & drink
+  { name: 'coffee', category: 'food', paths: '<path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v6a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/>' },
+  { name: 'pizza', category: 'food', paths: '<path d="M12 2a15 15 0 0 1 15 15L12 22 2 17A15 15 0 0 1 12 2z"/><circle cx="11" cy="10" r="0.7"/><circle cx="15" cy="14" r="0.7"/><circle cx="9" cy="15" r="0.7"/>' },
+  { name: 'apple', category: 'food', paths: '<path d="M12 6c-3 0-6 2.5-6 7.5S9 22 12 22s6-4 6-8.5S15 6 12 6z"/><path d="M12 6c0-2 1-4 3-4-0.3 2-1.5 3.5-3 4z"/>' },
+  { name: 'utensils', category: 'food', paths: '<path d="M3 2v7a3 3 0 0 0 3 3v10M6 2v20M9 2v7a3 3 0 0 1-3 3"/><path d="M17 2c-2 3-2 7 0 9s0 8 0 11"/>' },
+  { name: 'glass', category: 'food', paths: '<path d="M6 3h12l-1.5 15a2 2 0 0 1-2 2h-5a2 2 0 0 1-2-2z"/><line x1="6.5" y1="8" x2="17.5" y2="8"/>' },
+
+  // extra shapes / misc UI often requested
+  { name: 'triangle', category: 'misc', paths: '<path d="M12 3l10 18H2z"/>' },
+  { name: 'hexagon', category: 'misc', paths: '<path d="M21 8v8l-9 5-9-5V8l9-5z"/>' },
+  { name: 'octagon', category: 'misc', paths: '<polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"/>' },
+  { name: 'infinity', category: 'misc', paths: '<path d="M18.6 6.6a5.5 5.5 0 0 0-7.8 0L12 7.8l1.2-1.2a5.5 5.5 0 1 1 0 7.8L12 13.2l-1.2 1.2a5.5 5.5 0 1 1 0-7.8"/>' },
+  { name: 'layers', category: 'misc', paths: '<polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/>' },
+  { name: 'sliders-horizontal', category: 'misc', paths: '<line x1="21" y1="4" x2="14" y2="4"/><line x1="10" y1="4" x2="3" y2="4"/><line x1="21" y1="12" x2="12" y2="12"/><line x1="8" y1="12" x2="3" y2="12"/><line x1="21" y1="20" x2="16" y2="20"/><line x1="12" y1="20" x2="3" y2="20"/><circle cx="12" cy="4" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="14" cy="20" r="2"/>' },
+  { name: 'toggle-left', category: 'misc', paths: '<rect x="1" y="5" width="22" height="14" rx="7"/><circle cx="8" cy="12" r="3"/>' },
+  { name: 'toggle-right', category: 'misc', paths: '<rect x="1" y="5" width="22" height="14" rx="7"/><circle cx="16" cy="12" r="3"/>' },
+  { name: 'anchor', category: 'misc', paths: '<circle cx="12" cy="5" r="3"/><line x1="12" y1="22" x2="12" y2="8"/><path d="M5 12H2a10 10 0 0 0 20 0h-3"/>' },
+  { name: 'gauge', category: 'misc', paths: '<path d="M12 2a10 10 0 1 0 8.66 15"/><path d="M12 12l5-5"/><path d="M17 2.5A10 10 0 0 1 21.5 7"/>' },
+  { name: 'palette', category: 'misc', paths: '<circle cx="13.5" cy="6.5" r="0.5"/><circle cx="17.5" cy="10.5" r="0.5"/><circle cx="8.5" cy="7.5" r="0.5"/><circle cx="6.5" cy="12.5" r="0.5"/><path d="M12 2a10 10 0 1 0 0 20c1.1 0 2-.9 2-2 0-.5-.2-1-.6-1.4-.3-.4-.5-.8-.5-1.3 0-1 .8-1.8 1.8-1.8H17a5 5 0 0 0 5-5c0-5-4.5-8.5-10-8.5z"/>' },
+  { name: 'puzzle', category: 'misc', paths: '<path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 0 1-4 0v-.1a1.7 1.7 0 0 0-1-1.6H9a1.7 1.7 0 0 0-1.5 1l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9V15a1.7 1.7 0 0 0-1.5-1H3a2 2 0 0 1 0-4h.1A1.7 1.7 0 0 0 4.6 9 1.7 1.7 0 0 0 4.3 7.1l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 0 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V9c.3.7.9 1.2 1.5 1.2H21a2 2 0 0 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1.8z"/>' },
 ];

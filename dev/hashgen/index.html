@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" data-collection="dev" data-tool="HashGen">
+<head>
+  <meta charset="UTF-8" />
+  <script>(function(){try{var t=localStorage.getItem('tapdot-theme');var d=matchMedia('(prefers-color-scheme: dark)').matches;if(t==='dark'||(!t&&d))document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HashGen — SHA Hash Generator | tapdot</title>
+  <meta name="description" content="Generate SHA-1, SHA-256, SHA-384, and SHA-512 hashes of text or files entirely in your browser via WebCrypto. Nothing is uploaded." />
+  <meta property="og:title" content="HashGen — SHA Hash Generator | tapdot" />
+  <meta property="og:description" content="SHA-1/256/384/512 hashing for text and files — fully local, via WebCrypto." />
+  <link rel="canonical" href="https://tools.tapdot.org/dev/hashgen/" />
+  <link rel="icon" type="image/png" href="/assets/tapdot-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/shared/shared.css" />
+  <link rel="stylesheet" href="/dev/dev.css" />
+</head>
+<body>
+<nav class="ts-nav">
+  <a href="https://tapdot.org" class="ts-nav-logo"><img src="/assets/tapdot-icon.png" width="22" height="22" alt="tapdot" /><span>tapdot</span></a>
+  <button class="ts-dark-toggle" id="darkToggle" aria-label="Toggle dark mode"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg></button>
+</nav>
+<main class="ts-main">
+  <div class="ts-tool-header">
+    <h1 class="ts-tool-name">HashGen</h1>
+    <p class="ts-tool-desc">SHA hashes for text or files, via your browser's own WebCrypto.</p>
+  </div>
+  <div class="ts-privacy-strip"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Hashed locally via WebCrypto — files never leave your device</div>
+
+  <div class="ts-callout" style="margin-bottom:20px">
+    <strong>Not for password storage.</strong> SHA-256/512 are fast general-purpose
+    hashes — fine for file integrity checks or checksums, but wrong for hashing
+    passwords (use bcrypt/Argon2/scrypt for that, which need a slow, salted,
+    memory-hard algorithm this tool intentionally doesn't implement).
+  </div>
+
+  <div class="ts-pill-tabs" id="modeTabs" style="margin-bottom:14px">
+    <button class="ts-pill-tab active" data-mode="text">Text</button>
+    <button class="ts-pill-tab" data-mode="file">File</button>
+  </div>
+
+  <div class="ts-card" id="textPane">
+    <p class="ts-card-label">Text</p>
+    <textarea class="ts-textarea" id="input" style="min-height:140px" placeholder="Type or paste text to hash…"></textarea>
+  </div>
+  <div class="ts-card ts-hidden" id="filePane">
+    <p class="ts-card-label">File</p>
+    <input type="file" id="fileInput" />
+    <p class="dev-muted ts-mt-sm" id="fileInfo"></p>
+  </div>
+
+  <div class="ts-card">
+    <p class="ts-card-label">Hashes</p>
+    <div id="hashList"></div>
+  </div>
+</main>
+<footer class="ts-footer">
+  <span>Built by <a href="https://tapdot.org">tapdot</a></span><span class="ts-footer-dot">·</span>
+  <a href="/privacy.html">Privacy</a><span class="ts-footer-dot">·</span><span>All processing happens in your browser</span>
+</footer>
+<script src="/shared/shared.js"></script>
+<script src="hashgen.js" defer></script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "YOUR_CLOUDFLARE_TOKEN"}'></script>
+</body>
+</html>
