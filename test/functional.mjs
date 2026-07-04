@@ -1451,6 +1451,27 @@ const check = (name, ok) => { console.log((ok ? 'PASS' : 'FAIL') + '  ' + name);
   await page.close();
 }
 
+// 59. SVGClean — regex-based SVG bloat stripper.
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/dev/svgclean/', { waitUntil: 'networkidle' });
+  await page.waitForTimeout(300);
+  const output = await page.$eval('#output', el => el.textContent);
+  check('SVGClean strips comments/XML declaration/editor namespaces by default',
+    !output.includes('<!--') && !output.includes('<?xml') && !output.includes('inkscape:'));
+  check('SVGClean removes the empty inner <g></g>', !/<g>\s*<\/g>/.test(output));
+  check('SVGClean rounds numeric precision', !output.includes('20.999999'));
+  const savings = await page.$eval('#savings', el => el.textContent);
+  check('SVGClean reports a size reduction', /smaller/.test(savings));
+  await page.uncheck('#optPrecision');
+  await page.waitForTimeout(200);
+  const output2 = await page.$eval('#output', el => el.textContent);
+  check('SVGClean precision toggle changes output', output2.includes('20.999999'));
+  check('no JS errors on SVGClean', errs.length === 0);
+  await page.close();
+}
+
 await browser.close(); srv.close();
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

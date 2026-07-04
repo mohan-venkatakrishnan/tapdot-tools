@@ -186,6 +186,7 @@ const ICON_PATHS = {
   'AIRewrite': '<path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/>',
   'PassHash': '<rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
   'ImageCompress': '<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/>',
+  'SVGClean': '<path d="M12 2l1.5 3.5L17 7l-3.5 1.5L12 12l-1.5-3.5L7 7l3.5-1.5z"/><path d="M5 15l.8 1.7L7.5 17.5l-1.7.8L5 20l-.8-1.7L2.5 17.5l1.7-.8z"/>',
   'LoanCalc': '<path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/>',
   'RetireCalc': '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/>',
   'InflationCalc': '<path d="M23 18l-9.5-9.5-5 5L1 6"/><path d="M17 18h6v-6"/>',
@@ -458,6 +459,7 @@ const TOOL_REGISTRY = [
   { name: 'AIRewrite', url: '/ai/rewrite/', collection: 'ai', desc: 'Change the tone or length of text — on-device' },
   { name: 'PassHash', url: '/dev/passhash/', collection: 'dev', desc: 'Hash and verify passwords with real bcrypt/Argon2id (WASM)' },
   { name: 'ImageCompress', url: '/design/imagecompress/', collection: 'design', desc: 'Resize and recompress images locally — JPEG/WebP/PNG' },
+  { name: 'SVGClean', url: '/dev/svgclean/', collection: 'dev', desc: 'Strip editor cruft, comments, and excess precision from SVG markup' },
   { name: 'Browse all tools', url: '/browse/', collection: 'tools', desc: 'Every tool in one pastel card view, grouped by collection' },
   { name: 'Privacy Policy', url: '/privacy.html', collection: 'tools', desc: "What tapdot tools does — and doesn't — collect" },
 ];
@@ -1124,6 +1126,11 @@ const STEPS = {
     { t: 'Open a photo', d: { k: 'text', text: 'vacation.jpg — 4.2 MB' } },
     { t: 'Adjust size & quality', d: { k: 'chips', items: ['1600px', 'Quality 80%'], on: 1 } },
     { t: 'Recompressed locally', d: { k: 'result', text: 'vacation.jpg — 480 KB (-89%)' } },
+  ],
+  'SVGClean': [
+    { t: 'Paste bloated SVG', d: { k: 'text', text: '<!-- Generator: Adobe Illustrator -->…' } },
+    { t: 'Pick what to strip', d: { k: 'chips', items: ['Comments', 'Editor namespaces', 'Precision'], on: 1 } },
+    { t: 'Cleaned locally', d: { k: 'result', text: '423 B → 108 B (-74%)' } },
   ],
   'LoanCalc': [
     { t: 'Enter your loan', d: { k: 'fields', rows: [['Amount', '$500,000'], ['Rate', '8.5%']] } },

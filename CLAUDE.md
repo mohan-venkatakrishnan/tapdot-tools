@@ -642,3 +642,14 @@ project's actual architecture — never remove it.
   - Still explicitly deferred (unchanged from v23): SVG bloat stripper, voice-to-text
     (WebSpeech API), SQL obfuscator, sitemap-style graph view.
   - Suites: 312 layout / 243 functional / css-audit clean (0 issues).
+- v25: **SVGClean** (`dev/svgclean/`, site now 91 tools) — the first of the
+  remaining PRD-deferred items, taken one at a time per user direction (voice-to-text,
+  SQL obfuscator, sitemap graph view still to come). Regex-based SVG bloat stripper —
+  deliberately NOT a full SVGO port (no XML parser, no dependency): strips XML
+  declaration/DOCTYPE/comments, editor-namespace attributes (`inkscape:*`,
+  `sodipodi:*`, `data-name`, etc. from Illustrator/Sketch/Figma/Inkscape exports),
+  `<title>`/`<desc>`/`<metadata>`, iteratively removes empty `<g>`/`<defs>`, collapses
+  whitespace, and rounds numeric precision (configurable decimal places) — each pass
+  toggleable. Live before/after size + % saved plus a rendered `<svg>` preview pane
+  for both original and cleaned markup, so a bad pass is visually obvious before
+  copying the output. Suites: 315 layout / 249 functional / css-audit clean.

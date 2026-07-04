@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" data-collection="dev" data-tool="SVGClean">
+<head>
+  <meta charset="UTF-8" />
+  <script>(function(){try{var t=localStorage.getItem('tapdot-theme');var d=matchMedia('(prefers-color-scheme: dark)').matches;if(t==='dark'||(!t&&d))document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SVGClean — Strip SVG Bloat | tapdot</title>
+  <meta name="description" content="Strip editor cruft, comments, metadata, and excess precision from SVG markup — live, entirely in your browser. Nothing you paste is ever sent anywhere." />
+  <meta property="og:title" content="SVGClean — Strip SVG Bloat | tapdot" />
+  <meta property="og:description" content="Clean up bloated SVG markup from Illustrator/Figma/Sketch exports — live, local." />
+  <link rel="canonical" href="https://tools.tapdot.org/dev/svgclean/" />
+  <link rel="icon" type="image/png" href="/assets/tapdot-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/shared/shared.css" />
+  <link rel="stylesheet" href="/dev/dev.css" />
+</head>
+<body>
+<nav class="ts-nav">
+  <a href="https://tapdot.org" class="ts-nav-logo"><img src="/assets/tapdot-icon.png" width="22" height="22" alt="tapdot" /><span>tapdot</span></a>
+  <button class="ts-dark-toggle" id="darkToggle" aria-label="Toggle dark mode"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg></button>
+</nav>
+<main class="ts-main ts-main-wide">
+  <div class="ts-tool-header">
+    <h1 class="ts-tool-name">SVGClean</h1>
+    <p class="ts-tool-desc">Strip editor cruft, comments, and excess precision from SVG markup — live, entirely in your browser.</p>
+  </div>
+  <div class="ts-privacy-strip"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Everything runs in your browser — nothing is sent anywhere</div>
+
+  <div class="ts-card">
+    <p class="ts-card-label">Options</p>
+    <div class="dev-row">
+      <label class="ts-label" style="display:flex;align-items:center;gap:6px"><input type="checkbox" id="optComments" checked /> Comments &amp; XML/DOCTYPE declarations</label>
+      <label class="ts-label" style="display:flex;align-items:center;gap:6px"><input type="checkbox" id="optEditor" checked /> Editor namespaces (Illustrator/Sketch/Figma/Inkscape)</label>
+      <label class="ts-label" style="display:flex;align-items:center;gap:6px"><input type="checkbox" id="optMeta" checked /> &lt;title&gt;, &lt;desc&gt;, &lt;metadata&gt;</label>
+      <label class="ts-label" style="display:flex;align-items:center;gap:6px"><input type="checkbox" id="optEmpty" checked /> Empty groups &amp; defs</label>
+      <label class="ts-label" style="display:flex;align-items:center;gap:6px"><input type="checkbox" id="optWhitespace" checked /> Collapse whitespace</label>
+      <label class="ts-label" style="display:flex;align-items:center;gap:6px"><input type="checkbox" id="optPrecision" checked /> Round number precision</label>
+      <div id="precisionRow" class="dev-row">
+        <label class="ts-label" style="margin:0" for="precision">Decimal places</label>
+        <input class="ts-input" id="precision" type="number" value="2" min="0" max="6" style="width:60px" />
+      </div>
+    </div>
+  </div>
+
+  <div class="ts-workbench">
+    <div class="ts-card">
+      <p class="ts-card-label">Original SVG</p>
+      <textarea class="ts-textarea ts-code-input" id="input" placeholder="Paste your SVG markup here…"></textarea>
+      <p class="ic-size" id="inSize">—</p>
+    </div>
+    <div class="ts-card">
+      <div class="dev-row" style="justify-content:space-between">
+        <p class="ts-card-label" style="margin-bottom:0">Cleaned SVG</p>
+        <button class="ts-copy-btn" id="copyOut">Copy</button>
+      </div>
+      <div class="ts-code-output" id="output" style="white-space:pre-wrap;word-break:break-all;min-height:220px"></div>
+      <p class="ic-size" id="outSize">—</p>
+      <div class="ic-savings" id="savings"></div>
+    </div>
+  </div>
+
+  <div class="ts-workbench" id="previewRow">
+    <div class="ts-card">
+      <p class="ts-card-label">Original preview</p>
+      <div class="ic-imgwrap" id="origPreview" style="min-height:120px"></div>
+    </div>
+    <div class="ts-card">
+      <p class="ts-card-label">Cleaned preview</p>
+      <div class="ic-imgwrap" id="cleanPreview" style="min-height:120px"></div>
+    </div>
+  </div>
+  <p class="biz-muted ts-mt-sm">Regex-based cleaning, not a full SVGO reimplementation — safe for typical exported icon/illustration SVGs, but always compare the before/after preview before shipping.</p>
+</main>
+<footer class="ts-footer">
+  <span>Built by <a href="https://tapdot.org">tapdot</a></span><span class="ts-footer-dot">·</span>
+  <a href="/privacy.html">Privacy</a><span class="ts-footer-dot">·</span><span>All processing happens in your browser</span>
+</footer>
+<script src="/shared/shared.js"></script>
+<script src="svgclean.js" defer></script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "YOUR_CLOUDFLARE_TOKEN"}'></script>
+</body>
+</html>
