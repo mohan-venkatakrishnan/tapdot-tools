@@ -121,6 +121,25 @@ no reason to succeed on a plain static HTML/CSS/JS site and failed silently (gen
 caught. `.nojekyll` makes Pages serve files as-is with no build step, matching the
 project's actual architecture — never remove it.
 
+**Base instruction: verify every deployment actually succeeds — never assume from
+`git push` exit code alone.** After pushing to `main`:
+1. Poll `GET /repos/mohan-venkatakrishnan/tapdot-tools/pages/builds/latest` (via the
+   PAT embedded in `git remote get-url origin`) until `status` is `built` (success) or
+   `errored` (failure) — don't stop at `building`.
+2. If `errored`, or if `GET /actions/runs?per_page=5` shows the latest run for your
+   commit as `conclusion: failure`, inspect the failed job's logs
+   (`/actions/jobs/{id}/logs`) to tell a real content/build problem (fix the code) apart
+   from GitHub-side infrastructure flakiness (e.g. "Deployment failed, try again later").
+3. For infra flakiness: first try `POST /actions/runs/{id}/rerun-failed-jobs`. If that
+   run doesn't move past `queued` within a few minutes (has happened — GitHub Actions
+   runner assignment can itself stall), fall back to `git commit --allow-empty` + push,
+   which reliably forces a fresh deployment.
+4. Only report a deploy/ship as done once the Pages build for that exact commit SHA
+   reports `built` and a live-site smoke check (`curl` a couple of routes for HTTP 200)
+   confirms it. This happened for real on 2026-07-04 (v22, commit 49abad2) — the build
+   succeeded but the deploy step hit a transient Pages API error; the rerun then stalled
+   queued; an empty-commit push resolved it in under 2 minutes.
+
 ## Pending / not-yet-done
 
 - Replace `YOUR_CLOUDFLARE_TOKEN` in every HTML `<script>` beacon before real launch.
