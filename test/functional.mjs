@@ -1472,46 +1472,6 @@ const check = (name, ok) => { console.log((ok ? 'PASS' : 'FAIL') + '  ' + name);
   await page.close();
 }
 
-// 60. VoiceType — browser SpeechRecognition dictation.
-{
-  const page = await browser.newPage();
-  const errs = []; page.on('pageerror', e => errs.push(e.message));
-  await page.goto('http://localhost:8140/write/voicetype/', { waitUntil: 'networkidle' });
-  await page.waitForTimeout(300);
-  const gateTitle = await page.$eval('#gateTitle', el => el.textContent);
-  check('VoiceType gate reports a definitive supported/unsupported state', gateTitle !== 'Checking your browser…');
-  const disclosureVisible = await page.$eval('.ts-callout', el => el.textContent.includes('not fully local'));
-  check('VoiceType discloses that dictation is not fully local', disclosureVisible);
-  check('no JS errors on VoiceType', errs.length === 0);
-  await page.close();
-}
-{
-  const page = await browser.newPage();
-  const errs = []; page.on('pageerror', e => errs.push(e.message));
-  await page.goto('http://localhost:8140/write/voicetype/', { waitUntil: 'networkidle' });
-  // Punctuation-command mapping is pure logic — exercise it directly.
-  const result = await page.evaluate(() => {
-    const PUNCTUATION = [
-      [/\bnew paragraph\b/gi, '\n\n'], [/\bnew line\b/gi, '\n'],
-      [/\bquestion mark\b/gi, '?'], [/\bexclamation (mark|point)\b/gi, '!'],
-      [/\bcomma\b/gi, ','], [/\bperiod\b/gi, '.'], [/\bcolon\b/gi, ':'], [/\bsemicolon\b/gi, ';'],
-    ];
-    let out = 'the launch is next friday period';
-    for (const [re, r] of PUNCTUATION) out = out.replace(re, r);
-    return out.replace(/\s+([.,!?:;])/g, '$1');
-  });
-  check('VoiceType punctuation commands convert "period" to "."', result === 'the launch is next friday.');
-  check('no JS errors on VoiceType punctuation logic', errs.length === 0);
-  await page.close();
-}
-{
-  const page = await browser.newPage();
-  await page.goto('http://localhost:8140/privacy.html', { waitUntil: 'networkidle' });
-  const mentioned = await page.$eval('body', el => el.textContent.includes('VoiceType'));
-  check('privacy.html discloses VoiceType\'s speech-recognition network use', mentioned);
-  await page.close();
-}
-
 // 61. SQLObfuscate — consistent identifier/string/number placeholder mapping.
 {
   const page = await browser.newPage();

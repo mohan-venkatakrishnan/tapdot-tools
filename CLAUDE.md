@@ -654,17 +654,20 @@ project's actual architecture — never remove it.
   for both original and cleaned markup, so a bad pass is visually obvious before
   copying the output. Suites: 315 layout / 249 functional / css-audit clean.
 - v26: **The rest of the PRD-deferred list, built one at a time per user direction**
-  (site now 93 tools + a new non-tool Site Graph view; completes the deferred-items
+  (site now 92 tools + a new non-tool Site Graph view; completes the deferred-items
   backlog from v23).
-  - **VoiceType** (`write/voicetype/`) — dictation via the browser's built-in
-    `SpeechRecognition` API. Called out prominently, in-page and in `privacy.html`,
-    that this is the one tool site-wide that is NOT fully local: Chrome sends
-    microphone audio to Google's speech-to-text servers to produce the transcript.
-    tapdot never sees it, but it does leave the device — same category of
-    disclosure as WSTester, now with its own dedicated privacy.html card. Voice
-    punctuation commands ("period", "comma", "new line", etc.) via a small
-    regex-replacement pass on the final transcript; continuous listening restarts
-    itself on Chrome's silence-triggered `onend`.
+  - **VoiceType was built, then removed by user decision.** It shipped briefly as
+    `write/voicetype/` — dictation via the browser's built-in `SpeechRecognition`
+    API, with a prominent disclosure (in-page + `privacy.html`) that it was the one
+    tool site-wide that isn't fully local, since Chrome sends microphone audio to
+    Google's speech-to-text servers to produce the transcript. The user decided
+    against keeping a tool that breaks the "nothing leaves your device" guarantee,
+    even with disclosure, so it was pulled: directory deleted, and every reference
+    removed from `shared.js` (ICON_PATHS/TOOL_REGISTRY/STEPS), the write hub,
+    `privacy.html`'s dedicated card, and both test suites. Homepage tool count
+    reverted 93 → 92. Voice-to-text stays off the deferred-items list as "tried,
+    rejected" rather than "not yet built" — a real Web Speech API limitation
+    (audio must leave the device to be transcribed), not a bug to fix later.
   - **SQLObfuscate** (`dev/sqlobfuscate/`) — distinct from the existing SQLFormat
     pretty-printer: replaces real table/column names, string literals, and numeric
     literals with consistent placeholders (`customers` → `col1`, every occurrence)
@@ -684,6 +687,7 @@ project's actual architecture — never remove it.
   - Fixed a real bug found while wiring these in: `TOOL_REGISTRY` had a duplicate
     "Browse all tools" entry (appeared twice, from an earlier insertion at the
     wrong split point) — removed the stray copy.
-  - Suites: 324 layout / 267 functional / css-audit clean. This closes out every
+  - Suites (after the VoiceType removal below): 321 layout / 261 functional /
+    css-audit clean. This closes out every
     item on the v23 PRD-deferred list (bcrypt/Argon2, image compression, Writer/
     Rewriter, SVG stripper, voice-to-text, SQL obfuscator, graph view).
