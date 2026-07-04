@@ -3,7 +3,7 @@
 const LS_ITEMS = 'tapdot-networth-items';
 const LS_HISTORY = 'tapdot-networth-history';
 const $ = (id) => document.getElementById(id);
-const fmtMoney = (n) => '$' + Math.round(n).toLocaleString();
+const fmtMoney = (n) => tapdotMoney.fmt(n);
 
 function loadItems() {
   try { const s = JSON.parse(localStorage.getItem(LS_ITEMS)); if (s) return s; } catch {}

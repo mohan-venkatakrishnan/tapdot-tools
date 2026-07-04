@@ -2,7 +2,7 @@
 // reduce-EMI strategies, baseline-vs-prepaid projection.
 
 const $ = (id) => document.getElementById(id);
-const fmtMoney = (n) => '$' + Math.round(n).toLocaleString();
+const fmtMoney = (n) => tapdotMoney.fmt(n);
 const fmtYears = (months) => {
   const y = Math.floor(months / 12), m = months % 12;
   return y ? `${y}y${m ? ' ' + m + 'm' : ''}` : `${m}m`;

@@ -61,3 +61,13 @@
 .reading-status-badge.to-read { background: var(--color-bg-soft); color: var(--color-muted); }
 .reading-status-badge.reading { background: rgba(61,154,166,0.15); color: var(--color-accent); }
 .reading-status-badge.done { background: rgba(139, 195, 74, 0.15); color: #6b9b3f; }
+
+/* UnitConvert */
+.uc-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; min-width: 0; }
+.uc-amount { width: 140px; font-size: 18px; font-family: var(--font-mono); }
+.uc-row .ts-select { flex: 1; min-width: 120px; }
+.uc-result { font-family: var(--font-mono); font-size: clamp(18px, 3.4vw, 28px); font-weight: 600; color: var(--color-accent); margin: 18px 0 6px; overflow-wrap: anywhere; }
+.uc-table { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+.uc-cell { background: var(--color-bg-soft); border: 0.5px solid var(--color-border); border-radius: var(--radius-md); padding: 10px 12px; text-align: center; min-width: 0; }
+.uc-cell-num { display: block; font-family: var(--font-mono); font-size: 14px; color: var(--color-text); overflow-wrap: anywhere; }
+.uc-cell-unit { font-size: 11px; color: var(--color-muted); }

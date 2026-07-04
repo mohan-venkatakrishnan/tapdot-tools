@@ -1,7 +1,7 @@
 // InflationCalc — future cost, purchasing-power erosion, halving time
 
 const $ = (id) => document.getElementById(id);
-const fmtMoney = (n) => '$' + Math.round(n).toLocaleString();
+const fmtMoney = (n) => tapdotMoney.fmt(n);
 
 function render() {
   const amount = Math.max(0, parseFloat($('amount').value) || 0);

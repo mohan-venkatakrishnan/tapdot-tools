@@ -114,8 +114,11 @@ function renderWorldMap(container, opts) {
   cities.forEach(([name, tz, lat, lon], i) => {
     const isSel = selSet.has(tz);
     const x = tzmX(lon), y = tzmY(lat);
+    // Selected cities get a persistent name label (flipped below the dot near the top edge).
+    const labelY = tzmY(lat) < 20 ? 16 : -10;
     markers += `<g class="tzm-marker${isSel ? ' on' : ''}" data-tz="${tz}" data-name="${name}" transform="translate(${x},${y})" style="animation-delay:${(i % 12) * 0.18}s">
       <circle class="tzm-hit" r="7"/><circle class="tzm-ring"/><circle class="tzm-dot"/>
+      ${isSel ? `<text class="tzm-label" x="0" y="${labelY}" text-anchor="middle">${name}</text>` : ''}
     </g>`;
   });
 
@@ -151,5 +154,20 @@ function renderWorldMap(container, opts) {
       tip.style.top = Math.max(26, cy - 8) + 'px';
     });
     el.addEventListener('mouseleave', () => { tip.hidden = true; });
+  });
+}
+
+/**
+ * initMapFullscreen(button, target) — toggles fullscreen on the map's card
+ * so the map can run on a big TV. Falls back silently if unsupported.
+ */
+function initMapFullscreen(button, target) {
+  if (!button || !target || !target.requestFullscreen) { if (button) button.style.display = 'none'; return; }
+  button.addEventListener('click', () => {
+    if (document.fullscreenElement) document.exitFullscreen();
+    else target.requestFullscreen().catch(() => {});
+  });
+  document.addEventListener('fullscreenchange', () => {
+    button.textContent = document.fullscreenElement ? 'Exit fullscreen' : '⛶ Fullscreen';
   });
 }

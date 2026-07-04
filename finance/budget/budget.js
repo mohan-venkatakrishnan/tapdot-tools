@@ -2,7 +2,7 @@
 
 const LS = 'tapdot-budget-history';
 const $ = (id) => document.getElementById(id);
-const fmtMoney = (n) => '$' + Math.round(n).toLocaleString();
+const fmtMoney = (n) => tapdotMoney.fmt(n);
 
 const NEEDS = ['rent', 'mortgage', 'utilities', 'groceries', 'insurance', 'transport', 'minimum payments', 'childcare', 'healthcare'];
 const WANTS = ['dining', 'entertainment', 'shopping', 'hobbies', 'subscriptions', 'gym', 'travel'];

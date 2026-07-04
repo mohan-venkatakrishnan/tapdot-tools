@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" data-collection="dev" data-tool="WorldClock">
+<head>
+  <meta charset="UTF-8" />
+  <script>(function(){try{var t=localStorage.getItem('tapdot-theme');var d=matchMedia('(prefers-color-scheme: dark)').matches;if(t==='dark'||(!t&&d))document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WorldClock — Airport-Style World Clocks | tapdot</title>
+  <meta name="description" content="Beautiful analog world clocks in airport, classic, and minimal themes. Fullscreen mode for TVs and wall displays. Fully local." />
+  <meta property="og:title" content="WorldClock — Airport-Style World Clocks | tapdot" />
+  <meta property="og:description" content="Themed analog clocks for any set of cities, with a TV-ready fullscreen mode." />
+  <link rel="canonical" href="https://tools.tapdot.org/dev/worldclock/" />
+  <link rel="icon" type="image/png" href="/assets/tapdot-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/shared/shared.css" />
+  <link rel="stylesheet" href="/dev/dev.css" />
+</head>
+<body>
+<nav class="ts-nav">
+  <a href="https://tapdot.org" class="ts-nav-logo"><img src="/assets/tapdot-icon.png" width="22" height="22" alt="tapdot" /><span>tapdot</span></a>
+  <button class="ts-dark-toggle" id="darkToggle" aria-label="Toggle dark mode"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg></button>
+</nav>
+<main class="ts-main ts-main-wide">
+  <div class="ts-tool-header">
+    <h1 class="ts-tool-name">WorldClock</h1>
+    <p class="ts-tool-desc">Airport-style analog clocks for the cities you care about — TV-ready in fullscreen.</p>
+  </div>
+
+  <div class="ts-card">
+    <div class="dev-row" style="justify-content:space-between;flex-wrap:wrap;gap:10px">
+      <div class="dev-row" style="flex-wrap:wrap;gap:10px">
+        <select class="ts-select" id="cityPick" data-searchable style="min-width:200px"></select>
+        <button class="ts-btn ts-btn-secondary" id="addCity">Add city</button>
+      </div>
+      <div class="dev-row" style="flex-wrap:wrap;gap:10px">
+        <div class="ts-segment" id="themeTabs">
+          <button class="ts-segment-btn active" data-theme="airport">Airport</button>
+          <button class="ts-segment-btn" data-theme="classic">Classic</button>
+          <button class="ts-segment-btn" data-theme="minimal">Minimal</button>
+        </div>
+        <button class="ts-btn ts-btn-ghost" id="clockFs">⛶ Fullscreen</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="wc-grid" id="clockGrid"></div>
+</main>
+<footer class="ts-footer">
+  <span>Built by <a href="https://tapdot.org">tapdot</a></span><span class="ts-footer-dot">·</span>
+  <a href="/privacy.html">Privacy</a><span class="ts-footer-dot">·</span><span>All processing happens in your browser</span>
+</footer>
+<script src="/shared/shared.js"></script>
+<script src="/dev/libs/tz/cities.js"></script>
+<script src="/dev/libs/tz/worldmap.js"></script>
+<script src="worldclock.js" defer></script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "YOUR_CLOUDFLARE_TOKEN"}'></script>
+</body>
+</html>

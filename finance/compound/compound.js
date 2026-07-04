@@ -1,7 +1,7 @@
 // CompoundCalc — compound interest with monthly contributions
 
 const $ = (id) => document.getElementById(id);
-const fmtMoney = (n) => '$' + Math.round(n).toLocaleString();
+const fmtMoney = (n) => tapdotMoney.fmt(n);
 
 function compoundInterest({ principal, rate, frequency, years, monthlyContrib }) {
   const n = frequency;

@@ -66,6 +66,26 @@ textarea.ts-code-input {
 
 /* Pill tabs moved to shared/shared.css (used by marketing tools too) */
 
+/* DiffCheck */
+.diff-out { max-height: 480px; overflow-y: auto; }
+.diff-out > div { white-space: pre-wrap; word-break: break-word; padding: 1px 6px; border-radius: 3px; }
+.diff-add { background: rgba(29,158,117,0.12); color: var(--color-success); }
+.diff-del { background: rgba(220,38,38,0.10); color: var(--color-danger); }
+.diff-same { color: var(--color-muted); }
+
+/* WSTester log */
+.ws-log > div { padding: 3px 0; border-bottom: 0.5px solid var(--color-border); word-break: break-word; }
+.ws-sent { color: var(--color-accent); }
+.ws-recv { color: var(--color-success); }
+.ws-sys { color: var(--color-muted); font-style: italic; }
+
+/* CodePlay */
+.play-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 16px; }
+.play-grid > * { min-width: 0; }
+@media (max-width: 900px) { .play-grid { grid-template-columns: 1fr; } }
+.play-editor .ts-textarea { min-height: 220px; font-size: 12.5px; }
+.play-preview { width: 100%; height: 340px; border: 0.5px solid var(--color-border); border-radius: var(--radius-md); background: #fff; }
+
 /* RegexLab cheat sheet */
 .rx-cheat { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; font-size: 12px; color: var(--color-muted); }
 .rx-cheat code { font-family: var(--font-mono); color: var(--color-accent); background: var(--color-bg-soft); padding: 1px 5px; border-radius: 4px; margin-right: 4px; }
@@ -294,3 +314,49 @@ textarea.ts-code-input {
 .tz-planner td.ov { background: var(--color-accent); }
 .tz-remove { cursor: pointer; color: var(--color-muted); background: none; border: none; font-size: 15px; }
 .tz-remove:hover { color: var(--color-danger); }
+
+/* World map: persistent labels on selected cities + fullscreen mode */
+.tzm-label { font-size: 9px; font-family: var(--font-body); fill: var(--color-text); paint-order: stroke; stroke: var(--color-surface); stroke-width: 2.5px; pointer-events: none; }
+.tz-map-wrap:fullscreen { background: var(--color-bg); display: flex; align-items: center; justify-content: center; padding: 4vh 4vw; }
+.tz-map-wrap:fullscreen > div, .tz-map-wrap:fullscreen svg { width: 100%; height: auto; max-height: 92vh; }
+
+/* WorldClock — themed analog clocks */
+.wc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
+.wc-grid:fullscreen { background: #0b0e14; padding: 4vh 4vw; align-content: center; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+.wc-clock { position: relative; background: var(--color-surface); border: 0.5px solid var(--color-border); border-radius: var(--radius-lg); padding: 18px; text-align: center; }
+.wc-face { width: 100%; max-width: 240px; }
+.wc-dial { fill: var(--color-bg-soft); stroke: var(--color-border); stroke-width: 1; }
+.wc-tick { stroke: var(--color-muted); stroke-width: 0.7; }
+.wc-tick.major { stroke: var(--color-text); stroke-width: 1.6; }
+.wc-hand { stroke-linecap: round; }
+.wc-hour { stroke: var(--color-text); stroke-width: 3.4; }
+.wc-minute { stroke: var(--color-text); stroke-width: 2.2; }
+.wc-second { stroke: var(--color-danger); stroke-width: 1; }
+.wc-hub { fill: var(--color-text); }
+.wc-city { font-weight: 600; font-size: 15px; color: var(--color-text); margin-top: 10px; }
+.wc-sub { font-family: var(--font-mono); font-size: 12px; color: var(--color-muted); margin-top: 2px; }
+.wc-rm { position: absolute; top: 10px; right: 12px; }
+.wc-night .wc-dial { fill: #141824; }
+.wc-night .wc-city::after { content: ' 🌙'; font-size: 11px; }
+
+/* Airport theme: dark dial, bold Swiss-railway look */
+[data-wc-theme="airport"] .wc-dial { fill: #10131c; stroke: #2a3040; }
+[data-wc-theme="airport"] .wc-tick { stroke: #e8eaf0; stroke-width: 1; }
+[data-wc-theme="airport"] .wc-tick.major { stroke: #ffffff; stroke-width: 2.4; }
+[data-wc-theme="airport"] .wc-hour, [data-wc-theme="airport"] .wc-minute { stroke: #ffffff; }
+[data-wc-theme="airport"] .wc-second { stroke: #e63946; stroke-width: 1.4; }
+[data-wc-theme="airport"] .wc-hub { fill: #e63946; }
+
+/* Classic theme: light dial, thin elegant hands */
+[data-wc-theme="classic"] .wc-dial { fill: #faf8f2; stroke: #d8d2c4; }
+[data-wc-theme="classic"] .wc-tick { stroke: #8a8470; }
+[data-wc-theme="classic"] .wc-tick.major { stroke: #3c382e; }
+[data-wc-theme="classic"] .wc-hour { stroke: #3c382e; stroke-width: 2.6; }
+[data-wc-theme="classic"] .wc-minute { stroke: #3c382e; stroke-width: 1.6; }
+[data-wc-theme="classic"] .wc-second { stroke: #b8860b; }
+[data-wc-theme="classic"] .wc-hub { fill: #3c382e; }
+
+/* Minimal theme: no minor ticks, hairline hands */
+[data-wc-theme="minimal"] .wc-tick { display: none; }
+[data-wc-theme="minimal"] .wc-tick.major { display: initial; stroke-width: 0.8; }
+[data-wc-theme="minimal"] .wc-second { display: none; }

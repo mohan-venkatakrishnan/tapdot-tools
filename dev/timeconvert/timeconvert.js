@@ -131,3 +131,5 @@ $('results').addEventListener('click', (e) => {
 
 initTzSelects();
 setNow();
+
+initMapFullscreen(document.getElementById('mapFs'), document.getElementById('mapWrap'));

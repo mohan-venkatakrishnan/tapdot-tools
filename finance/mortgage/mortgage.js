@@ -1,7 +1,7 @@
 // MortgageCalc — EMI, amortisation schedule, overpayment savings
 
 const $ = (id) => document.getElementById(id);
-const fmtMoney = (n) => '$' + Math.round(n).toLocaleString();
+const fmtMoney = (n) => tapdotMoney.fmt(n);
 
 function calcEMI({ principal, annualRate, years }) {
   const r = annualRate / 100 / 12;

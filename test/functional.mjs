@@ -1041,6 +1041,142 @@ const check = (name, ok) => { console.log((ok ? 'PASS' : 'FAIL') + '  ' + name);
   await page.close();
 }
 
+// 55. v21 batch: money formats, JWT encode, Base64, Diff, CodePlay, BigO, UnitConvert, WorldClock, SketchPad.
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/finance/loan/', { waitUntil: 'networkidle' });
+  await page.waitForTimeout(200);
+  await page.selectOption('#tmCurrency', '₹');
+  await page.click('[data-tmfmt="in"]');
+  await page.waitForTimeout(200);
+  const emi = await page.$eval('#emi', el => el.textContent);
+  check('Finance money picker switches to ₹ with lakh/crore grouping', emi.startsWith('₹') && /\d,\d\d,\d\d\d|\d\d,\d\d\d/.test(emi));
+  // restore defaults so other tests aren't affected
+  await page.evaluate(() => { localStorage.removeItem('tapdot-finance-currency'); localStorage.removeItem('tapdot-finance-format'); });
+  check('no JS errors on money picker', errs.length === 0);
+  await page.close();
+}
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/dev/jwt/', { waitUntil: 'networkidle' });
+  await page.click('[data-jm="encode"]');
+  await page.waitForTimeout(400);
+  const token = await page.$eval('#encOut', el => el.textContent);
+  check('JWT encode produces a 3-part HS256 token', token.split('.').length === 3 && token.startsWith('eyJ'));
+  // Round-trip: decode tab should verify what encode signed
+  const hs256 = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
+  check('JWT encode round-trips the canonical jwt.io token', token === hs256);
+  check('no JS errors on JWT encode', errs.length === 0);
+  await page.close();
+}
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/dev/base64/', { waitUntil: 'networkidle' });
+  await page.fill('#input', 'Hello, world!');
+  await page.waitForTimeout(100);
+  const out = await page.$eval('#output', el => el.textContent);
+  check('Base64Tool encodes correctly', out === 'SGVsbG8sIHdvcmxkIQ==');
+  await page.click('[data-mode="decode"]');
+  await page.fill('#input', 'SGVsbG8sIHdvcmxkIQ==');
+  await page.waitForTimeout(100);
+  const dec = await page.$eval('#output', el => el.textContent);
+  check('Base64Tool decodes correctly', dec === 'Hello, world!');
+  check('no JS errors on Base64Tool', errs.length === 0);
+  await page.close();
+}
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/dev/diff/', { waitUntil: 'networkidle' });
+  await page.fill('#left', 'line one\nline two\nline three');
+  await page.fill('#right', 'line one\nline 2\nline three\nline four');
+  await page.waitForTimeout(400);
+  const stats = await page.$eval('#diffStats', el => el.textContent);
+  check('DiffCheck counts additions and removals (+2 −1)', stats === '+2 −1');
+  check('no JS errors on DiffCheck', errs.length === 0);
+  await page.close();
+}
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/dev/play/', { waitUntil: 'networkidle' });
+  await page.waitForTimeout(700);
+  const frame = page.frames().find(f => f !== page.mainFrame());
+  const h1 = frame ? await frame.$eval('h1', el => el.textContent).catch(() => '') : '';
+  check('CodePlay renders the starter example in the sandboxed preview', h1 === 'Hello, CodePlay');
+  check('no JS errors on CodePlay', errs.length === 0);
+  await page.close();
+}
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/dev/bigo/', { waitUntil: 'networkidle' });
+  await page.waitForTimeout(200);
+  const time = await page.$eval('#timeC', el => el.textContent);
+  check('BigOCheck flags the nested-loop starter as O(n²)', time === 'O(n²)');
+  await page.fill('#code', 'function sum(a){let s=0;for(const x of a){s+=x}return s}');
+  await page.waitForTimeout(150);
+  const linear = await page.$eval('#timeC', el => el.textContent);
+  check('BigOCheck detects a single pass as O(n)', linear === 'O(n)');
+  check('no JS errors on BigOCheck', errs.length === 0);
+  await page.close();
+}
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/productivity/convert/', { waitUntil: 'networkidle' });
+  await page.waitForTimeout(150);
+  await page.fill('#amount', '100');
+  await page.selectOption('#fromUnit', 'cm');
+  await page.selectOption('#toUnit', 'm');
+  await page.waitForTimeout(150);
+  const result = await page.$eval('#result', el => el.textContent);
+  check('UnitConvert converts 100 cm = 1 m', result.includes('100 cm = 1 m'));
+  check('no JS errors on UnitConvert', errs.length === 0);
+  await page.close();
+}
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/dev/worldclock/', { waitUntil: 'networkidle' });
+  await page.waitForTimeout(1300);
+  const clocks = await page.$$eval('.wc-clock', els => els.length);
+  const digital = await page.$eval('.wc-clock [data-digital]', el => el.textContent);
+  check('WorldClock renders default clocks with ticking digital time', clocks === 4 && /^\d{2}:\d{2}$/.test(digital));
+  check('no JS errors on WorldClock', errs.length === 0);
+  await page.close();
+}
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/design/sketch/', { waitUntil: 'networkidle' });
+  const box = await page.$eval('#skCanvas', el => { const r = el.getBoundingClientRect(); return { x: r.x, y: r.y }; });
+  await page.mouse.move(box.x + 50, box.y + 50);
+  await page.mouse.down();
+  await page.mouse.move(box.x + 150, box.y + 120);
+  await page.mouse.up();
+  await page.waitForTimeout(600);
+  const saved = await page.evaluate(() => JSON.parse(localStorage.getItem('tapdot-sketchpad') || '[]').length);
+  check('SketchPad saves a drawn stroke locally', saved === 1);
+  check('no JS errors on SketchPad', errs.length === 0);
+  await page.close();
+}
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/dev/timezone/', { waitUntil: 'networkidle' });
+  await page.waitForTimeout(400);
+  const labels = await page.$$eval('.tzm-label', els => els.map(e => e.textContent));
+  check('TimezoneNow shows persistent labels on selected map cities', labels.length > 0);
+  const fsBtn = await page.isVisible('#mapFs');
+  check('TimezoneNow offers a fullscreen button', fsBtn);
+  check('no JS errors on TimezoneNow labels/fullscreen', errs.length === 0);
+  await page.close();
+}
+
 await browser.close(); srv.close();
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

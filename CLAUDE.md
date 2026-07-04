@@ -446,3 +446,53 @@ project's actual architecture — never remove it.
     formula accuracy, part-payment impact, reduce-tenure > reduce-EMI savings
     invariant, chart overlay; RetireCalc positivity + plain-English explainer;
     InflationCalc future-cost and halving-time accuracy). All suites pass.
+- v21: **Big user-requested batch — currency formats + 9 new tools (site now 80).**
+  - **`finance/libs/money.js` (`tapdotMoney`)**: shared currency-symbol picker
+    ($ ₹ € £ ¥ A$ C$ S$ CHF R R$ د.إ) + number-format toggle (Million/Billion
+    en-US grouping vs Lakh/Crore en-IN grouping), persisted in localStorage,
+    auto-injected into every finance tool's header. Tools' local `fmtMoney`
+    now delegates to `tapdotMoney.fmt`; on change the picker calls the page's
+    global `render()` (falls back to reload). TaxEstimate intentionally keeps
+    its own per-country symbols. **New finance tools must use tapdotMoney.**
+  - **JWTRead → encode + decode** (jwt.io parity): new "Encode & sign" pill tab —
+    JSON payload, HS256/384/512, WebCrypto signing, live token output, and an
+    explicit disclosure that secrets never leave the page (and a warning to only
+    use test secrets in ANY browser tool). Verified in tests to round-trip the
+    canonical jwt.io token byte-for-byte.
+  - **Base64Tool** (`dev/base64/`): live encode/decode, UTF-8 safe
+    (TextEncoder→btoa), URL-safe alphabet option, byte counts, friendly errors.
+  - **DiffCheck** (`dev/diff/`): LCS line diff with +/− highlighting and counts;
+    debounced live; guards against quadratic blowup on huge inputs (>4M cell cap).
+  - **WSTester** (`dev/websocket/`): direct browser→server WebSocket connection
+    (disclosed prominently — no proxy, tapdot never sees traffic), status badge,
+    timestamped send/receive log, Ctrl+Enter to send. privacy.html gained a
+    WSTester section since it's inherently a network tool.
+  - **CodePlay** (`dev/play/`): JSFiddle-style HTML/CSS/JS editors + sandboxed
+    `srcdoc` iframe (allow-scripts only) with console.log/warn/error captured via
+    a postMessage bridge; debounced auto-run; localStorage autosave.
+  - **BigOCheck** (`dev/bigo/`): structural time-complexity estimator — loop
+    nesting (brace AND indent passes for C-like/Python), halving-loop → O(log n),
+    recursion / divide-and-conquer detection, costly built-ins (sort, includes
+    in loops) — with reasons listed, plus optional on-device AI explanation.
+  - **WorldClock** (`dev/worldclock/`): analog SVG clocks per city (searchable
+    picker from TZ_CITIES), three themes (airport dark/Swiss, classic, minimal),
+    night indicator, digital+date line, and TV fullscreen via the shared
+    `initMapFullscreen` helper.
+  - **SketchPad** (`design/sketch/`): element-based local whiteboard — pen, line,
+    arrow, rect, ellipse, text; colour + width; undo (button & Ctrl+Z); PNG
+    export on white; localStorage autosave; touch support.
+  - **PhotoTune** (`design/photo/`): fully local canvas photo editor —
+    brightness/contrast/saturation/sepia/blur via ctx.filter, rotate 90°, flip
+    H/V, export width + PNG/JPEG. Display capped at 900px wide; export renders
+    at full/chosen resolution. (Answer to "can a photo editor stay local": yes.)
+  - **UnitConvert** (`productivity/convert/`): 8 categories (length, weight,
+    temperature, area, volume, speed, data incl. binary units, time), live
+    conversion + an all-equivalents grid. 3D presentation was considered and
+    skipped deliberately — it would hurt readability for a reference tool.
+  - **World map**: selected cities now show persistent name labels
+    (`.tzm-label`, stroke-outlined for readability, flipped below dots near the
+    top edge); hover tooltips already existed. TimezoneNow + TZConvert gained
+    ⛶ Fullscreen (`initMapFullscreen` in worldmap.js) for TV/wall displays.
+  - Suites: 276 layout / 197 functional / css-audit clean (one false positive —
+    CodePlay's starter-example `.card` lives in user-space iframe CSS — added to
+    the audit's IGNORE list with a comment).

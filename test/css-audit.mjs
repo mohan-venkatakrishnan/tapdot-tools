@@ -56,6 +56,8 @@ const IGNORE = new Set([
   'gc-tab', 'gc-name', 'gc-credits', 'gc-grade', 'w-name', 'w-score', 'w-weight', 'w-max',
   'ff-front', 'ff-tile-q', 'ff-tile-a', 'b-mode', 'b-val', 'cite-style-segment',
   'd-front', 'i', 'tzm-dots', 'tzm-arcs', 'tzm-markers',
+  // CodePlay's starter example — user-space HTML/CSS that runs inside the sandbox iframe
+  'card',
 ]);
 const undef = new Map();
 for (const f of walk(ROOT, ['.html', '.js'])) {

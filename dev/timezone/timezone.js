@@ -99,3 +99,5 @@ initSelect();
 renderAll();
 setInterval(renderMap, 60000); // day/night terminator drift
 setInterval(renderClocks, 1000);
+
+initMapFullscreen(document.getElementById('mapFs'), document.getElementById('mapWrap'));

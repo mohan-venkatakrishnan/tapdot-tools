@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" data-collection="design" data-tool="PhotoTune">
+<head>
+  <meta charset="UTF-8" />
+  <script>(function(){try{var t=localStorage.getItem('tapdot-theme');var d=matchMedia('(prefers-color-scheme: dark)').matches;if(t==='dark'||(!t&&d))document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PhotoTune — Local Photo Editor | tapdot</title>
+  <meta name="description" content="Edit photos entirely in your browser: brightness, contrast, saturation, filters, rotate, flip, resize, and export. The image never uploads anywhere." />
+  <meta property="og:title" content="PhotoTune — Local Photo Editor | tapdot" />
+  <meta property="og:description" content="Brightness, contrast, filters, rotate, resize, export — your photo never uploads." />
+  <link rel="canonical" href="https://tools.tapdot.org/design/photo/" />
+  <link rel="icon" type="image/png" href="/assets/tapdot-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/shared/shared.css" />
+  <link rel="stylesheet" href="/design/design.css" />
+</head>
+<body>
+<nav class="ts-nav">
+  <a href="https://tapdot.org" class="ts-nav-logo"><img src="/assets/tapdot-icon.png" width="22" height="22" alt="tapdot" /><span>tapdot</span></a>
+  <button class="ts-dark-toggle" id="darkToggle" aria-label="Toggle dark mode"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg></button>
+</nav>
+<main class="ts-main ts-main-wide">
+  <div class="ts-tool-header">
+    <h1 class="ts-tool-name">PhotoTune</h1>
+    <p class="ts-tool-desc">Brightness, contrast, filters, rotate, resize, export — your photo never uploads.</p>
+  </div>
+  <div class="ts-privacy-strip"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Yes, a photo editor can be fully local — your image is edited on a canvas in this tab and never uploaded</div>
+
+  <div class="ts-workbench">
+    <div class="ts-card">
+      <button class="ts-btn ts-btn-primary" id="loadBtn">Open an image…</button>
+      <input type="file" id="fileInput" accept="image/*" class="ts-hidden" />
+      <div id="controls" class="ts-hidden">
+        <div class="design-field ts-mt-md"><label>Brightness <span class="val" id="vBright">100%</span></label><input type="range" id="bright" min="20" max="200" value="100" /></div>
+        <div class="design-field"><label>Contrast <span class="val" id="vContrast">100%</span></label><input type="range" id="contrast" min="20" max="200" value="100" /></div>
+        <div class="design-field"><label>Saturation <span class="val" id="vSat">100%</span></label><input type="range" id="sat" min="0" max="200" value="100" /></div>
+        <div class="design-field"><label>Sepia <span class="val" id="vSepia">0%</span></label><input type="range" id="sepia" min="0" max="100" value="0" /></div>
+        <div class="design-field"><label>Blur <span class="val" id="vBlur">0px</span></label><input type="range" id="blur" min="0" max="10" value="0" /></div>
+        <div class="biz-row ts-mt-sm" style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="ts-btn ts-btn-ghost" id="rotBtn">Rotate 90°</button>
+          <button class="ts-btn ts-btn-ghost" id="flipH">Flip H</button>
+          <button class="ts-btn ts-btn-ghost" id="flipV">Flip V</button>
+          <button class="ts-btn ts-btn-ghost" id="resetBtn">Reset</button>
+        </div>
+        <div class="biz-row ts-mt-md" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <label class="ts-label" style="margin:0" for="maxW">Export width</label>
+          <input class="ts-input" id="maxW" type="number" style="width:100px" />
+          <select class="ts-select" id="expFmt"><option value="png">PNG</option><option value="jpeg">JPEG</option></select>
+          <button class="ts-btn ts-btn-secondary" id="exportBtn">Download</button>
+        </div>
+      </div>
+    </div>
+    <div class="ts-card" style="text-align:center">
+      <canvas id="photoCanvas" class="photo-canvas"></canvas>
+      <p class="biz-muted" id="photoInfo">Open an image to start — it stays on your device.</p>
+    </div>
+  </div>
+</main>
+<footer class="ts-footer">
+  <span>Built by <a href="https://tapdot.org">tapdot</a></span><span class="ts-footer-dot">·</span>
+  <a href="/privacy.html">Privacy</a><span class="ts-footer-dot">·</span><span>All processing happens in your browser</span>
+</footer>
+<script src="/shared/shared.js"></script>
+<script src="photo.js" defer></script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "YOUR_CLOUDFLARE_TOKEN"}'></script>
+</body>
+</html>

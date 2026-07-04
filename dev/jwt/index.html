@@ -24,14 +24,48 @@
 <main class="ts-main ts-main-wide">
   <div class="ts-tool-header">
     <h1 class="ts-tool-name">JWTRead</h1>
-    <p class="ts-tool-desc">Decode and inspect JWT tokens — entirely in your browser.</p>
+    <p class="ts-tool-desc">Decode, verify, and create JWT tokens — entirely in your browser.</p>
   </div>
-  <div class="ts-privacy-strip"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Decoded locally with atob() — your token is never sent anywhere</div>
+  <div class="ts-privacy-strip"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Tokens and secrets are processed locally and never stored or sent to any server — unlike online JWT sites, there is no backend here at all</div>
 
+  <div class="ts-pill-tabs" style="margin-bottom:14px" id="jwtModeTabs">
+    <button class="ts-pill-tab active" data-jm="decode">Decode &amp; verify</button>
+    <button class="ts-pill-tab" data-jm="encode">Encode &amp; sign</button>
+  </div>
+
+  <div id="decodePane">
   <div class="ts-card">
     <p class="ts-card-label">JWT token</p>
     <textarea class="ts-textarea ts-code-input" id="token" placeholder="Paste a JWT — eyJhbGciOi..."></textarea>
     <p class="ts-err-msg ts-mt-sm" id="err"></p>
+  </div>
+  </div>
+
+  <div id="encodePane" class="ts-hidden">
+    <div class="ts-workbench">
+      <div class="ts-card">
+        <p class="ts-card-label">Payload (JSON)</p>
+        <textarea class="ts-textarea ts-code-input" id="encPayload">{
+  "sub": "1234567890",
+  "name": "John Doe",
+  "iat": 1516239022
+}</textarea>
+        <div class="biz-row ts-mt-md" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+          <label class="ts-label" style="margin:0" for="encAlg">Algorithm</label>
+          <select class="ts-select" id="encAlg"><option>HS256</option><option>HS384</option><option>HS512</option></select>
+          <input class="ts-input" id="encSecret" placeholder="Secret" style="flex:1;min-width:120px" value="your-256-bit-secret" />
+        </div>
+        <p class="ts-err-msg ts-mt-sm" id="encErr"></p>
+      </div>
+      <div class="ts-card">
+        <div class="dev-row" style="justify-content:space-between">
+          <p class="ts-card-label" style="margin-bottom:0">Signed token</p>
+          <button class="ts-copy-btn" id="encCopy">Copy</button>
+        </div>
+        <div class="ts-code-output" id="encOut" style="white-space:pre-wrap;word-break:break-all"></div>
+        <p class="dev-muted ts-mt-sm">Signed with WebCrypto HMAC in this tab. The secret never leaves your machine — but only sign with test/dev secrets in any browser tool, including this one.</p>
+      </div>
+    </div>
   </div>
 
   <div class="ts-output" id="out">

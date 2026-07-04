@@ -149,3 +149,49 @@ async function verifyHmac() {
 
 $('secret').addEventListener('input', verifyHmac);
 $('token').addEventListener('input', () => { render(); verifyHmac(); });
+
+// ── Encode & sign (WebCrypto HMAC) ──────────────────────────────────────────
+function b64url(bytes) {
+  let bin = '';
+  bytes.forEach(b => bin += String.fromCharCode(b));
+  return btoa(bin).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+function b64urlJson(obj) {
+  return b64url(new TextEncoder().encode(JSON.stringify(obj)));
+}
+
+async function encodeJwt() {
+  const err = $('encErr');
+  let payload;
+  try { payload = JSON.parse($('encPayload').value); }
+  catch (e) { err.textContent = 'Payload is not valid JSON: ' + e.message; $('encOut').textContent = ''; return; }
+  err.textContent = '';
+  const alg = $('encAlg').value;
+  const secret = $('encSecret').value;
+  const header = { alg, typ: 'JWT' };
+  const signingInput = b64urlJson(header) + '.' + b64urlJson(payload);
+  if (!secret) { $('encOut').textContent = signingInput + '.'; return; }
+  try {
+    const key = await crypto.subtle.importKey(
+      'raw', new TextEncoder().encode(secret),
+      { name: 'HMAC', hash: HMAC_ALGS[alg] }, false, ['sign']);
+    const sig = await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(signingInput));
+    $('encOut').textContent = signingInput + '.' + b64url(new Uint8Array(sig));
+  } catch (e) {
+    err.textContent = 'Could not sign: ' + e.message;
+  }
+}
+['encPayload', 'encAlg', 'encSecret'].forEach(id => $(id).addEventListener('input', encodeJwt));
+$('encCopy').addEventListener('click', (e) => copyText($('encOut').textContent, e.target));
+
+$('jwtModeTabs').addEventListener('click', (e) => {
+  const b = e.target.closest('[data-jm]');
+  if (!b) return;
+  $('jwtModeTabs').querySelectorAll('.ts-pill-tab').forEach(x => x.classList.remove('active'));
+  b.classList.add('active');
+  const enc = b.dataset.jm === 'encode';
+  $('decodePane').classList.toggle('ts-hidden', enc);
+  $('out').classList.toggle('ts-hidden', enc);
+  $('encodePane').classList.toggle('ts-hidden', !enc);
+  if (enc) encodeJwt();
+});

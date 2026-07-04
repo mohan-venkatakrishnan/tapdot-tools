@@ -1,7 +1,7 @@
 // EquityCalc — startup equity & dilution calculator
 
 const $ = (id) => document.getElementById(id);
-const fmtMoney = (n) => '$' + Math.round(n).toLocaleString();
+const fmtMoney = (n) => tapdotMoney.fmt(n);
 
 function calcRound({ existingShares, optionPool, investment, preMoney }) {
   const pricePerShare = preMoney / existingShares;

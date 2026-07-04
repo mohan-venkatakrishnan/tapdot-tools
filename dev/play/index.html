@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" data-collection="dev" data-tool="CodePlay">
+<head>
+  <meta charset="UTF-8" />
+  <script>(function(){try{var t=localStorage.getItem('tapdot-theme');var d=matchMedia('(prefers-color-scheme: dark)').matches;if(t==='dark'||(!t&&d))document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CodePlay — HTML / CSS / JS Playground | tapdot</title>
+  <meta name="description" content="A JSFiddle-style frontend playground that runs entirely in your browser. HTML, CSS, and JS with a live preview — autosaved locally, never uploaded." />
+  <meta property="og:title" content="CodePlay — HTML / CSS / JS Playground | tapdot" />
+  <meta property="og:description" content="HTML, CSS, and JS editors with a live sandboxed preview — fully local." />
+  <link rel="canonical" href="https://tools.tapdot.org/dev/play/" />
+  <link rel="icon" type="image/png" href="/assets/tapdot-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/shared/shared.css" />
+  <link rel="stylesheet" href="/dev/dev.css" />
+</head>
+<body>
+<nav class="ts-nav">
+  <a href="https://tapdot.org" class="ts-nav-logo"><img src="/assets/tapdot-icon.png" width="22" height="22" alt="tapdot" /><span>tapdot</span></a>
+  <button class="ts-dark-toggle" id="darkToggle" aria-label="Toggle dark mode"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg></button>
+</nav>
+<main class="ts-main ts-main-wide">
+  <div class="ts-tool-header">
+    <h1 class="ts-tool-name">CodePlay</h1>
+    <p class="ts-tool-desc">HTML, CSS, and JS editors with a live sandboxed preview — fully local.</p>
+  </div>
+  <div class="ts-privacy-strip"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Your code autosaves to this browser only — no account, no cloud, no sharing servers</div>
+
+  <div class="play-grid">
+    <div class="ts-card play-editor"><p class="ts-card-label">HTML</p><textarea class="ts-textarea ts-code-input" id="html" spellcheck="false"></textarea></div>
+    <div class="ts-card play-editor"><p class="ts-card-label">CSS</p><textarea class="ts-textarea ts-code-input" id="css" spellcheck="false"></textarea></div>
+    <div class="ts-card play-editor"><p class="ts-card-label">JavaScript</p><textarea class="ts-textarea ts-code-input" id="js" spellcheck="false"></textarea></div>
+  </div>
+  <div class="ts-card">
+    <div class="dev-row" style="justify-content:space-between">
+      <p class="ts-card-label" style="margin-bottom:0">Preview</p>
+      <div class="dev-row">
+        <span class="dev-muted" id="saveState"></span>
+        <button class="ts-btn ts-btn-ghost" id="resetPlay">Reset</button>
+      </div>
+    </div>
+    <iframe id="preview" class="play-preview" sandbox="allow-scripts" title="Live preview"></iframe>
+    <p class="ts-card-label ts-mt-md">Console</p>
+    <div class="ts-code-output" id="playConsole" style="max-height:160px;overflow-y:auto"></div>
+  </div>
+</main>
+<footer class="ts-footer">
+  <span>Built by <a href="https://tapdot.org">tapdot</a></span><span class="ts-footer-dot">·</span>
+  <a href="/privacy.html">Privacy</a><span class="ts-footer-dot">·</span><span>All processing happens in your browser</span>
+</footer>
+<script src="/shared/shared.js"></script>
+<script src="play.js" defer></script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "YOUR_CLOUDFLARE_TOKEN"}'></script>
+</body>
+</html>

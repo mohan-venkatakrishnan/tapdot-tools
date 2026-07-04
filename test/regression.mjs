@@ -38,6 +38,7 @@ const ROUTES = [
   '/dev/json/', '/dev/jsonconvert/', '/dev/jwt/', '/dev/yaml/', '/dev/csv/',
   '/dev/markdown/', '/dev/html/', '/dev/sql/', '/dev/contrast/', '/dev/uuid/',
   '/dev/timezone/', '/dev/timeconvert/', '/dev/regex/', '/dev/cron/',
+  '/dev/base64/', '/dev/diff/', '/dev/websocket/', '/dev/play/', '/dev/bigo/', '/dev/worldclock/',
   '/marketing/', '/marketing/utm/', '/marketing/headline/', '/marketing/emailsubject/',
   '/marketing/adcopy/', '/marketing/calendar/', '/marketing/persona/',
   '/marketing/competitor/', '/marketing/roi/',
@@ -53,9 +54,10 @@ const ROUTES = [
   '/health/cycle/', '/health/water/', '/health/sleep/',
   '/design/', '/design/palette/', '/design/typography/', '/design/icons/',
   '/design/shadows/', '/design/spacing/', '/design/gradient/',
+  '/design/sketch/', '/design/photo/',
   '/productivity/', '/productivity/focus/', '/productivity/note/',
   '/productivity/decision/', '/productivity/meeting-timer/',
-  '/productivity/habits/', '/productivity/reading/',
+  '/productivity/habits/', '/productivity/reading/', '/productivity/convert/',
   '/privacy.html',
 ];
 const VIEWPORTS = [

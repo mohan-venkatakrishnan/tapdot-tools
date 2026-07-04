@@ -3,7 +3,7 @@
 // (inflation-adjusted) post-retirement return.
 
 const $ = (id) => document.getElementById(id);
-const fmtMoney = (n) => '$' + Math.round(n).toLocaleString();
+const fmtMoney = (n) => tapdotMoney.fmt(n);
 const RETIREMENT_YEARS = 30;
 
 // Present value of an annuity paying `payment` monthly for `months` at monthly rate `r`.

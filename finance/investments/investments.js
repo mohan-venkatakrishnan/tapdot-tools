@@ -2,7 +2,7 @@
 
 const LS = 'tapdot-investments';
 const $ = (id) => document.getElementById(id);
-const fmtMoney = (n) => '$' + n.toLocaleString(undefined, { maximumFractionDigits: 2 });
+const fmtMoney = (n) => tapdotMoney.fmt(n);
 const DONUT_COLORS = ['#5B6CF0', '#12A594', '#D97757', '#B0609E', '#4E8FC4', '#8A5CD6', '#3D9AA6', '#D6537E'];
 
 function load() { try { const s = JSON.parse(localStorage.getItem(LS)); if (Array.isArray(s) && s.length) return s; } catch {} return [

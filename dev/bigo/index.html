@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" data-collection="dev" data-tool="BigOCheck">
+<head>
+  <meta charset="UTF-8" />
+  <script>(function(){try{var t=localStorage.getItem('tapdot-theme');var d=matchMedia('(prefers-color-scheme: dark)').matches;if(t==='dark'||(!t&&d))document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BigOCheck — Time Complexity Analyzer | tapdot</title>
+  <meta name="description" content="Estimate the Big-O time complexity of your code with structural analysis, plus an on-device AI explanation. Your code never leaves your browser." />
+  <meta property="og:title" content="BigOCheck — Time Complexity Analyzer | tapdot" />
+  <meta property="og:description" content="Estimate time complexity from loop structure and recursion — with on-device AI reasoning." />
+  <link rel="canonical" href="https://tools.tapdot.org/dev/bigo/" />
+  <link rel="icon" type="image/png" href="/assets/tapdot-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/shared/shared.css" />
+  <link rel="stylesheet" href="/dev/dev.css" />
+</head>
+<body>
+<nav class="ts-nav">
+  <a href="https://tapdot.org" class="ts-nav-logo"><img src="/assets/tapdot-icon.png" width="22" height="22" alt="tapdot" /><span>tapdot</span></a>
+  <button class="ts-dark-toggle" id="darkToggle" aria-label="Toggle dark mode"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg></button>
+</nav>
+<main class="ts-main ts-main-wide">
+  <div class="ts-tool-header">
+    <h1 class="ts-tool-name">BigOCheck</h1>
+    <p class="ts-tool-desc">Estimate time complexity from loop structure and recursion — with on-device AI reasoning.</p>
+  </div>
+  <div class="ts-privacy-strip"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Analyzed locally — unlike AI complexity sites, your code is never uploaded</div>
+
+  <div class="ts-workbench">
+    <div class="ts-card">
+      <p class="ts-card-label">Your code (any C-like / Python-like language)</p>
+      <textarea class="ts-textarea ts-code-input" id="code" style="min-height:280px">function hasDuplicate(arr) {
+  for (let i = 0; i < arr.length; i++) {
+    for (let j = i + 1; j < arr.length; j++) {
+      if (arr[i] === arr[j]) return true;
+    }
+  }
+  return false;
+}</textarea>
+      <button class="ts-btn ts-btn-secondary ts-mt-md" id="aiBtn">Explain with on-device AI</button>
+      <p class="biz-ai-status" id="aiStatus" style="font-size:12px;color:var(--color-muted)"></p>
+    </div>
+    <div class="ts-card">
+      <div class="ts-stats-grid" style="grid-template-columns:1fr 1fr">
+        <div class="ts-stat"><span class="ts-stat-num" id="timeC">—</span><span class="ts-stat-label">Estimated time complexity</span></div>
+        <div class="ts-stat"><span class="ts-stat-num" id="spaceC">—</span><span class="ts-stat-label">Estimated extra space</span></div>
+      </div>
+      <p class="ts-card-label ts-mt-md">Why</p>
+      <div class="ts-code-output" id="reasons" style="white-space:pre-wrap"></div>
+      <p class="dev-muted ts-mt-sm">Structural estimate — it reads loop nesting, recursion, and divide-and-conquer patterns. Hidden costs inside library calls (sort, includes, slicing) are flagged when recognised but can't all be known statically.</p>
+    </div>
+  </div>
+</main>
+<footer class="ts-footer">
+  <span>Built by <a href="https://tapdot.org">tapdot</a></span><span class="ts-footer-dot">·</span>
+  <a href="/privacy.html">Privacy</a><span class="ts-footer-dot">·</span><span>All processing happens in your browser</span>
+</footer>
+<script src="/shared/shared.js"></script>
+<script src="bigo.js" defer></script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "YOUR_CLOUDFLARE_TOKEN"}'></script>
+</body>
+</html>
