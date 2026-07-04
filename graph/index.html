@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" data-collection="tools" data-tool="">
+<head>
+  <meta charset="UTF-8" />
+  <script>(function(){try{var t=localStorage.getItem('tapdot-theme');var d=matchMedia('(prefers-color-scheme: dark)').matches;if(t==='dark'||(!t&&d))document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Site Graph — Every tapdot Tool, Visually | tapdot</title>
+  <meta name="description" content="A radial graph of every tapdot collection and tool — click any node to open it. A visual alternative to the Browse page." />
+  <meta property="og:title" content="Site Graph | tapdot" />
+  <meta property="og:description" content="Every tapdot collection and tool, laid out as a radial graph." />
+  <link rel="canonical" href="https://tools.tapdot.org/graph/" />
+  <link rel="icon" type="image/png" href="/assets/tapdot-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/shared/shared.css" />
+  <link rel="stylesheet" href="graph.css" />
+</head>
+<body>
+<nav class="ts-nav">
+  <a href="https://tapdot.org" class="ts-nav-logo"><img src="/assets/tapdot-icon.png" width="22" height="22" alt="tapdot" /><span>tapdot</span></a>
+  <button class="ts-dark-toggle" id="darkToggle" aria-label="Toggle dark mode"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg></button>
+</nav>
+<main class="ts-main ts-main-wide">
+  <div class="ts-tool-header">
+    <h1 class="ts-tool-name">Site graph</h1>
+    <p class="ts-tool-desc">Every collection and tool, laid out as a radial graph — click a node to open it.</p>
+  </div>
+
+  <div class="graph-controls">
+    <input class="ts-input" id="graphSearch" placeholder="Filter by name…" style="max-width:260px" />
+    <a class="ts-btn ts-btn-ghost" href="/browse/">Prefer cards? Open Browse →</a>
+  </div>
+
+  <div class="graph-wrap">
+    <svg id="graphSvg" viewBox="0 0 1000 1000" role="img" aria-label="Radial graph of tapdot collections and tools"></svg>
+  </div>
+  <p class="biz-muted ts-mt-sm" id="graphHint">Hover a node to highlight its connections. Click to open the tool.</p>
+</main>
+<footer class="ts-footer">
+  <span>Built by <a href="https://tapdot.org">tapdot</a></span><span class="ts-footer-dot">·</span>
+  <a href="/privacy.html">Privacy</a><span class="ts-footer-dot">·</span><span>All processing happens in your browser</span>
+</footer>
+<script src="/shared/shared.js"></script>
+<script src="graph.js" defer></script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "YOUR_CLOUDFLARE_TOKEN"}'></script>
+</body>
+</html>

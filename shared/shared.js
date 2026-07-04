@@ -187,6 +187,8 @@ const ICON_PATHS = {
   'PassHash': '<rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
   'ImageCompress': '<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/>',
   'SVGClean': '<path d="M12 2l1.5 3.5L17 7l-3.5 1.5L12 12l-1.5-3.5L7 7l3.5-1.5z"/><path d="M5 15l.8 1.7L7.5 17.5l-1.7.8L5 20l-.8-1.7L2.5 17.5l1.7-.8z"/>',
+  'VoiceType': '<path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/>',
+  'SQLObfuscate': '<ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/><path d="M7 8.5h2M7 14.5h2" stroke-dasharray="1 1.5"/>',
   'LoanCalc': '<path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/>',
   'RetireCalc': '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/>',
   'InflationCalc': '<path d="M23 18l-9.5-9.5-5 5L1 6"/><path d="M17 18h6v-6"/>',
@@ -448,7 +450,6 @@ const TOOL_REGISTRY = [
   { name: 'HabitTracker', url: '/productivity/habits/', collection: 'productivity', desc: 'Daily habits with streaks and a heatmap' },
   { name: 'ReadingList', url: '/productivity/reading/', collection: 'productivity', desc: 'Save articles and books, track status and notes' },
   { name: 'Chrome AI tools', url: '/ai/', collection: 'ai', desc: 'On-device AI — summarize and translate, Chrome-only' },
-  { name: 'Browse all tools', url: '/browse/', collection: 'tools', desc: 'Every tool in one pastel card view, grouped by collection' },
   { name: 'TimestampConvert', url: '/dev/timestamp/', collection: 'dev', desc: 'Unix timestamp <-> date, live, across timezones' },
   { name: 'JSONCSV', url: '/dev/jsoncsv/', collection: 'dev', desc: 'Convert JSON arrays to CSV and back' },
   { name: 'HashGen', url: '/dev/hashgen/', collection: 'dev', desc: 'SHA-1/256/384/512 hashes for text or files' },
@@ -460,7 +461,10 @@ const TOOL_REGISTRY = [
   { name: 'PassHash', url: '/dev/passhash/', collection: 'dev', desc: 'Hash and verify passwords with real bcrypt/Argon2id (WASM)' },
   { name: 'ImageCompress', url: '/design/imagecompress/', collection: 'design', desc: 'Resize and recompress images locally — JPEG/WebP/PNG' },
   { name: 'SVGClean', url: '/dev/svgclean/', collection: 'dev', desc: 'Strip editor cruft, comments, and excess precision from SVG markup' },
+  { name: 'VoiceType', url: '/write/voicetype/', collection: 'write', desc: 'Dictate text using your browser\'s speech recognition' },
+  { name: 'SQLObfuscate', url: '/dev/sqlobfuscate/', collection: 'dev', desc: 'Anonymize table/column names and literals in a SQL query' },
   { name: 'Browse all tools', url: '/browse/', collection: 'tools', desc: 'Every tool in one pastel card view, grouped by collection' },
+  { name: 'Site Graph', url: '/graph/', collection: 'tools', desc: 'Every collection and tool as a radial graph' },
   { name: 'Privacy Policy', url: '/privacy.html', collection: 'tools', desc: "What tapdot tools does — and doesn't — collect" },
 ];
 
@@ -1131,6 +1135,16 @@ const STEPS = {
     { t: 'Paste bloated SVG', d: { k: 'text', text: '<!-- Generator: Adobe Illustrator -->…' } },
     { t: 'Pick what to strip', d: { k: 'chips', items: ['Comments', 'Editor namespaces', 'Precision'], on: 1 } },
     { t: 'Cleaned locally', d: { k: 'result', text: '423 B → 108 B (-74%)' } },
+  ],
+  'VoiceType': [
+    { t: 'Click Start dictating', d: { k: 'chips', items: ['● Listening…'], on: 0 } },
+    { t: 'Speak naturally', d: { k: 'text', text: 'the launch is next friday period' } },
+    { t: 'Transcribed with punctuation', d: { k: 'result', text: 'The launch is next Friday.' } },
+  ],
+  'SQLObfuscate': [
+    { t: 'Paste a real query', d: { k: 'text', text: 'SELECT customers.email FROM customers…' } },
+    { t: 'Names get consistent placeholders', d: { k: 'chips', items: ['customers → col1', 'email → col2'], on: 0 } },
+    { t: 'Safe to share', d: { k: 'result', text: 'SELECT col1.col2 FROM col1…' } },
   ],
   'LoanCalc': [
     { t: 'Enter your loan', d: { k: 'fields', rows: [['Amount', '$500,000'], ['Rate', '8.5%']] } },

@@ -1,0 +1,6 @@
+.vt-controls { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; min-width: 0; }
+.vt-controls .ts-btn svg { vertical-align: -2px; margin-right: 4px; }
+.vt-status { font-size: 12px; color: var(--color-muted); }
+.vt-status.listening { color: var(--color-accent); font-weight: 500; }
+#micBtn.listening { background: var(--color-danger); border-color: var(--color-danger); }
+.vt-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }

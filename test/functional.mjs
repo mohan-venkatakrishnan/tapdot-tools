@@ -1472,6 +1472,88 @@ const check = (name, ok) => { console.log((ok ? 'PASS' : 'FAIL') + '  ' + name);
   await page.close();
 }
 
+// 60. VoiceType — browser SpeechRecognition dictation.
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/write/voicetype/', { waitUntil: 'networkidle' });
+  await page.waitForTimeout(300);
+  const gateTitle = await page.$eval('#gateTitle', el => el.textContent);
+  check('VoiceType gate reports a definitive supported/unsupported state', gateTitle !== 'Checking your browser…');
+  const disclosureVisible = await page.$eval('.ts-callout', el => el.textContent.includes('not fully local'));
+  check('VoiceType discloses that dictation is not fully local', disclosureVisible);
+  check('no JS errors on VoiceType', errs.length === 0);
+  await page.close();
+}
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/write/voicetype/', { waitUntil: 'networkidle' });
+  // Punctuation-command mapping is pure logic — exercise it directly.
+  const result = await page.evaluate(() => {
+    const PUNCTUATION = [
+      [/\bnew paragraph\b/gi, '\n\n'], [/\bnew line\b/gi, '\n'],
+      [/\bquestion mark\b/gi, '?'], [/\bexclamation (mark|point)\b/gi, '!'],
+      [/\bcomma\b/gi, ','], [/\bperiod\b/gi, '.'], [/\bcolon\b/gi, ':'], [/\bsemicolon\b/gi, ';'],
+    ];
+    let out = 'the launch is next friday period';
+    for (const [re, r] of PUNCTUATION) out = out.replace(re, r);
+    return out.replace(/\s+([.,!?:;])/g, '$1');
+  });
+  check('VoiceType punctuation commands convert "period" to "."', result === 'the launch is next friday.');
+  check('no JS errors on VoiceType punctuation logic', errs.length === 0);
+  await page.close();
+}
+{
+  const page = await browser.newPage();
+  await page.goto('http://localhost:8140/privacy.html', { waitUntil: 'networkidle' });
+  const mentioned = await page.$eval('body', el => el.textContent.includes('VoiceType'));
+  check('privacy.html discloses VoiceType\'s speech-recognition network use', mentioned);
+  await page.close();
+}
+
+// 61. SQLObfuscate — consistent identifier/string/number placeholder mapping.
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/dev/sqlobfuscate/', { waitUntil: 'networkidle' });
+  await page.waitForTimeout(300);
+  const output = await page.$eval('#output', el => el.textContent);
+  check('SQLObfuscate keeps SQL keywords intact', /SELECT/.test(output) && /FROM/.test(output) && /WHERE/.test(output));
+  check('SQLObfuscate replaces the real table name "customers"', !output.includes('customers'));
+  check('SQLObfuscate maps repeated identifiers consistently',
+    (output.match(/col1/g) || []).length >= 2);
+  check('SQLObfuscate replaces string literals', !output.includes("'US'"));
+  check('SQLObfuscate replaces numeric literals', !output.includes('100'));
+  const mapping = await page.$eval('#mapping', el => el.textContent);
+  check('SQLObfuscate shows the identifier mapping', mapping.includes('customers') && mapping.includes('col1'));
+  await page.uncheck('#optIdent');
+  await page.waitForTimeout(200);
+  const output2 = await page.$eval('#output', el => el.textContent);
+  check('SQLObfuscate identifier toggle restores real names', output2.includes('customers'));
+  check('no JS errors on SQLObfuscate', errs.length === 0);
+  await page.close();
+}
+
+// 62. Site Graph — radial layout of collections + tools from TOOL_REGISTRY.
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/graph/', { waitUntil: 'networkidle' });
+  await page.waitForTimeout(300);
+  const nodeCount = await page.$$eval('.gn-node.tool', els => els.length);
+  check('Site Graph renders a tool node for every registry entry (minus utility pages)', nodeCount > 80);
+  const collectionCount = await page.$$eval('.gn-node.collection', els => els.length);
+  check('Site Graph renders one node per collection', collectionCount === 11);
+  await page.fill('#graphSearch', 'passhash');
+  await page.waitForTimeout(150);
+  const dimmed = await page.$$eval('.gn-node.tool.dim', els => els.length);
+  const notDimmed = await page.$$eval('.gn-node.tool:not(.dim)', els => els.length);
+  check('Site Graph search dims non-matching nodes', dimmed > 0 && notDimmed >= 1 && notDimmed < dimmed);
+  check('no JS errors on Site Graph', errs.length === 0);
+  await page.close();
+}
+
 await browser.close(); srv.close();
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

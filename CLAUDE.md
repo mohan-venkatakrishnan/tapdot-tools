@@ -653,3 +653,37 @@ project's actual architecture — never remove it.
   toggleable. Live before/after size + % saved plus a rendered `<svg>` preview pane
   for both original and cleaned markup, so a bad pass is visually obvious before
   copying the output. Suites: 315 layout / 249 functional / css-audit clean.
+- v26: **The rest of the PRD-deferred list, built one at a time per user direction**
+  (site now 93 tools + a new non-tool Site Graph view; completes the deferred-items
+  backlog from v23).
+  - **VoiceType** (`write/voicetype/`) — dictation via the browser's built-in
+    `SpeechRecognition` API. Called out prominently, in-page and in `privacy.html`,
+    that this is the one tool site-wide that is NOT fully local: Chrome sends
+    microphone audio to Google's speech-to-text servers to produce the transcript.
+    tapdot never sees it, but it does leave the device — same category of
+    disclosure as WSTester, now with its own dedicated privacy.html card. Voice
+    punctuation commands ("period", "comma", "new line", etc.) via a small
+    regex-replacement pass on the final transcript; continuous listening restarts
+    itself on Chrome's silence-triggered `onend`.
+  - **SQLObfuscate** (`dev/sqlobfuscate/`) — distinct from the existing SQLFormat
+    pretty-printer: replaces real table/column names, string literals, and numeric
+    literals with consistent placeholders (`customers` → `col1`, every occurrence)
+    so a query can be shared for troubleshooting without leaking schema or data.
+    Regex tokenizer with a ~100-entry SQL keyword denylist (not a real parser —
+    every non-keyword word is treated as an identifier, disclosed as a limitation).
+    Shows the original→placeholder mapping in a local-only panel for reference.
+  - **Site Graph** (`/graph/`) — the "sitemap-style graph view," built as a radial
+    SVG layout (deterministic trig positioning from `TOOL_REGISTRY` order, no
+    physics simulation): a center "tapdot" node, one node per collection on an
+    inner ring, and every tool on an outer ring within its collection's angular
+    arc. Hover highlights the connecting edges; click navigates. A lighter-weight
+    visual alternative to the card-based Browse page, not a replacement for it —
+    both are reachable via Ctrl+K search rather than a homepage link, matching the
+    user's preference (established this session) to keep the homepage hero
+    uncluttered rather than add another "or browse X" nudge.
+  - Fixed a real bug found while wiring these in: `TOOL_REGISTRY` had a duplicate
+    "Browse all tools" entry (appeared twice, from an earlier insertion at the
+    wrong split point) — removed the stray copy.
+  - Suites: 324 layout / 267 functional / css-audit clean. This closes out every
+    item on the v23 PRD-deferred list (bcrypt/Argon2, image compression, Writer/
+    Rewriter, SVG stripper, voice-to-text, SQL obfuscator, graph view).

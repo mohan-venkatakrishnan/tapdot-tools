@@ -1,0 +1,16 @@
+.graph-controls { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+.graph-wrap { border: 0.5px solid var(--color-border); border-radius: var(--radius-lg); background: var(--color-bg-soft); overflow: hidden; }
+#graphSvg { width: 100%; height: auto; display: block; }
+
+.gn-edge { stroke: var(--color-border); stroke-width: 1; fill: none; opacity: 0.6; }
+.gn-edge.dim { opacity: 0.12; }
+.gn-edge.lit { opacity: 1; stroke-width: 1.6; }
+
+.gn-node circle { stroke: var(--color-bg); stroke-width: 1.5; cursor: pointer; }
+.gn-node.dim { opacity: 0.25; }
+.gn-node text { font-family: var(--font-body); font-size: 11px; fill: var(--color-text); pointer-events: none; }
+.gn-node.center circle { cursor: default; }
+.gn-node.center text { font-size: 13px; font-weight: 600; }
+.gn-node.collection text { font-size: 12px; font-weight: 600; }
+.gn-node.tool circle { r: 5; }
+.gn-node.tool:hover circle, .gn-node.collection:hover circle { stroke: var(--color-text); }

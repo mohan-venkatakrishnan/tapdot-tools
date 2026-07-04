@@ -60,7 +60,7 @@ const ROUTES = [
   '/productivity/habits/', '/productivity/reading/', '/productivity/convert/',
   '/ai/', '/ai/summarize/', '/ai/translate/', '/ai/write/', '/ai/rewrite/',
   '/browse/', '/dev/timestamp/', '/dev/jsoncsv/', '/dev/hashgen/', '/dev/keygen/',
-  '/dev/passhash/', '/dev/svgclean/',
+  '/dev/passhash/', '/dev/svgclean/', '/write/voicetype/', '/dev/sqlobfuscate/', '/graph/',
   '/privacy.html',
 ];
 const VIEWPORTS = [
