@@ -182,6 +182,10 @@ const ICON_PATHS = {
   'KeyGen': '<circle cx="8" cy="8" r="5"/><path d="M12.5 12.5L22 22M17 17l3 3M14 14l3 3"/>',
   'AISummarize': '<path d="M4 6h16M4 12h10M4 18h6"/>',
   'AITranslate': '<path d="M5 8l6 6M4 14l6-6 2-3M2 5h12M7 2h1"/><path d="M22 22l-5-10-5 10M14 18h6"/>',
+  'AIWrite': '<path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/>',
+  'AIRewrite': '<path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/>',
+  'PassHash': '<rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
+  'ImageCompress': '<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/>',
   'LoanCalc': '<path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/>',
   'RetireCalc': '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/>',
   'InflationCalc': '<path d="M23 18l-9.5-9.5-5 5L1 6"/><path d="M17 18h6v-6"/>',
@@ -450,6 +454,10 @@ const TOOL_REGISTRY = [
   { name: 'KeyGen', url: '/dev/keygen/', collection: 'dev', desc: 'RSA/ECDSA keypair generator, exported as PEM' },
   { name: 'AISummarize', url: '/ai/summarize/', collection: 'ai', desc: 'Summarize long text on-device — TL;DR, key points, headline' },
   { name: 'AITranslate', url: '/ai/translate/', collection: 'ai', desc: 'Translate between languages on-device with auto-detection' },
+  { name: 'AIWrite', url: '/ai/write/', collection: 'ai', desc: 'Draft an email, post, or message from bullet points — on-device' },
+  { name: 'AIRewrite', url: '/ai/rewrite/', collection: 'ai', desc: 'Change the tone or length of text — on-device' },
+  { name: 'PassHash', url: '/dev/passhash/', collection: 'dev', desc: 'Hash and verify passwords with real bcrypt/Argon2id (WASM)' },
+  { name: 'ImageCompress', url: '/design/imagecompress/', collection: 'design', desc: 'Resize and recompress images locally — JPEG/WebP/PNG' },
   { name: 'Browse all tools', url: '/browse/', collection: 'tools', desc: 'Every tool in one pastel card view, grouped by collection' },
   { name: 'Privacy Policy', url: '/privacy.html', collection: 'tools', desc: "What tapdot tools does — and doesn't — collect" },
 ];
@@ -1097,6 +1105,26 @@ const STEPS = {
     { t: 'Language auto-detected', d: { k: 'chips', items: ['Detected: French'], on: 0 } },
     { t: 'Translated locally', d: { k: 'result', text: 'Hello, how are you?' } },
   ],
+  'AIWrite': [
+    { t: 'Jot a few points', d: { k: 'text', text: 'launch delayed a week, bug found, new date Friday' } },
+    { t: 'Pick tone & length', d: { k: 'chips', items: ['Neutral', 'Medium'], on: 0 } },
+    { t: 'Drafted on-device', d: { k: 'result', text: 'Hi team, quick update — we\'re pushing…' } },
+  ],
+  'AIRewrite': [
+    { t: 'Paste existing text', d: { k: 'text', text: 'hey can u send that file over asap' } },
+    { t: 'Choose a new tone', d: { k: 'chips', items: ['More formal'], on: 0 } },
+    { t: 'Rewritten locally', d: { k: 'result', text: 'Could you please send that file at your earliest convenience?' } },
+  ],
+  'PassHash': [
+    { t: 'Type a password', d: { k: 'text', text: 'correct horse battery staple' } },
+    { t: 'Pick bcrypt or Argon2id', d: { k: 'chips', items: ['bcrypt', 'Argon2id'], on: 1 } },
+    { t: 'Real WASM hash', d: { k: 'result', text: '$argon2id$v=19$m=19456,t=2,p=1$…' } },
+  ],
+  'ImageCompress': [
+    { t: 'Open a photo', d: { k: 'text', text: 'vacation.jpg — 4.2 MB' } },
+    { t: 'Adjust size & quality', d: { k: 'chips', items: ['1600px', 'Quality 80%'], on: 1 } },
+    { t: 'Recompressed locally', d: { k: 'result', text: 'vacation.jpg — 480 KB (-89%)' } },
+  ],
   'LoanCalc': [
     { t: 'Enter your loan', d: { k: 'fields', rows: [['Amount', '$500,000'], ['Rate', '8.5%']] } },
     { t: 'Add part payments', d: { k: 'fields', rows: [['Month 24', '$20,000']] } },
@@ -1394,11 +1422,31 @@ function initSourceLink() {
   footer.appendChild(a);
 }
 
+function initDonateLink() {
+  const footer = document.querySelector('.ts-footer');
+  if (!footer || footer.querySelector('.ts-donate-link')) return;
+  const a = document.createElement('a');
+  a.className = 'ts-donate-link';
+  a.href = 'https://paypal.me/MohanVenkatakrishnan';
+  a.target = '_blank';
+  a.rel = 'noopener noreferrer';
+  a.title = 'Support tapdot tools — buy me a coffee';
+  a.innerHTML =
+    '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>' +
+    ' Buy me a coffee';
+  const dot = document.createElement('span');
+  dot.className = 'ts-footer-dot';
+  dot.textContent = '·';
+  footer.appendChild(dot);
+  footer.appendChild(a);
+}
+
 // ── Init ─────────────────────────────────────────────────────────────────────
 
 document.addEventListener('DOMContentLoaded', () => {
   initDarkToggle();
   initSourceLink();
+  initDonateLink();
   initFavicon();
   initBackground();
   initCardTilt();

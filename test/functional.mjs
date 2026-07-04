@@ -1370,6 +1370,87 @@ const check = (name, ok) => { console.log((ok ? 'PASS' : 'FAIL') + '  ' + name);
   await page.close();
 }
 
+// 58. Deferred batch: PassHash (bcrypt/Argon2 via WASM), ImageCompress, AIWrite/AIRewrite, donate link.
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/dev/passhash/', { waitUntil: 'networkidle' });
+  await page.fill('#password', 'correct horse battery staple');
+  await page.selectOption('#algo', 'bcrypt');
+  await page.fill('#bcryptCost', '4');
+  await page.click('#runBtn');
+  await page.waitForFunction(() => document.getElementById('result').textContent.startsWith('$2'), { timeout: 15000 });
+  const bcryptHash = await page.$eval('#result', el => el.textContent);
+  check('PassHash produces a real bcrypt hash', /^\$2[aby]?\$04\$/.test(bcryptHash));
+  await page.click('[data-mode="verify"]');
+  await page.fill('#existingHash', bcryptHash);
+  await page.click('#runBtn');
+  await page.waitForFunction(() => /Match|No match/.test(document.getElementById('result').textContent), { timeout: 15000 });
+  const verifyText = await page.$eval('#result', el => el.textContent);
+  check('PassHash verifies the correct password against its own bcrypt hash', verifyText.includes('Match') && !verifyText.includes('No match'));
+  check('no JS errors on PassHash bcrypt', errs.length === 0);
+  await page.close();
+}
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/dev/passhash/', { waitUntil: 'networkidle' });
+  await page.fill('#password', 'correct horse battery staple');
+  await page.selectOption('#algo', 'argon2id');
+  await page.fill('#argonMem', '8');
+  await page.click('#runBtn');
+  await page.waitForFunction(() => document.getElementById('result').textContent.startsWith('$argon2id'), { timeout: 20000 });
+  const argonHash = await page.$eval('#result', el => el.textContent);
+  check('PassHash produces a real Argon2id hash', argonHash.startsWith('$argon2id$'));
+  await page.click('[data-mode="verify"]');
+  await page.fill('#existingHash', argonHash);
+  await page.click('#runBtn');
+  await page.waitForFunction(() => /Match|No match/.test(document.getElementById('result').textContent), { timeout: 20000 });
+  const verifyText = await page.$eval('#result', el => el.textContent);
+  check('PassHash verifies the correct password against its own Argon2id hash', verifyText.includes('Match') && !verifyText.includes('No match'));
+  check('no JS errors on PassHash argon2id', errs.length === 0);
+  await page.close();
+}
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/design/imagecompress/', { waitUntil: 'networkidle' });
+  const gateOk = await page.$eval('#gate', el => !!el).catch(() => false);
+  check('ImageCompress loads without JS errors', errs.length === 0);
+  await page.close();
+}
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/ai/write/', { waitUntil: 'networkidle' });
+  await page.waitForTimeout(400);
+  const gateTitle = await page.$eval('#gateTitle', el => el.textContent);
+  const gateMsg = await page.$eval('#gateMsg', el => el.textContent);
+  check('AIWrite gate reports a definitive supported/unsupported state',
+    gateTitle !== 'Checking your browser…' && gateMsg.length > 20);
+  check('no JS errors on AIWrite gate', errs.length === 0);
+  await page.close();
+}
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/ai/rewrite/', { waitUntil: 'networkidle' });
+  await page.waitForTimeout(400);
+  const gateTitle = await page.$eval('#gateTitle', el => el.textContent);
+  const gateMsg = await page.$eval('#gateMsg', el => el.textContent);
+  check('AIRewrite gate reports a definitive supported/unsupported state',
+    gateTitle !== 'Checking your browser…' && gateMsg.length > 20);
+  check('no JS errors on AIRewrite gate', errs.length === 0);
+  await page.close();
+}
+{
+  const page = await browser.newPage();
+  await page.goto('http://localhost:8140/dev/json/', { waitUntil: 'networkidle' });
+  const href = await page.$eval('.ts-donate-link', el => el.getAttribute('href')).catch(() => null);
+  check('Every tool footer links to the PayPal donate page', href === 'https://paypal.me/MohanVenkatakrishnan');
+  await page.close();
+}
+
 await browser.close(); srv.close();
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

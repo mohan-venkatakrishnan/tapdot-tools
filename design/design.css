@@ -74,3 +74,12 @@
 
 /* PhotoTune */
 .photo-canvas { max-width: 100%; height: auto; border-radius: var(--radius-md); }
+
+/* ImageCompress */
+.ic-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media (max-width: 560px) { .ic-compare { grid-template-columns: 1fr; } }
+.ic-pane { min-width: 0; }
+.ic-imgwrap { border: 0.5px solid var(--color-border); border-radius: var(--radius-md); overflow: hidden; background: var(--color-bg-soft); display: flex; align-items: center; justify-content: center; min-height: 160px; }
+.ic-imgwrap img, .ic-imgwrap canvas { max-width: 100%; height: auto; display: block; }
+.ic-size { font-family: var(--font-mono); font-size: 12px; color: var(--color-muted); margin-top: 6px; text-align: center; }
+.ic-savings { text-align: center; font-size: 14px; margin-top: 14px; }

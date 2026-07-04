@@ -1378,6 +1378,8 @@ body {
 /* GitHub source link in the footer */
 .ts-source-link { display: inline-flex; align-items: center; gap: 5px; color: var(--color-muted); text-decoration: none; }
 .ts-source-link:hover { color: var(--color-accent); }
+.ts-donate-link { display: inline-flex; align-items: center; gap: 5px; color: var(--color-muted); text-decoration: none; }
+.ts-donate-link:hover { color: var(--color-accent); }
 
 /* AI collection — soft coral, distinct from everything else */
 [data-collection="ai"] {

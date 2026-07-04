@@ -54,12 +54,13 @@ const ROUTES = [
   '/health/cycle/', '/health/water/', '/health/sleep/',
   '/design/', '/design/palette/', '/design/typography/', '/design/icons/',
   '/design/shadows/', '/design/spacing/', '/design/gradient/',
-  '/design/sketch/', '/design/photo/',
+  '/design/sketch/', '/design/photo/', '/design/imagecompress/',
   '/productivity/', '/productivity/focus/', '/productivity/note/',
   '/productivity/decision/', '/productivity/meeting-timer/',
   '/productivity/habits/', '/productivity/reading/', '/productivity/convert/',
-  '/ai/', '/ai/summarize/', '/ai/translate/',
+  '/ai/', '/ai/summarize/', '/ai/translate/', '/ai/write/', '/ai/rewrite/',
   '/browse/', '/dev/timestamp/', '/dev/jsoncsv/', '/dev/hashgen/', '/dev/keygen/',
+  '/dev/passhash/',
   '/privacy.html',
 ];
 const VIEWPORTS = [

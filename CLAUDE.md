@@ -611,3 +611,34 @@ project's actual architecture — never remove it.
     incorrect assertion; the real mobile-viewport overflow check for the same tool
     already existed and passes.
   - Suites: 300 layout / 232 functional / css-audit clean.
+- v24: **Remaining PRD-deferred items + sitewide PayPal donate link (site now 90
+  tools).**
+  - **PassHash** (`dev/passhash/`) — real bcrypt and Argon2id, not toy implementations:
+    vendored `hash-wasm`'s WASM builds of the reference C implementations
+    (`dev/libs/hash-wasm-bcrypt.js` / `hash-wasm-argon2.js`, self-contained, WASM
+    embedded as base64, no separate fetch — same vendoring pattern as `js-yaml.min.js`).
+    Hash and Verify pill-tabs, adjustable bcrypt cost factor (4–14) and Argon2id
+    iterations/memory, an explicit "for development and testing only" callout (a
+    browser tab is not where production password hashes should be generated).
+    Deliberately did NOT hand-roll Blowfish S-boxes or Argon2's memory-hard mixing
+    function from memory — correctness-critical crypto code shouldn't be transcribed
+    from training data; verified the vendored WASM round-trips (hash→verify→reject-
+    wrong-password) before shipping.
+  - **ImageCompress** (`design/imagecompress/`) — resize + recompress images using
+    the browser's own `canvas.toBlob()` encoder (JPEG/WebP/PNG), no WASM codec
+    needed since this isn't MozJPEG-specific compression, just native re-encoding.
+    Max-width and quality sliders, live before/after size comparison with % saved.
+  - **AIWrite** and **AIRewrite** (`ai/write/`, `ai/rewrite/`) — the last two Chrome
+    built-in AI tools from the deferred list, using the `Writer` and `Rewriter`
+    APIs. Same gate pattern as AISummarize/AITranslate (`availability()` on load,
+    session created on the user's click, never a throwaway detection session).
+    AIWrite drafts from bullet points (tone/length/format); AIRewrite changes tone
+    or length of existing text.
+  - **PayPal "buy me a coffee" footer link, sitewide** (user request) — `initDonateLink()`
+    in `shared/shared.js`, modeled directly on the existing `initSourceLink()` pattern:
+    appends a `.ts-footer-dot` separator + `<a href="https://paypal.me/MohanVenkatakrishnan">`
+    into every page's `.ts-footer` automatically, no per-page HTML edits needed.
+    Called from the same `DOMContentLoaded` handler as every other shared init.
+  - Still explicitly deferred (unchanged from v23): SVG bloat stripper, voice-to-text
+    (WebSpeech API), SQL obfuscator, sitemap-style graph view.
+  - Suites: 312 layout / 243 functional / css-audit clean (0 issues).

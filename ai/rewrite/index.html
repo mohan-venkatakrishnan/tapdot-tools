@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" data-collection="ai" data-tool="AIRewrite">
+<head>
+  <meta charset="UTF-8" />
+  <script>(function(){try{var t=localStorage.getItem('tapdot-theme');var d=matchMedia('(prefers-color-scheme: dark)').matches;if(t==='dark'||(!t&&d))document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AIRewrite — On-Device AI Rewriter | tapdot</title>
+  <meta name="description" content="Rewrite text to a different tone or length using Chrome's built-in on-device AI. Nothing is uploaded. Chrome-only." />
+  <meta property="og:title" content="AIRewrite — On-Device AI Rewriter | tapdot" />
+  <meta property="og:description" content="Change the tone or length of existing text with Chrome's built-in Rewriter API — fully on-device." />
+  <link rel="canonical" href="https://tools.tapdot.org/ai/rewrite/" />
+  <link rel="icon" type="image/png" href="/assets/tapdot-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/shared/shared.css" />
+</head>
+<body>
+<nav class="ts-nav">
+  <a href="https://tapdot.org" class="ts-nav-logo"><img src="/assets/tapdot-icon.png" width="22" height="22" alt="tapdot" /><span>tapdot</span></a>
+  <button class="ts-dark-toggle" id="darkToggle" aria-label="Toggle dark mode"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg></button>
+</nav>
+<main class="ts-main">
+  <div class="ts-tool-header">
+    <h1 class="ts-tool-name">AIRewrite</h1>
+    <p class="ts-tool-desc">Change the tone or length of existing text — entirely on-device.</p>
+  </div>
+  <div class="ai-gate" id="gate"><span class="ai-gate-icon">⏳</span><div><h3 id="gateTitle">Checking your browser…</h3><p id="gateMsg"></p></div></div>
+  <div id="toolBody" class="ai-disabled">
+    <div class="ts-card">
+      <p class="ts-card-label">Text to rewrite</p>
+      <textarea class="ts-textarea" id="input" style="min-height:140px" placeholder="Paste the text you want to change the tone or length of…"></textarea>
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:14px">
+        <select class="ts-select" id="tone">
+          <option value="more-formal">More formal</option>
+          <option value="as-is" selected>Keep tone</option>
+          <option value="more-casual">More casual</option>
+        </select>
+        <select class="ts-select" id="length">
+          <option value="shorter">Shorter</option>
+          <option value="as-is" selected>Same length</option>
+          <option value="longer">Longer</option>
+        </select>
+        <button class="ts-btn ts-btn-primary" id="goBtn">Rewrite it</button>
+        <span class="biz-ai-status" id="status" style="font-size:12px;color:var(--color-muted)"></span>
+      </div>
+    </div>
+    <div class="ts-output" id="output">
+      <div class="ts-card">
+        <div style="display:flex;justify-content:space-between;align-items:center"><p class="ts-card-label" style="margin-bottom:0">Rewritten</p><button class="ts-copy-btn" id="copyOut">Copy</button></div>
+        <div class="ts-mono-output ts-mt-sm" id="result" style="font-family:var(--font-body);font-size:14px;white-space:pre-wrap"></div>
+      </div>
+    </div>
+  </div>
+</main>
+<footer class="ts-footer">
+  <span>Built by <a href="https://tapdot.org">tapdot</a></span><span class="ts-footer-dot">·</span>
+  <a href="/privacy.html">Privacy</a><span class="ts-footer-dot">·</span><span>All processing happens on your device</span>
+</footer>
+<script src="/shared/shared.js"></script>
+<script src="rewrite.js" defer></script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "YOUR_CLOUDFLARE_TOKEN"}'></script>
+</body>
+</html>
