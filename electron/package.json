@@ -2,7 +2,8 @@
   "name": "tapdot-desktop",
   "productName": "tapdot",
   "version": "1.0.0",
-  "description": "92 privacy-first tools, fully offline — the native desktop app",
+  "description": "90+ privacy-first tools, fully offline — the native desktop app",
+  "homepage": "https://tools.tapdot.org/desktop/",
   "main": "src/main.js",
   "author": {
     "name": "Mohan Venkatakrishnan",
@@ -64,7 +65,9 @@
     "linux": {
       "target": ["AppImage", "deb"],
       "icon": "assets/icon.png",
-      "category": "Utility"
+      "category": "Utility",
+      "desktopName": "tapdot.desktop",
+      "synopsis": "90+ privacy-first tools, fully offline"
     },
     "dmg": {
       "title": "tapdot ${version}",
