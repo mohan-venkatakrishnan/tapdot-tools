@@ -1514,6 +1514,39 @@ const check = (name, ok) => { console.log((ok ? 'PASS' : 'FAIL') + '  ' + name);
   await page.close();
 }
 
+// 63. tapdot Desktop download page — offline messaging, non-profit disclosure, downloads.
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/desktop/', { waitUntil: 'networkidle' });
+  const bodyText = await page.$eval('body', el => el.textContent);
+  check('Desktop page states the accurate tool count (92)', bodyText.includes('92'));
+  check('Desktop page explains the CurrencyConvert offline exception precisely',
+    bodyText.includes('CurrencyConvert') && bodyText.includes('once a day') && bodyText.includes('caches'));
+  check('Desktop page explains why the app shows as untrusted (no paid certificate)',
+    bodyText.includes('unidentified developer') && bodyText.includes('$99') && bodyText.includes('non-profit'));
+  check('Desktop page links to view source on GitHub', await page.$('.desk-source-link') !== null);
+  const downloadLinks = await page.$$eval('.desk-download-btn', els => els.map(e => e.getAttribute('href')));
+  check('Desktop page offers all three platform downloads', downloadLinks.length === 3 &&
+    downloadLinks.some(h => h.endsWith('.dmg')) && downloadLinks.some(h => h.endsWith('.exe')) && downloadLinks.some(h => h.endsWith('.AppImage')));
+  check('no JS errors on Desktop page', errs.length === 0);
+  await page.close();
+}
+{
+  const page = await browser.newPage();
+  await page.goto('http://localhost:8140/dev/json/', { waitUntil: 'networkidle' });
+  const href = await page.$eval('.ts-desktop-link', el => el.getAttribute('href')).catch(() => null);
+  check('Every tool footer links to the desktop app download page', href === '/desktop/');
+  await page.close();
+}
+{
+  const page = await browser.newPage();
+  await page.goto('http://localhost:8140/desktop/', { waitUntil: 'networkidle' });
+  const selfLink = await page.$('.ts-desktop-link');
+  check('Desktop page itself does not show a redundant self-link in its footer', selfLink === null);
+  await page.close();
+}
+
 await browser.close(); srv.close();
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

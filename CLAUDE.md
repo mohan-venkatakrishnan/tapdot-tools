@@ -155,6 +155,17 @@ project's actual architecture — never remove it.
   collection-by-collection (its own build order is in the doc), running the full test
   suite after each collection — do not attempt all 46 in one pass; that's exactly how
   the mobile-nav and grid-shrink bugs got introduced this round.
+- **tapdot Desktop (`electron/`) is scaffolded but not released.** `npm install &&
+  npm start` inside `electron/` should launch the app locally once Electron is
+  installed there (untested in this environment — no native build toolchain
+  available). Before a real release: generate proper `icon.icns`/`icon.ico` from
+  a real 512×512+ source (current `electron/assets/icon.png` is a 256×256
+  placeholder copy of the web favicon), run an actual `electron-builder` build
+  per platform, and decide whether/when to buy the Apple ($99/yr) and Windows EV
+  (~$200–400/yr) code-signing certificates the `/desktop/` page explains the
+  absence of. Remember to run `node scripts/generate-desktop-catalog.mjs` after
+  any future tool add/remove/rename — it's what keeps the Electron sidebar's
+  tool list in sync with the real site instead of drifting stale.
 
 ## Change log of base decisions
 
@@ -691,3 +702,74 @@ project's actual architecture — never remove it.
     css-audit clean. This closes out every
     item on the v23 PRD-deferred list (bcrypt/Argon2, image compression, Writer/
     Rewriter, SVG stripper, voice-to-text, SQL obfuscator, graph view).
+- v27: **tapdot Desktop** — a native Electron app wrapping all 92 tools, plus a
+  real `/desktop/` download page, built from a user-supplied plan doc
+  (`tapdot-electron-plan.md`) that assumed the older 67-tool count and a
+  separate `tapdot-desktop` repo with a git submodule back to this one.
+  - **Single-repo, not submodule.** The plan's structure made sense for a
+    two-repo setup; since the desktop app and the tools already live in one
+    place, `electron/` is a subfolder here instead. `electron/scripts/
+    copy-tools.mjs` copies `shared/`, `assets/`, every collection folder, and
+    the two root HTML files into `electron/tools/` (gitignored, regenerated
+    before every `npm start`/`npm run dist`) — same effect as the plan's
+    submodule (one source of truth, tools update automatically on next
+    build) without maintaining a second repo.
+  - **Tool catalog is generated, not hand-maintained.** The plan's
+    `renderer/index.html` hardcoded a `COLLECTIONS` array reflecting the old
+    67-tool lineup — exactly the kind of list that goes stale the next time a
+    tool ships. `scripts/generate-desktop-catalog.mjs` regexes the real
+    `TOOL_REGISTRY` out of `shared/shared.js` (same source the site's search
+    palette reads) and writes `electron/src/renderer/tools-catalog.js`. Run it
+    after any tool add/remove/rename; it's what caught the count actually
+    being 92, not 67 or the requested "90+".
+  - **`/desktop/`** (`desktop/index.html` + `desktop.css`) replaces the
+    user-supplied `desktop.html` mockup (deleted — its numbers and repo URLs
+    were stale, and its inline `<style>` block meant `css-audit.mjs` couldn't
+    see any of its classes). Rebuilt using the site's real `.ts-nav`/`.ts-main`/
+    `.ts-footer` shell instead of a standalone marketing-page header, so
+    dark mode, the search palette, and the site's actual footer links all work
+    on it for free.
+  - **Messaging deliberately stresses three things per user direction:**
+    (1) the offline claim is stated precisely, not marketed loosely — "91 of
+    the 92 tools never make a single network request... CurrencyConvert
+    fetches exchange rates once a day when online and caches them locally,
+    that's the one exception" — because a privacy-first product that
+    overclaims "100% offline" while quietly calling an API undermines its own
+    premise; (2) the macOS/Windows "untrusted app" warnings get their own
+    dedicated section explaining exactly why they appear (no paid code-signing
+    certificate — Apple $99/yr, Windows EV cert ~$200–400/yr) and why that's
+    not a red flag (open source, inspectable before running) rather than
+    burying it in a FAQ; (3) framed explicitly as a one-time download that
+    then costs nothing and asks nothing further — "download once, use it
+    forever" — since that's the actual pitch for why a desktop app matters
+    when the tools already work in a browser.
+  - **No analytics in the desktop build, enforced by CSP, not convention.**
+    `static.cloudflareinsights.com` is deliberately left out of the
+    renderer's `Content-Security-Policy` `connect-src` — the beacon script
+    tag is still physically present in the copied tool files (untouched, same
+    as the web version), it simply can't reach the network. Cheaper and more
+    reliable than trying to strip `<script>` tags at copy time.
+  - **`webSecurity: false`** is set on the `BrowserWindow` (documented inline
+    in `main.js`) — Chromium blocks `fetch()` from `file://` origins to
+    `https://` endpoints by default, which would break CurrencyConvert's rate
+    fetch. Every other tool never calls `fetch()` at all, and the renderer's
+    own CSP still restricts `connect-src` to the two hosts the site itself
+    ever calls, so this isn't opening the app to arbitrary network access.
+  - **Sitewide footer link**: `initDesktopLink()` in `shared.js`, same
+    injection pattern as `initSourceLink()`/`initDonateLink()` — appends
+    "Download desktop app" → `/desktop/` to every tool's footer, skipped on
+    the `/desktop/` page itself to avoid a redundant self-link.
+  - **Not done, and deliberately deferred**: actual code signing (cost, see
+    above), generating real `.icns`/`.ico` app icons (currently a placeholder
+    256×256 copy of the web favicon — fine for local dev, too small for a
+    polished release), and running a real `electron-builder` package build
+    (needs the native toolchain per target OS; this session verified
+    `copy-tools.mjs` produces a correct `electron/tools/` tree and syntax-
+    checked every JS file, but did not attempt an actual `.dmg`/`.exe`/
+    `.AppImage` build).
+  - GitHub Actions release workflow (`.github/workflows/release-desktop.yml`)
+    triggers on `v*` tag pushes, builds all three platforms in parallel, and
+    publishes directly via `electron-builder --publish always` (simpler than
+    the plan's separate `softprops/action-gh-release` upload step, since
+    electron-builder already knows how to talk to GitHub Releases once
+    `build.publish` is configured in `package.json`).

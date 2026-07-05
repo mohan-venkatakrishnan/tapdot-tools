@@ -1380,6 +1380,8 @@ body {
 .ts-source-link:hover { color: var(--color-accent); }
 .ts-donate-link { display: inline-flex; align-items: center; gap: 5px; color: var(--color-muted); text-decoration: none; }
 .ts-donate-link:hover { color: var(--color-accent); }
+.ts-desktop-link { display: inline-flex; align-items: center; gap: 5px; color: var(--color-muted); text-decoration: none; }
+.ts-desktop-link:hover { color: var(--color-accent); }
 
 /* AI collection — soft coral, distinct from everything else */
 [data-collection="ai"] {

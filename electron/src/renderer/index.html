@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tapdot</title>
+  <!--
+    CSP note: this whitelists exactly the two hosts the web version of tapdot
+    tools ever calls (Google Fonts for typography, open.er-api.com for
+    CurrencyConvert's daily rate fetch). static.cloudflareinsights.com is
+    deliberately NOT whitelisted — the desktop app ships with zero analytics,
+    unlike the web version's anonymous page-visit counter.
+  -->
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self' file:; script-src 'self' 'unsafe-inline' file:;
+             style-src 'self' 'unsafe-inline' file: https://fonts.googleapis.com;
+             font-src 'self' file: https://fonts.gstatic.com;
+             img-src 'self' file: data:;
+             connect-src 'self' file: https://open.er-api.com;" />
+  <link rel="stylesheet" href="renderer.css" />
+</head>
+<body data-theme="light">
+
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-logo sidebar-item">
+    <img src="../../assets/icon.png" alt="tapdot" />
+    tapdot
+    <span class="sidebar-count" id="tool-count"></span>
+  </div>
+  <input class="sidebar-search sidebar-item" id="sidebar-search" placeholder="Filter tools…" />
+  <!-- Collections and tools populated by JS from tools-catalog.js -->
+</nav>
+
+<div class="content">
+  <div class="content-toolbar">
+    <button class="nav-btn" id="btn-back" title="Back" disabled>&#8592;</button>
+    <button class="nav-btn" id="btn-forward" title="Forward" disabled>&#8594;</button>
+    <span class="toolbar-title" id="toolbar-title">tapdot Desktop</span>
+    <button class="nav-btn" id="btn-dark" title="Toggle dark mode">&#9681;</button>
+  </div>
+
+  <div class="update-banner" id="update-banner"></div>
+
+  <iframe
+    id="tool-frame"
+    sandbox="allow-scripts allow-same-origin allow-forms allow-modals allow-downloads allow-popups"
+    title="Tool content"
+  ></iframe>
+</div>
+
+<script src="tools-catalog.js"></script>
+<script>
+let toolsPath = '';
+let isDark = false;
+
+async function init() {
+  if (window.tapdotDesktop) {
+    toolsPath = await window.tapdotDesktop.getToolsPath();
+    isDark = false; // theme is per-tool-page localStorage; the shell defaults light
+  }
+
+  document.getElementById('tool-count').textContent = `${window.TOOLS_CATALOG.totalTools} tools`;
+
+  buildSidebar();
+  loadHub();
+
+  window.tapdotDesktop?.onNavigate((p) => { if (!p) loadHub(); });
+  window.tapdotDesktop?.onToggleDark(toggleDark);
+  window.tapdotDesktop?.onUpdateAvailable((version) => {
+    const banner = document.getElementById('update-banner');
+    banner.textContent = `tapdot ${version} is ready — restart to update`;
+    banner.classList.add('visible');
+  });
+
+  document.getElementById('btn-dark').addEventListener('click', toggleDark);
+  const frame = document.getElementById('tool-frame');
+  document.getElementById('btn-back').addEventListener('click', () => frame.contentWindow?.history.back());
+  document.getElementById('btn-forward').addEventListener('click', () => frame.contentWindow?.history.forward());
+
+  document.getElementById('sidebar-search').addEventListener('input', filterSidebar);
+}
+
+function buildSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  const homeLink = document.createElement('a');
+  homeLink.className = 'tool-link sidebar-item';
+  homeLink.textContent = '⌂ All Tools';
+  homeLink.style.marginTop = '4px';
+  homeLink.addEventListener('click', loadHub);
+  sidebar.appendChild(homeLink);
+
+  for (const collection of window.TOOLS_CATALOG.collections) {
+    const section = document.createElement('div');
+    section.className = 'collection-section';
+    section.dataset.collection = collection.id;
+
+    const label = document.createElement('div');
+    label.className = 'collection-label sidebar-item';
+    label.textContent = collection.label;
+    section.appendChild(label);
+
+    for (const tool of collection.tools) {
+      const link = document.createElement('a');
+      link.className = 'tool-link sidebar-item';
+      link.textContent = tool.label;
+      link.title = tool.desc;
+      link.dataset.name = tool.label.toLowerCase();
+      link.dataset.collection = collection.id;
+      link.dataset.tool = tool.id;
+      link.addEventListener('click', () => loadTool(collection.id, tool));
+      section.appendChild(link);
+    }
+
+    sidebar.appendChild(section);
+  }
+}
+
+function filterSidebar(e) {
+  const q = e.target.value.trim().toLowerCase();
+  document.querySelectorAll('.collection-section').forEach((section) => {
+    let anyVisible = false;
+    section.querySelectorAll('.tool-link').forEach((link) => {
+      const match = !q || link.dataset.name.includes(q);
+      link.classList.toggle('hidden', !match);
+      if (match) anyVisible = true;
+    });
+    section.classList.toggle('hidden', !anyVisible);
+  });
+}
+
+function loadHub() {
+  const frame = document.getElementById('tool-frame');
+  frame.src = `file://${toolsPath}/index.html`;
+  setActive(null, null);
+  document.getElementById('toolbar-title').textContent = 'tapdot Desktop';
+}
+
+function loadTool(collectionId, tool) {
+  const frame = document.getElementById('tool-frame');
+  frame.src = `file://${toolsPath}/${tool.htmlPath}`;
+  setActive(collectionId, tool.id);
+  document.getElementById('toolbar-title').textContent = tool.label;
+}
+
+function setActive(collectionId, toolId) {
+  document.querySelectorAll('.tool-link').forEach((link) => {
+    link.classList.toggle('active', link.dataset.collection === collectionId && link.dataset.tool === toolId);
+  });
+}
+
+function toggleDark() {
+  isDark = !isDark;
+  document.body.setAttribute('data-theme', isDark ? 'dark' : 'light');
+  const frame = document.getElementById('tool-frame');
+  frame.contentDocument?.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+}
+
+init();
+</script>
+</body>
+</html>

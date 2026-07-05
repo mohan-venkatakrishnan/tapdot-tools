@@ -463,6 +463,7 @@ const TOOL_REGISTRY = [
   { name: 'SQLObfuscate', url: '/dev/sqlobfuscate/', collection: 'dev', desc: 'Anonymize table/column names and literals in a SQL query' },
   { name: 'Browse all tools', url: '/browse/', collection: 'tools', desc: 'Every tool in one pastel card view, grouped by collection' },
   { name: 'Site Graph', url: '/graph/', collection: 'tools', desc: 'Every collection and tool as a radial graph' },
+  { name: 'tapdot Desktop', url: '/desktop/', collection: 'tools', desc: 'Download all 92 tools as a native app — works fully offline' },
   { name: 'Privacy Policy', url: '/privacy.html', collection: 'tools', desc: "What tapdot tools does — and doesn't — collect" },
 ];
 
@@ -1455,12 +1456,31 @@ function initDonateLink() {
   footer.appendChild(a);
 }
 
+function initDesktopLink() {
+  const footer = document.querySelector('.ts-footer');
+  if (!footer || footer.querySelector('.ts-desktop-link')) return;
+  if (location.pathname.startsWith('/desktop/')) return;
+  const a = document.createElement('a');
+  a.className = 'ts-desktop-link';
+  a.href = '/desktop/';
+  a.title = 'Download tapdot Desktop — all tools, fully offline';
+  a.innerHTML =
+    '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>' +
+    ' Download desktop app';
+  const dot = document.createElement('span');
+  dot.className = 'ts-footer-dot';
+  dot.textContent = '·';
+  footer.appendChild(dot);
+  footer.appendChild(a);
+}
+
 // ── Init ─────────────────────────────────────────────────────────────────────
 
 document.addEventListener('DOMContentLoaded', () => {
   initDarkToggle();
   initSourceLink();
   initDonateLink();
+  initDesktopLink();
   initFavicon();
   initBackground();
   initCardTilt();
