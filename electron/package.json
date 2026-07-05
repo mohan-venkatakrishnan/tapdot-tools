@@ -65,8 +65,9 @@
     "linux": {
       "target": ["AppImage", "deb"],
       "icon": "assets/icon.png",
-      "category": "Utility",
-      "desktopName": "tapdot.desktop",
+      "category": "Utility"
+    },
+    "deb": {
       "synopsis": "90+ privacy-first tools, fully offline"
     },
     "dmg": {
