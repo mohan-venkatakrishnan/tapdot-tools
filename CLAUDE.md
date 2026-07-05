@@ -155,17 +155,12 @@ project's actual architecture — never remove it.
   collection-by-collection (its own build order is in the doc), running the full test
   suite after each collection — do not attempt all 46 in one pass; that's exactly how
   the mobile-nav and grid-shrink bugs got introduced this round.
-- **tapdot Desktop (`electron/`) is scaffolded but not released.** `npm install &&
-  npm start` inside `electron/` should launch the app locally once Electron is
-  installed there (untested in this environment — no native build toolchain
-  available). Before a real release: generate proper `icon.icns`/`icon.ico` from
-  a real 512×512+ source (current `electron/assets/icon.png` is a 256×256
-  placeholder copy of the web favicon), run an actual `electron-builder` build
-  per platform, and decide whether/when to buy the Apple ($99/yr) and Windows EV
-  (~$200–400/yr) code-signing certificates the `/desktop/` page explains the
-  absence of. Remember to run `node scripts/generate-desktop-catalog.mjs` after
-  any future tool add/remove/rename — it's what keeps the Electron sidebar's
-  tool list in sync with the real site instead of drifting stale.
+- **tapdot Desktop (`electron/`)** — see the v27/v28 changelog entries for the
+  release history. Still unsigned (Apple $99/yr, Windows EV ~$200–400/yr —
+  `/desktop/` explains the absence of both honestly). Remember to run
+  `node scripts/generate-desktop-catalog.mjs` after any future tool
+  add/remove/rename — it's what keeps the Electron sidebar's tool list in
+  sync with the real site instead of drifting stale.
 
 ## Change log of base decisions
 

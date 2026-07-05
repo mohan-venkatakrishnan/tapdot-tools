@@ -41,10 +41,12 @@ npm run dist:linux    # .AppImage + .deb
 npm run dist          # all three (requires the right host OS/toolchain per target)
 ```
 
-Before a real release, replace the placeholder `assets/icon.png` (currently a
-copy of the web favicon, 256×256 — fine for dev, too small for a polished app
-icon) and generate `icon.icns` (macOS) / `icon.ico` (Windows) from a proper
-512×512+ source image.
+`assets/icon.png` is a 1024×1024 rendering of the tapdot mark (T + tap-dot) on
+the brand purple — electron-builder converts it to `.icns`/`.ico` at build
+time, so there's no separate icon file to maintain per platform. (An earlier
+256×256 placeholder failed macOS builds outright: electron-builder requires
+at least 512×512 for icon conversion — "Icon must be at least 512x512 pixels,
+provided: 256x256". If you ever swap the icon, keep it at 1024×1024+.)
 
 ## Code signing — not done yet
 
