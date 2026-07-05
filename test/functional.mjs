@@ -1520,7 +1520,7 @@ const check = (name, ok) => { console.log((ok ? 'PASS' : 'FAIL') + '  ' + name);
   const errs = []; page.on('pageerror', e => errs.push(e.message));
   await page.goto('http://localhost:8140/desktop/', { waitUntil: 'networkidle' });
   const bodyText = await page.$eval('body', el => el.textContent);
-  check('Desktop page states the accurate tool count (92)', bodyText.includes('92'));
+  check('Desktop page states the tool count as "90+"', bodyText.includes('90+'));
   check('Desktop page explains the CurrencyConvert offline exception precisely',
     bodyText.includes('CurrencyConvert') && bodyText.includes('once a day') && bodyText.includes('caches'));
   check('Desktop page explains why the app shows as untrusted (no paid certificate)',

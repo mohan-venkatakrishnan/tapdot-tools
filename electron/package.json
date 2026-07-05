@@ -49,7 +49,7 @@
     },
     "mac": {
       "target": [{ "target": "dmg", "arch": ["x64", "arm64"] }],
-      "icon": "assets/icon.icns",
+      "icon": "assets/icon.png",
       "category": "public.app-category.productivity",
       "darkModeSupport": true,
       "hardenedRuntime": true,
@@ -59,7 +59,7 @@
     },
     "win": {
       "target": [{ "target": "nsis", "arch": ["x64"] }],
-      "icon": "assets/icon.ico"
+      "icon": "assets/icon.png"
     },
     "linux": {
       "target": ["AppImage", "deb"],

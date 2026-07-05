@@ -463,7 +463,7 @@ const TOOL_REGISTRY = [
   { name: 'SQLObfuscate', url: '/dev/sqlobfuscate/', collection: 'dev', desc: 'Anonymize table/column names and literals in a SQL query' },
   { name: 'Browse all tools', url: '/browse/', collection: 'tools', desc: 'Every tool in one pastel card view, grouped by collection' },
   { name: 'Site Graph', url: '/graph/', collection: 'tools', desc: 'Every collection and tool as a radial graph' },
-  { name: 'tapdot Desktop', url: '/desktop/', collection: 'tools', desc: 'Download all 92 tools as a native app — works fully offline' },
+  { name: 'tapdot Desktop', url: '/desktop/', collection: 'tools', desc: 'Download 90+ tools as a native app — works fully offline' },
   { name: 'Privacy Policy', url: '/privacy.html', collection: 'tools', desc: "What tapdot tools does — and doesn't — collect" },
 ];
 
