@@ -1527,8 +1527,9 @@ const check = (name, ok) => { console.log((ok ? 'PASS' : 'FAIL') + '  ' + name);
     bodyText.includes('unidentified developer') && bodyText.includes('$99') && bodyText.includes('non-profit'));
   check('Desktop page links to view source on GitHub', await page.$('.desk-source-link') !== null);
   const downloadLinks = await page.$$eval('.desk-download-btn', els => els.map(e => e.getAttribute('href')));
-  check('Desktop page offers all three platform downloads', downloadLinks.length === 3 &&
-    downloadLinks.some(h => h.endsWith('.dmg')) && downloadLinks.some(h => h.endsWith('.exe')) && downloadLinks.some(h => h.endsWith('.AppImage')));
+  check('Desktop page offers downloads for all three platforms (macOS has two chip variants)',
+    downloadLinks.filter(h => h.endsWith('.dmg')).length === 2 &&
+    downloadLinks.some(h => h.endsWith('.exe')) && downloadLinks.some(h => h.endsWith('.AppImage')));
   check('no JS errors on Desktop page', errs.length === 0);
   await page.close();
 }
