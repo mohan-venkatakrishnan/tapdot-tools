@@ -83,7 +83,8 @@
     "publish": [{
       "provider": "github",
       "owner": "mohan-venkatakrishnan",
-      "repo": "tapdot-tools"
+      "repo": "tapdot-tools",
+      "releaseType": "release"
     }]
   }
 }
