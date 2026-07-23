@@ -788,6 +788,18 @@ project's actual architecture — never remove it.
     com.apple.quarantine` recovery command for anyone already holding the
     broken v1.0.0 download. **Ad-hoc signing does not remove the Gatekeeper
     prompt** — it downgrades a hard failure to the normal bypassable one.
+  - **Two release-pipeline traps found while shipping v1.0.1**, both of which
+    would have recurred every release: (1) electron-builder's `publish` config
+    defaults to `releaseType: "draft"`, so a tagged build lands as an
+    *unpublished draft* — the workflow goes green, every asset uploads, and
+    every download link still 404s until someone publishes it by hand (this is
+    why v1.0.0 sat with a `published_at` three hours after `created_at`). Fixed
+    with `"releaseType": "release"`. (2) `/desktop/`'s links used
+    `/releases/latest/download/<versioned-filename>`, which gains nothing over
+    an explicit tag URL — the filename already pins the version — and GitHub's
+    CDN **caches a 404 per filename** if that path is hit before the release is
+    published, which it was. Now `/releases/download/v1.0.1/…`. **Bump these
+    four links whenever the desktop version changes.**
   - **CronLab → crontab.guru parity.** The rewrite fixed three genuine
     correctness bugs, all of which produced *wrong answers rather than errors*:
     (1) step-on-range (`9-17/2`) parsed without complaint but matched
