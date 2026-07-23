@@ -61,6 +61,7 @@ const ROUTES = [
   '/ai/', '/ai/summarize/', '/ai/translate/', '/ai/write/', '/ai/rewrite/',
   '/browse/', '/dev/timestamp/', '/dev/jsoncsv/', '/dev/hashgen/', '/dev/keygen/',
   '/dev/passhash/', '/dev/svgclean/', '/dev/sqlobfuscate/', '/graph/', '/desktop/',
+  '/data/', '/data/schema/', '/data/notebook/', '/data/vector/', '/data/dataset/',
   '/privacy.html',
 ];
 const VIEWPORTS = [

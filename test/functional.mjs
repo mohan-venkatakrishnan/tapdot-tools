@@ -1713,6 +1713,202 @@ const check = (name, ok) => { console.log((ok ? 'PASS' : 'FAIL') + '  ' + name);
   await page.close();
 }
 
+// ── SchemaViz: DDL parsing, diagram, inference, export (v30).
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/data/schema/', { waitUntil: 'networkidle' });
+  await page.evaluate(() => localStorage.clear());
+  await page.reload({ waitUntil: 'networkidle' });
+  await page.waitForTimeout(600);
+
+  const tables = await page.$$eval('.erd-table', els => els.length);
+  check('SchemaViz draws a box per table in the default schema', tables === 6);
+  check('SchemaViz draws relationship edges', (await page.$$eval('.erd-edge', els => els.length)) >= 5);
+  check('SchemaViz marks primary-key rows', (await page.$$eval('.erd-pk', els => els.length)) > 0);
+
+  const dialect = await page.$$eval('.ts-stat', els => els.map(e => e.textContent).join(' '));
+  check('SchemaViz detects the MySQL dialect', dialect.includes('MySQL'));
+
+  // The reviews table declares no FK — the link to products must be inferred
+  // AND visually distinguished from declared ones.
+  check('SchemaViz infers a missing foreign key from <table>_id naming',
+    (await page.$$eval('.erd-inferred', els => els.length)) > 0);
+  check('SchemaViz explains that inferred links are guesses',
+    (await page.$eval('#notes', el => el.textContent)).includes('inferred'));
+
+  // Postgres example: composite PK + ALTER TABLE-added FKs.
+  await page.selectOption('#example', 'saas');
+  await page.waitForTimeout(700);
+  const pgTables = await page.$$eval('.erd-table', els => els.length);
+  check('SchemaViz parses the Postgres example including ALTER TABLE foreign keys', pgTables === 6);
+  check('SchemaViz reports no parse errors on the Postgres example',
+    (await page.$eval('#err', el => el.textContent)) === '');
+
+  // pgvector columns must survive as a normal type.
+  await page.selectOption('#example', 'rag');
+  await page.waitForTimeout(700);
+  const types = await page.$$eval('.erd-type', els => els.map(e => e.textContent));
+  check('SchemaViz keeps pgvector vector(1536) columns intact', types.some(t => t.includes('vector(1536)')));
+
+  await page.click('#exportDbml');
+  await page.waitForTimeout(250);
+  const dbml = await page.$eval('#dbmlOut', el => el.textContent);
+  check('SchemaViz exports DBML with tables and refs', dbml.includes('Table ') && dbml.includes('Ref:'));
+
+  // Clicking a table isolates it; clicking the background clears it.
+  await page.click('.erd-table');
+  await page.waitForTimeout(200);
+  check('SchemaViz isolates a table\'s relationships on click',
+    (await page.$$eval('.erd-table.erd-selected', els => els.length)) === 1);
+
+  check('no JS errors on SchemaViz', errs.length === 0);
+  await page.close();
+}
+
+// ── NotebookView: .ipynb rendering (v30).
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/data/notebook/', { waitUntil: 'networkidle' });
+  await page.click('#sampleBtn');
+  await page.waitForTimeout(500);
+
+  check('NotebookView renders every cell', (await page.$$eval('.nb-cell', els => els.length)) === 9);
+  check('NotebookView renders markdown as HTML', (await page.$$eval('.nb-md h1', els => els.length)) >= 1);
+  check('NotebookView highlights code keywords', (await page.$$eval('.nb-src .tok-kw', els => els.length)) > 0);
+  check('NotebookView renders an embedded plot', (await page.$$eval('.nb-out-img svg, .nb-out-img img', els => els.length)) >= 1);
+  check('NotebookView renders a pandas-style HTML table', (await page.$$eval('.nb-out-html table', els => els.length)) >= 1);
+  check('NotebookView renders a traceback with ANSI colour', (await page.$$eval('.nb-out-error .ansi-red', els => els.length)) > 0);
+  check('NotebookView builds a table of contents from headings', (await page.$$eval('.nb-toc-item', els => els.length)) >= 3);
+
+  const notes = await page.$eval('#notes', el => el.textContent);
+  check('NotebookView flags cells that errored', notes.includes('ended in an error'));
+  check('NotebookView flags never-executed cells', notes.includes('never been executed'));
+
+  // Hiding code must leave outputs in place.
+  await page.click('#toggleCode');
+  await page.waitForTimeout(250);
+  check('NotebookView can hide code while keeping outputs',
+    (await page.$$eval('.nb-src', els => els.length)) === 0 &&
+    (await page.$$eval('.nb-outputs', els => els.length)) > 0);
+
+  // A notebook is untrusted input — script tags in an HTML output must not survive.
+  const clean = await page.evaluate(() => {
+    const nbWithScript = {
+      nbformat: 4, cells: [{ cell_type: 'code', execution_count: 1, source: ['x'],
+        outputs: [{ output_type: 'display_data', data: { 'text/html': ['<div onclick="alert(1)">hi</div><script>window.__pwned = true;<\/script>'] } }] }],
+      metadata: {},
+    };
+    document.getElementById('paste').value = JSON.stringify(nbWithScript);
+    document.getElementById('paste').dispatchEvent(new Event('input'));
+    return new Promise(r => setTimeout(() => r({
+      pwned: !!window.__pwned,
+      hasOnclick: document.querySelector('.nb-out-html [onclick]') !== null,
+      hasScript: document.querySelector('.nb-out-html script') !== null,
+    }), 300));
+  });
+  check('NotebookView strips <script> from untrusted HTML outputs', !clean.hasScript && !clean.pwned);
+  check('NotebookView strips inline event handlers from HTML outputs', !clean.hasOnclick);
+
+  check('no JS errors on NotebookView', errs.length === 0);
+  await page.close();
+}
+
+// ── VectorLens: parsing, PCA, clustering, similarity (v30).
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/data/vector/', { waitUntil: 'networkidle' });
+  await page.click('#sampleBtn');
+  await page.waitForTimeout(700);
+
+  check('VectorLens plots a point per embedding', (await page.$$eval('.vl-dot', els => els.length)) === 25);
+  const stats = await page.$$eval('.ts-stat', els => els.map(e => e.textContent).join('|'));
+  check('VectorLens reports vector count and dimensions', stats.includes('25') && stats.includes('24'));
+  check('VectorLens reports how much variance the projection keeps', stats.includes('%'));
+
+  // Clicking a point should surface its nearest neighbours — and for the sample
+  // data those must be from the same topic, which is the whole point of the tool.
+  await page.click('.vl-dot');
+  await page.waitForTimeout(300);
+  const rowCount = await page.$$eval('.vl-match-row', els => els.length);
+  check('VectorLens lists nearest neighbours on click', rowCount === 10);
+  const firstLabel = await page.$eval('.vl-sel-label', el => el.textContent);
+  const topMatch = await page.$eval('.vl-match-row td:nth-child(2)', el => el.textContent);
+  check('VectorLens ranks a same-topic item first (cosine actually works)',
+    firstLabel.split('/')[0] === topMatch.split('/')[0]);
+
+  // Ragged vectors are the classic broken export — must be refused, not plotted.
+  await page.evaluate(() => {
+    document.getElementById('input').value = JSON.stringify([{ embedding: [1, 2, 3] }, { embedding: [1, 2] }]);
+    document.getElementById('input').dispatchEvent(new Event('input'));
+  });
+  await page.waitForTimeout(500);
+  check('VectorLens refuses vectors of mismatched length',
+    (await page.$eval('#err', el => el.textContent)).includes('different lengths'));
+
+  check('no JS errors on VectorLens', errs.length === 0);
+  await page.close();
+}
+
+// ── DataSetInspect: validation of a deliberately flawed sample (v30).
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/data/dataset/', { waitUntil: 'networkidle' });
+  await page.click('#sampleBtn');
+  await page.waitForTimeout(600);
+
+  check('DataSetInspect detects the chat message format',
+    (await page.$eval('#format', el => el.textContent)).includes('Chat messages'));
+
+  const issues = await page.$eval('#issues', el => el.textContent);
+  check('DataSetInspect catches a row with no assistant reply', issues.includes('no assistant message'));
+  check('DataSetInspect catches two user turns in a row', issues.includes('two user messages in a row'));
+  check('DataSetInspect catches an empty content field', issues.includes('empty content'));
+  check('DataSetInspect catches a line that is not valid JSON', issues.includes('invalid JSON'));
+
+  const dupes = await page.$eval('#dupes', el => el.textContent);
+  check('DataSetInspect finds the exact duplicate', dupes.includes('exact'));
+  check('DataSetInspect finds the near-duplicate', /\d{2}%/.test(dupes));
+
+  check('DataSetInspect charts the length distribution', (await page.$$eval('.ds-bar', els => els.length)) > 0);
+  check('DataSetInspect shows the role distribution', (await page.$eval('#dists', el => el.textContent)).includes('assistant'));
+  check('DataSetInspect labels token counts as estimates',
+    (await page.$eval('#histNote', el => el.textContent)).includes('estimate'));
+
+  // A clean file must report clean, not just "fewer problems".
+  await page.evaluate(() => {
+    const rows = [1, 2, 3].map(n => ({ messages: [
+      { role: 'system', content: 'You are helpful.' },
+      { role: 'user', content: 'Question number ' + n + ' about a distinct topic ' + n },
+      { role: 'assistant', content: 'A distinct answer for topic ' + n + ' with different words entirely' }] }));
+    document.getElementById('input').value = rows.map(r => JSON.stringify(r)).join('\n');
+    document.getElementById('input').dispatchEvent(new Event('input'));
+  });
+  await page.waitForTimeout(600);
+  check('DataSetInspect reports a clean file as clean',
+    (await page.$eval('#issues', el => el.textContent)).includes('No structural problems'));
+
+  check('no JS errors on DataSetInspect', errs.length === 0);
+  await page.close();
+}
+
+// The new collection must be reachable the same way every other one is.
+{
+  const page = await browser.newPage();
+  await page.goto('http://localhost:8140/data/schema/', { waitUntil: 'networkidle' });
+  const crumbs = await page.$$eval('.ts-nav-crumb, .ts-nav-crumb-mid', els => els.map(e => e.textContent.trim()));
+  check('Data collection appears in the breadcrumb', crumbs.some(c => c.includes('Data')));
+  await page.click('.ts-search-trigger');
+  await page.fill('#tsPaletteInput', 'schema');
+  await page.waitForTimeout(150);
+  const names = await page.$$eval('.ts-palette-item .pi-name', els => els.map(e => e.textContent));
+  check('SchemaViz is findable in the Ctrl+K palette', names.includes('SchemaViz'));
+  await page.close();
+}
+
 await browser.close(); srv.close();
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

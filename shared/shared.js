@@ -184,6 +184,11 @@ const ICON_PATHS = {
   'AITranslate': '<path d="M5 8l6 6M4 14l6-6 2-3M2 5h12M7 2h1"/><path d="M22 22l-5-10-5 10M14 18h6"/>',
   'AIWrite': '<path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/>',
   'AIRewrite': '<path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/>',
+  'data': '<path d="M4 5h16M4 12h16M4 19h9"/><circle cx="18" cy="18" r="3.5"/><path d="M20.5 20.5L23 23"/>',
+  'SchemaViz': '<ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v6c0 1.66 3.58 3 8 3s8-1.34 8-3V5"/><path d="M4 11v6c0 1.66 3.58 3 8 3s8-1.34 8-3v-6"/>',
+  'NotebookView': '<path d="M4 4h13a2 2 0 0 1 2 2v14a1 1 0 0 1-1 1H4z"/><path d="M4 4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2"/><path d="M8 8h7M8 12h7M8 16h4"/>',
+  'VectorLens': '<circle cx="6" cy="8" r="2"/><circle cx="17" cy="6" r="2"/><circle cx="12" cy="14" r="2"/><circle cx="19" cy="17" r="2"/><path d="M8 8.6l2.5 4M14 13.2l3.3-5.6M13.8 15.1l3.4 1.3"/>',
+  'DataSetInspect': '<path d="M4 5h16M4 12h16M4 19h9"/><circle cx="18" cy="18" r="3.5"/><path d="M20.5 20.5L23 23"/>',
   'PassHash': '<rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
   'ImageCompress': '<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/>',
   'SVGClean': '<path d="M12 2l1.5 3.5L17 7l-3.5 1.5L12 12l-1.5-3.5L7 7l3.5-1.5z"/><path d="M5 15l.8 1.7L7.5 17.5l-1.7.8L5 20l-.8-1.7L2.5 17.5l1.7-.8z"/>',
@@ -230,7 +235,7 @@ function initFavicon() {
   const color = {
     tools: '#5B6CF0', study: '#12A594', write: '#D97757', dev: '#5B6CF0',
     marketing: '#D6537E', finance: '#4E9B6B', legal: '#5C6FB8', hr: '#B0609E',
-    health: '#4E8FC4', design: '#8A5CD6', productivity: '#3D9AA6', ai: '#D96C4F',
+    health: '#4E8FC4', design: '#8A5CD6', productivity: '#3D9AA6', ai: '#D96C4F', data: '#B5822A',
   }[col] || '#5B6CF0';
   const paths = ICON_PATHS[tool] || ICON_PATHS[col] || ICON_PATHS.tools;
   const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">' +
@@ -457,6 +462,11 @@ const TOOL_REGISTRY = [
   { name: 'AITranslate', url: '/ai/translate/', collection: 'ai', desc: 'Translate between languages on-device with auto-detection' },
   { name: 'AIWrite', url: '/ai/write/', collection: 'ai', desc: 'Draft an email, post, or message from bullet points — on-device' },
   { name: 'AIRewrite', url: '/ai/rewrite/', collection: 'ai', desc: 'Change the tone or length of text — on-device' },
+  { name: 'Data & AI tools', url: '/data/', collection: 'data', desc: 'Schema diagrams, notebooks, embeddings and training-data QA' },
+  { name: 'SchemaViz', url: '/data/schema/', collection: 'data', desc: 'SQL DDL to an interactive ER diagram — MySQL, Postgres, SQLite, SQL Server' },
+  { name: 'NotebookView', url: '/data/notebook/', collection: 'data', desc: 'Open a Jupyter .ipynb with plots, tables and tracebacks intact' },
+  { name: 'VectorLens', url: '/data/vector/', collection: 'data', desc: 'Visualise embeddings — PCA projection, clusters and cosine search' },
+  { name: 'DataSetInspect', url: '/data/dataset/', collection: 'data', desc: 'Validate a fine-tuning JSONL — bad rows, duplicates, length outliers' },
   { name: 'PassHash', url: '/dev/passhash/', collection: 'dev', desc: 'Hash and verify passwords with real bcrypt/Argon2id (WASM)' },
   { name: 'ImageCompress', url: '/design/imagecompress/', collection: 'design', desc: 'Resize and recompress images locally — JPEG/WebP/PNG' },
   { name: 'SVGClean', url: '/dev/svgclean/', collection: 'dev', desc: 'Strip editor cruft, comments, and excess precision from SVG markup' },
@@ -483,12 +493,12 @@ function initSearch() {
 
   const GROUP_ORDER = {
     tools: 0, study: 1, write: 2, dev: 3, marketing: 4, finance: 5,
-    legal: 6, hr: 7, health: 8, design: 9, productivity: 10, ai: 11,
+    legal: 6, hr: 7, health: 8, design: 9, productivity: 10, ai: 11, data: 12,
   };
   const GROUP_LABELS = {
     tools: 'Tools', study: 'Study', write: 'Write', dev: 'Dev', marketing: 'Marketing',
     finance: 'Finance', legal: 'Legal', hr: 'HR', health: 'Health', design: 'Design',
-    productivity: 'Productivity', ai: 'Chrome AI',
+    productivity: 'Productivity', ai: 'Chrome AI', data: 'Data & AI',
   };
   let backdrop = null, activeIdx = 0, filtered = [];
 
@@ -656,6 +666,7 @@ const COLLECTION_LABELS = {
   study: 'Study', write: 'Write', dev: 'Dev',
   marketing: 'Marketing', finance: 'Finance', legal: 'Legal', hr: 'HR',
   health: 'Health', design: 'Design', productivity: 'Productivity', ai: 'Chrome AI',
+  data: 'Data & AI',
 };
 
 function collectionHome() {
@@ -1119,6 +1130,26 @@ const STEPS = {
     { t: 'Paste existing text', d: { k: 'text', text: 'hey can u send that file over asap' } },
     { t: 'Choose a new tone', d: { k: 'chips', items: ['More formal'], on: 0 } },
     { t: 'Rewritten locally', d: { k: 'result', text: 'Could you please send that file at your earliest convenience?' } },
+  ],
+  'SchemaViz': [
+    { t: 'Paste your schema dump', d: { k: 'text', text: 'CREATE TABLE orders (\n  id BIGINT PRIMARY KEY,\n  user_id INT NOT NULL,\n  FOREIGN KEY (user_id) REFERENCES users(id)\n);' } },
+    { t: 'Tables and keys are read out', d: { k: 'fields', rows: [['orders', '3 columns'], ['PRIMARY KEY', 'id'], ['FOREIGN KEY', 'user_id → users.id']] } },
+    { t: 'Drag the diagram to explore', d: { k: 'result', text: 'users ──◀ orders ──◀ order_items · 6 tables, 7 relationships' } },
+  ],
+  'NotebookView': [
+    { t: 'Drop in an .ipynb file', d: { k: 'text', text: 'sales-analysis.ipynb · 24 cells · python 3.11' } },
+    { t: 'Every cell renders', d: { k: 'chips', items: ['markdown', 'code', 'plots'], on: 2 } },
+    { t: 'Problems get flagged', d: { k: 'result', text: '2 cells errored · 1 never run · execution counts out of order' } },
+  ],
+  'VectorLens': [
+    { t: 'Load your embeddings', d: { k: 'text', text: '[{"id": "doc-1", "embedding": [0.021, -0.114, 0.309, …]}]' } },
+    { t: 'Projected down to 2D', d: { k: 'stats', items: [['25', 'vectors'], ['1536', 'dims'], ['95%', 'variance']] } },
+    { t: 'Search by cosine similarity', d: { k: 'rows', rows: [['doc-14', '0.9412'], ['doc-3', '0.8877'], ['doc-9', '0.8510']] } },
+  ],
+  'DataSetInspect': [
+    { t: 'Open your training JSONL', d: { k: 'text', text: '{"messages": [{"role": "user", "content": "…"}]}' } },
+    { t: 'Every row gets checked', d: { k: 'count', to: 4820, label: 'examples scanned' } },
+    { t: 'See what would break training', d: { k: 'result', text: '3 rows have no assistant reply · 11 duplicates · p99 length 4,190 tokens' } },
   ],
   'PassHash': [
     { t: 'Type a password', d: { k: 'text', text: 'correct horse battery staple' } },

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" data-collection="data" data-tool="NotebookView">
+<head>
+  <meta charset="UTF-8" />
+  <script>(function(){try{var t=localStorage.getItem('tapdot-theme');var d=matchMedia('(prefers-color-scheme: dark)').matches;if(t==='dark'||(!t&&d))document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NotebookView — Jupyter .ipynb Viewer | tapdot</title>
+  <meta name="description" content="Open and read any Jupyter notebook in your browser — rendered markdown, highlighted code, tables, tracebacks and inline plots. No upload, no kernel, works offline." />
+  <meta property="og:title" content="NotebookView — Jupyter .ipynb Viewer | tapdot" />
+  <meta property="og:description" content="Read .ipynb notebooks with plots and outputs intact, fully offline. Nothing is uploaded." />
+  <link rel="canonical" href="https://tools.tapdot.org/data/notebook/" />
+  <link rel="icon" type="image/png" href="/assets/tapdot-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/shared/shared.css" />
+  <link rel="stylesheet" href="/data/data.css" />
+</head>
+<body>
+<nav class="ts-nav">
+  <a href="https://tapdot.org" class="ts-nav-logo"><img src="/assets/tapdot-icon.png" width="22" height="22" alt="tapdot" /><span>tapdot</span></a>
+  <button class="ts-dark-toggle" id="darkToggle" aria-label="Toggle dark mode"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg></button>
+</nav>
+<main class="ts-main ts-main-wide">
+  <div class="ts-tool-header">
+    <h1 class="ts-tool-name">NotebookView</h1>
+    <p class="ts-tool-desc">Open any Jupyter notebook — markdown, code, tables, tracebacks and plots, all intact.</p>
+  </div>
+  <div class="ts-privacy-strip"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Your notebook is read in this tab and never uploaded — safe for work you can't paste into a website</div>
+
+  <div class="ts-card">
+    <div class="nb-drop" id="drop">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      <span class="nb-drop-title">Drop a <strong>.ipynb</strong> file here, or click to choose one</span>
+      <span class="dev-muted">Nothing leaves your device — the file is read with the browser's own FileReader</span>
+      <input type="file" id="file" accept=".ipynb,application/json,.json" class="ts-hidden" />
+    </div>
+    <div class="dev-row ts-mt-sm">
+      <button class="ts-btn ts-btn-secondary" id="sampleBtn" style="height:32px">Try a sample notebook</button>
+      <button class="ts-btn ts-btn-ghost" id="pasteBtn" style="height:32px">Paste JSON instead</button>
+      <span class="dev-muted" id="fileName"></span>
+    </div>
+    <div class="ts-hidden ts-mt-sm" id="pasteWrap">
+      <textarea class="ts-textarea ts-code-input" id="paste" spellcheck="false" placeholder="Paste the contents of a .ipynb file…" style="min-height:120px"></textarea>
+    </div>
+    <p class="ts-err-msg" id="err"></p>
+  </div>
+
+  <div class="ts-hidden" id="viewer">
+    <div class="ts-stats-grid" id="stats"></div>
+    <div id="notes"></div>
+
+    <div class="nb-layout">
+      <div class="ts-card nb-side">
+        <p class="ts-card-label">Contents</p>
+        <div class="nb-toc" id="toc"></div>
+        <div class="dev-row ts-mt-md" style="gap:6px">
+          <button class="ts-btn ts-btn-ghost sv-mini" id="toggleCode">Hide code</button>
+          <button class="ts-btn ts-btn-ghost sv-mini" id="toggleOut">Hide outputs</button>
+          <button class="ts-btn ts-btn-ghost sv-mini" id="copyCode">Copy all code</button>
+        </div>
+      </div>
+      <div class="ts-card nb-main">
+        <div id="cells"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ts-card">
+    <p class="ts-card-label">How it renders</p>
+    <div class="ts-callout">
+      <strong>Plots work offline because they're already in the file.</strong> When Jupyter
+      saves a notebook it embeds each figure as base64 PNG or SVG inside the JSON, so
+      rendering them needs no kernel, no Python and no network — just the file you dropped in.
+    </div>
+    <div class="ts-callout">
+      <strong>HTML outputs are sanitised before display.</strong> A notebook's rich outputs
+      (pandas DataFrames, for instance) are HTML, and a notebook is a file someone may have
+      handed you. Scripts, iframes, inline event handlers and <code>javascript:</code> URLs
+      are stripped out before anything reaches the page.
+    </div>
+    <div class="ts-callout">
+      <strong>It flags what a static render normally hides:</strong> cells that ended in an
+      error, cells that were never executed, and execution counts that run out of order —
+      the usual sign a notebook won't reproduce if you run it top to bottom.
+      LaTeX/MathJax output is shown as its source, since typesetting it would mean pulling in
+      a large third-party renderer this site deliberately doesn't ship.
+    </div>
+  </div>
+</main>
+<footer class="ts-footer">
+  <span>Built by <a href="https://tapdot.org">tapdot</a></span><span class="ts-footer-dot">·</span>
+  <a href="/privacy.html">Privacy</a><span class="ts-footer-dot">·</span><span>All processing happens in your browser</span>
+</footer>
+<script src="/shared/shared.js"></script>
+<script src="notebook.js" defer></script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "YOUR_CLOUDFLARE_TOKEN"}'></script>
+</body>
+</html>

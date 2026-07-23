@@ -62,6 +62,10 @@ const IGNORE = new Set([
   // RegexLab's sample TEST STRINGS contain HTML for the pattern to match
   // against; they are data, not markup this site renders.
   'lead',
+  // NotebookView's sample notebook contains a pandas-generated HTML output.
+  // Foreign markup from a notebook file is styled by .nb-out-html descendant
+  // selectors, never by its own class names.
+  'dataframe',
 ]);
 const undef = new Map();
 for (const f of walk(ROOT, ['.html', '.js'])) {

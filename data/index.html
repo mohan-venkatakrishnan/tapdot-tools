@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" data-collection="data" data-tool="">
+<head>
+  <meta charset="UTF-8" />
+  <script>(function(){try{var t=localStorage.getItem('tapdot-theme');var d=matchMedia('(prefers-color-scheme: dark)').matches;if(t==='dark'||(!t&&d))document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Data &amp; AI Tools — Schema Diagrams, Notebooks, Embeddings | tapdot</title>
+  <meta name="description" content="Database and AI-developer tools that run entirely in your browser: interactive ER diagrams from SQL DDL, a Jupyter notebook viewer, an embedding visualizer, and fine-tuning dataset QA." />
+  <meta property="og:title" content="Data &amp; AI Tools | tapdot" />
+  <meta property="og:description" content="Schema diagrams, notebook viewer, embedding visualizer and training-data QA — all local." />
+  <link rel="canonical" href="https://tools.tapdot.org/data/" />
+  <link rel="icon" type="image/png" href="/assets/tapdot-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/shared/shared.css" />
+  <link rel="stylesheet" href="/data/data.css" />
+</head>
+<body>
+<nav class="ts-nav">
+  <a href="https://tapdot.org" class="ts-nav-logo"><img src="/assets/tapdot-icon.png" width="22" height="22" alt="tapdot" /><span>tapdot</span></a>
+  <button class="ts-dark-toggle" id="darkToggle" aria-label="Toggle dark mode"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg></button>
+</nav>
+<main class="ts-main ts-main-wide">
+  <div class="ts-tool-header">
+    <h1 class="ts-tool-name">Data &amp; AI tools</h1>
+    <p class="ts-tool-desc">For the work around a database or a model — schemas, notebooks, embeddings and training data.</p>
+  </div>
+  <div class="ts-callout" style="margin-bottom:20px">
+    <strong>These read your files, not your servers.</strong> A browser can only speak HTTP and
+    WebSocket — it has no raw TCP sockets — so no web page can connect to MySQL or Postgres
+    directly. Anything that claims otherwise is relaying your credentials through a server you
+    don't own. These tools work on what you already have on disk: a schema dump, an
+    <code>.ipynb</code>, an embedding export, a JSONL file. Nothing is uploaded.
+  </div>
+  <div class="ts-hub-grid">
+    <a class="ts-hub-card" href="/data/schema/"><span class="ts-hub-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v6c0 1.66 3.58 3 8 3s8-1.34 8-3V5"/><path d="M4 11v6c0 1.66 3.58 3 8 3s8-1.34 8-3v-6"/></svg></span><div class="ts-hub-card-title">SchemaViz</div><div class="ts-hub-card-desc">Turn MySQL, Postgres, SQLite or SQL Server DDL into an interactive ER diagram — drag, trace and export.</div><div class="ts-hub-card-link">Open tool →</div></a>
+    <a class="ts-hub-card" href="/data/notebook/"><span class="ts-hub-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h13a2 2 0 0 1 2 2v14a1 1 0 0 1-1 1H4z"/><path d="M4 4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2"/><path d="M8 8h7M8 12h7M8 16h4"/></svg></span><div class="ts-hub-card-title">NotebookView</div><div class="ts-hub-card-desc">Open any Jupyter .ipynb with markdown, code, tables, tracebacks and plots intact — no kernel needed.</div><div class="ts-hub-card-link">Open tool →</div></a>
+    <a class="ts-hub-card" href="/data/vector/"><span class="ts-hub-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="8" r="2"/><circle cx="17" cy="6" r="2"/><circle cx="12" cy="14" r="2"/><circle cx="19" cy="17" r="2"/><path d="M8 8.6l2.5 4M14 13.2l3.3-5.6M13.8 15.1l3.4 1.3"/></svg></span><div class="ts-hub-card-title">VectorLens</div><div class="ts-hub-card-desc">Project, cluster and search embeddings from any vector store — PCA plot plus exact cosine similarity.</div><div class="ts-hub-card-link">Open tool →</div></a>
+    <a class="ts-hub-card" href="/data/dataset/"><span class="ts-hub-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16M4 12h16M4 19h9"/><circle cx="18" cy="18" r="3.5"/><path d="M20.5 20.5L23 23"/></svg></span><div class="ts-hub-card-title">DataSetInspect</div><div class="ts-hub-card-desc">Validate a fine-tuning JSONL before you pay to train on it — broken rows, duplicates, length outliers.</div><div class="ts-hub-card-link">Open tool →</div></a>
+  </div>
+</main>
+<footer class="ts-footer">
+  <span>Built by <a href="https://tapdot.org">tapdot</a></span><span class="ts-footer-dot">·</span>
+  <a href="/privacy.html">Privacy</a><span class="ts-footer-dot">·</span><span>All processing happens in your browser</span>
+</footer>
+<script src="/shared/shared.js"></script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "YOUR_CLOUDFLARE_TOKEN"}'></script>
+</body>
+</html>

@@ -768,6 +768,74 @@ project's actual architecture — never remove it.
     the plan's separate `softprops/action-gh-release` upload step, since
     electron-builder already knows how to talk to GitHub Releases once
     `build.publish` is configured in `package.json`).
+- v30: **Data & AI collection** (`data/`, 12th collection, amber theme) — 4 tools,
+  site now 96. Built from a user request for "a db visualizer that supports
+  mysql, postgres, vector and all popular databases" plus tools for AI
+  developers.
+  - **The architectural answer that shaped the whole collection:** a browser
+    has no raw TCP socket API — only HTTP and WebSocket — while MySQL and
+    PostgreSQL speak binary TCP wire protocols. **A static page therefore
+    cannot connect to a live database, at all.** Every browser "DB client"
+    either ships a server-side proxy (credentials and result sets crossing
+    someone else's machine) or is desktop software. Adding a proxy would break
+    the site's core promise, so the collection is deliberately *schema-first*:
+    it reads dumps, exports and files you already have. This is stated plainly
+    on the hub, in SchemaViz, and in `privacy.html` rather than left implicit.
+    A live client remains possible **in the Electron app only** (Node can open
+    TCP) — raised with the user, deferred by their choice.
+  - **SchemaViz** (`data/schema/`) — DDL → interactive ER diagram. New
+    `data/libs/ddl-parser.js`: a hand-written, tolerant SQL DDL parser (`ddl`-
+    prefixed globals per the v13 collision rule) covering MySQL/MariaDB,
+    PostgreSQL incl. `pgvector`, SQLite, SQL Server and Oracle — all four
+    quoting styles, inline + table-level constraints, composite keys, and FKs
+    added later via `ALTER TABLE`. Bottom-up SVG layout with layered
+    auto-placement, draggable tables (positions persisted), pan/zoom, click-to-
+    isolate, crow's-foot cardinality, and SVG/PNG/DBML export. **Missing FKs are
+    inferred** from `<table>_id` naming and drawn dashed — a guess must never
+    look like a declared constraint. Unparseable statements are surfaced as
+    warnings, never silently dropped.
+  - **NotebookView** (`data/notebook/`) — a full `.ipynb` renderer: markdown,
+    syntax-highlighted code, streams, tracebacks, pandas HTML tables and inline
+    plots. Plots work offline because Jupyter already embeds them as base64
+    inside the JSON — no kernel, no network. It also flags what a static render
+    normally hides: errored cells, never-executed cells, and out-of-order
+    execution counts (the usual sign a notebook won't reproduce).
+    **HTML outputs are sanitised** (script/iframe/`on*`/`javascript:` stripped)
+    because a notebook is a file someone may have handed you.
+  - **VectorLens** (`data/vector/`) — the "vector database" piece that works
+    locally: auto-detects JSON / OpenAI-response / JSONL / CSV embedding
+    exports, projects to 2D, k-means clusters, and does exact cosine search.
+    **PCA uses power iteration on the centered data matrix** (`v ← Xᵀ(Xv)`,
+    O(n·d) per step) rather than forming the d×d covariance matrix — at 1536
+    dimensions the latter is billions of operations and locks the tab.
+    Verified: 95.4% variance retained and perfect cluster purity on a synthetic
+    5-topic set. Ragged vectors (the classic truncated-export bug) are refused
+    with the actual length breakdown instead of being plotted as nonsense.
+  - **DataSetInspect** (`data/dataset/`) — fine-tuning JSONL QA: format
+    detection (chat / prompt-completion / Alpaca / raw), conversation validity
+    (system-not-first, doubled user turns, empty content, and the silent
+    run-waster — **an example with no assistant message**), exact + near
+    duplicates (Jaccard ≥ 0.9, bucketed by length band to avoid O(n²)), a
+    length distribution with p50/p90/p99, class balance, and a cleaned-JSONL
+    export. Token counts are labelled estimates everywhere — an exact count
+    needs the model's own BPE vocabulary, a multi-megabyte table this site
+    deliberately doesn't ship.
+  - **Two hardcoded lists in `scripts/generate-desktop-catalog.mjs` were silently
+    dropping the new collection from the Electron sidebar** — `COLLECTION_ORDER`
+    *filtered* rather than merely ordered, and `SKIP_URLS` enumerated hub pages
+    by hand. Both replaced with structural rules (a tool is any URL with ≥2 path
+    segments and no `.html`; unlisted collections are appended with a warning,
+    not dropped). This is exactly the staleness this script exists to prevent,
+    so it now can't recur.
+  - **Cross-collection CSS moved to shared.css** per the v16 rule: `.ts-code-output`,
+    `textarea.ts-code-input`, `.dev-badge`, `.dev-row`, `.dev-muted` were in
+    `dev.css` but are now used by the data collection too.
+  - Bugs found by the new tests: (1) `ansiToHtml` treated any escape containing
+    a `0` as a pure reset, but IPython writes `ESC[0;31m` = "reset THEN red" —
+    so **no real traceback would ever have shown colour**; codes are now applied
+    in order. (2) The DataSetInspect sample's "near duplicate" normalised to an
+    *exact* duplicate, so the near-dupe path was never exercised.
+  - Suites: 339 layout / 345 functional / css-audit clean.
 - v29: **Competitor-parity pass on the four flagship dev tools + the macOS
   install fix.** Driven by user feedback naming specific competitors:
   crontab.guru, jwt.io, regexr/regex101/regexper, and codepen.io.

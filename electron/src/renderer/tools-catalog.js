@@ -2,7 +2,7 @@
 // Source of truth: shared/shared.js TOOL_REGISTRY. Regenerate after any tool
 // add/remove/rename: node scripts/generate-desktop-catalog.mjs
 window.TOOLS_CATALOG = {
-  totalTools: 92,
+  totalTools: 96,
   collections: [
   {
     "id": "study",
@@ -229,6 +229,36 @@ window.TOOLS_CATALOG = {
         "label": "SQLObfuscate",
         "desc": "Anonymize table/column names and literals in a SQL query",
         "htmlPath": "dev/sqlobfuscate/index.html"
+      }
+    ]
+  },
+  {
+    "id": "data",
+    "label": "Data & AI",
+    "tools": [
+      {
+        "id": "schema",
+        "label": "SchemaViz",
+        "desc": "SQL DDL to an interactive ER diagram — MySQL, Postgres, SQLite, SQL Server",
+        "htmlPath": "data/schema/index.html"
+      },
+      {
+        "id": "notebook",
+        "label": "NotebookView",
+        "desc": "Open a Jupyter .ipynb with plots, tables and tracebacks intact",
+        "htmlPath": "data/notebook/index.html"
+      },
+      {
+        "id": "vector",
+        "label": "VectorLens",
+        "desc": "Visualise embeddings — PCA projection, clusters and cosine search",
+        "htmlPath": "data/vector/index.html"
+      },
+      {
+        "id": "dataset",
+        "label": "DataSetInspect",
+        "desc": "Validate a fine-tuning JSONL — bad rows, duplicates, length outliers",
+        "htmlPath": "data/dataset/index.html"
       }
     ]
   },

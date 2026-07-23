@@ -160,6 +160,30 @@
   </div>
 
   <div class="ts-card">
+    <p class="ts-card-label">Data &amp; AI tools</p>
+    <p style="font-size:14px;line-height:1.7;color:var(--color-text)">
+      SchemaViz, NotebookView, VectorLens, and DataSetInspect handle some of the most
+      sensitive material on this site — database schemas, analysis notebooks, embeddings
+      of your source documents, and model training data. None of it is transmitted:
+      files you open are read with the browser's own FileReader and parsed in the page.
+    </p>
+    <p style="font-size:14px;line-height:1.7;color:var(--color-text)">
+      <strong>SchemaViz does not connect to a database, and cannot.</strong> Browsers have
+      no raw TCP socket API, while MySQL and PostgreSQL speak binary TCP protocols, so no
+      web page can reach a database server directly. Tools that appear to do so are
+      relaying credentials and query results through a server operated by someone else.
+      SchemaViz reads schema definitions you paste or open — never a live connection, and
+      it never asks for credentials.
+    </p>
+    <p style="font-size:14px;line-height:1.7;color:var(--color-text)">
+      NotebookView renders the HTML outputs stored inside a notebook (pandas tables, for
+      example). Because a notebook may have come from someone else, that markup is
+      sanitised before display: script tags, iframes, inline event handlers, and
+      <code>javascript:</code> URLs are removed.
+    </p>
+  </div>
+
+  <div class="ts-card">
     <p class="ts-card-label">Contact</p>
     <p style="font-size:14px;line-height:1.7;color:var(--color-text)">
       Questions about this privacy policy? Email

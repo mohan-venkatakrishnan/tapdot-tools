@@ -1419,6 +1419,27 @@ body {
   --grad-a: #D96C4F;
   --grad-b: #F0A082;
 }
+/* Data & AI — warm amber, kept clearly apart from Write's clay and Chrome AI's
+   coral by being yellow-dominant rather than orange-red. */
+[data-collection="data"] {
+  --color-accent:       #B5822A;
+  --color-accent-soft:  #FAF2E2;
+  --color-accent-dark:  #8F6519;
+  --glow-1: rgba(181, 130, 42, 0.20);
+  --glow-2: rgba(224, 183, 106, 0.15);
+  --grad-a: #B5822A;
+  --grad-b: #E0B76A;
+}
+[data-theme="dark"][data-collection="data"] {
+  --color-accent:       #E0B76A;
+  --color-accent-soft:  #2A2113;
+  --color-accent-dark:  #EDD09A;
+  --glow-1: rgba(224, 183, 106, 0.16);
+  --glow-2: rgba(181, 130, 42, 0.12);
+  --grad-a: #E0B76A;
+  --grad-b: #EDD09A;
+}
+
 [data-theme="dark"][data-collection="ai"] {
   --color-accent:       #F09A7E;
   --color-accent-soft:  #2C1A14;
@@ -1462,3 +1483,41 @@ body {
 .ts-hero-browse-link { display: inline-block; margin-top: 14px; font-size: 13px; color: var(--color-accent); text-decoration: none; }
 .ts-hero-browse-link:hover { text-decoration: underline; }
 .browse-grid { display: flex; flex-direction: column; }
+
+
+/* ── Shared code / badge primitives ──────────────────────────────────────
+   These began life in dev.css but are now used by the dev AND data
+   collections. Per the base rule, anything used by more than one
+   collection lives here rather than being duplicated per stylesheet. */
+/* Code / structured output */
+.ts-code-output {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.7;
+  background: var(--color-bg-soft);
+  border: 0.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  overflow-x: auto;
+  white-space: pre;
+  tab-size: 2;
+  min-height: 60px;
+}
+textarea.ts-code-input {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.6;
+  tab-size: 2;
+  min-height: 220px;
+}
+
+/* Badges / status pills */
+.dev-badge { display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-mono);
+  font-size: 12px; padding: 3px 10px; border-radius: 999px; background: var(--color-accent-soft);
+  color: var(--color-accent); border: 0.5px solid var(--color-border); }
+.dev-badge.ok   { background: rgba(29,158,117,0.12); color: var(--color-success); }
+.dev-badge.bad  { background: rgba(220,38,38,0.10);  color: var(--color-danger); }
+.dev-badge.warn { background: rgba(217,119,6,0.12);  color: var(--color-warning); }
+
+.dev-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; min-width: 0; }
+.dev-muted { color: var(--color-muted); font-size: 12px; }

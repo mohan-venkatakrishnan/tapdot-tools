@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" data-collection="data" data-tool="SchemaViz">
+<head>
+  <meta charset="UTF-8" />
+  <script>(function(){try{var t=localStorage.getItem('tapdot-theme');var d=matchMedia('(prefers-color-scheme: dark)').matches;if(t==='dark'||(!t&&d))document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SchemaViz — Interactive Database ER Diagram | tapdot</title>
+  <meta name="description" content="Paste MySQL, PostgreSQL, SQLite or SQL Server DDL and get an interactive ER diagram — drag tables, trace relationships, export SVG, PNG or DBML. Runs entirely in your browser." />
+  <meta property="og:title" content="SchemaViz — Interactive Database ER Diagram | tapdot" />
+  <meta property="og:description" content="SQL schema to interactive ER diagram, fully in your browser. MySQL, Postgres, SQLite, SQL Server, pgvector." />
+  <link rel="canonical" href="https://tools.tapdot.org/data/schema/" />
+  <link rel="icon" type="image/png" href="/assets/tapdot-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/shared/shared.css" />
+  <link rel="stylesheet" href="/data/data.css" />
+</head>
+<body>
+<nav class="ts-nav">
+  <a href="https://tapdot.org" class="ts-nav-logo"><img src="/assets/tapdot-icon.png" width="22" height="22" alt="tapdot" /><span>tapdot</span></a>
+  <button class="ts-dark-toggle" id="darkToggle" aria-label="Toggle dark mode"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg></button>
+</nav>
+<main class="ts-main ts-main-wide">
+  <div class="ts-tool-header">
+    <h1 class="ts-tool-name">SchemaViz</h1>
+    <p class="ts-tool-desc">Paste your schema, get an interactive ER diagram you can drag, trace and export.</p>
+  </div>
+  <div class="ts-privacy-strip"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Your schema is parsed in this tab and never uploaded — no database connection, no account, no server</div>
+
+  <div class="ts-stats-grid" id="stats"></div>
+
+  <div class="sv-layout">
+    <div class="ts-card sv-input">
+      <div class="dev-row" style="justify-content:space-between">
+        <p class="ts-card-label" style="margin-bottom:0">SQL DDL</p>
+        <select class="ts-select" id="example" style="height:30px;min-width:150px">
+          <option value="">Load an example…</option>
+          <option value="shop">E-commerce (MySQL)</option>
+          <option value="saas">Multi-tenant SaaS (Postgres)</option>
+          <option value="rag">Vector / RAG (pgvector)</option>
+        </select>
+      </div>
+      <textarea class="ts-textarea ts-code-input sv-sql" id="sql" spellcheck="false" placeholder="CREATE TABLE users (&#10;  id INT PRIMARY KEY,&#10;  email VARCHAR(255) NOT NULL&#10;);"></textarea>
+      <p class="ts-err-msg" id="err"></p>
+
+      <p class="ts-card-label ts-mt-md">Tables</p>
+      <div class="sv-table-list" id="tableList"></div>
+    </div>
+
+    <div class="ts-card sv-canvas-card">
+      <div class="dev-row" style="justify-content:space-between">
+        <p class="ts-card-label" style="margin-bottom:0">Diagram</p>
+        <div class="dev-row" style="gap:6px">
+          <button class="ts-btn ts-btn-ghost sv-mini" id="fitBtn">Fit</button>
+          <button class="ts-btn ts-btn-ghost sv-mini" id="relayoutBtn">Re-layout</button>
+          <button class="ts-btn ts-btn-secondary sv-mini" id="exportSvg">SVG</button>
+          <button class="ts-btn ts-btn-secondary sv-mini" id="exportPng">PNG</button>
+          <button class="ts-btn ts-btn-secondary sv-mini" id="exportDbml">DBML</button>
+        </div>
+      </div>
+      <div class="sv-canvas">
+        <svg id="erd" class="sv-svg" xmlns="http://www.w3.org/2000/svg">
+          <g id="erdEdges"></g>
+          <g id="erdNodes"></g>
+        </svg>
+      </div>
+      <p class="dev-muted ts-mt-sm">Drag a table to move it · drag the background to pan · scroll to zoom · click a table to isolate its relationships · hover a column for its full type.</p>
+    </div>
+  </div>
+
+  <div id="notes"></div>
+
+  <div class="ts-card ts-hidden" id="dbmlWrap">
+    <p class="ts-card-label">DBML export <span class="dev-muted">— copied to your clipboard; paste into dbdiagram.io if you want their renderer</span></p>
+    <div class="ts-mono-output" id="dbmlOut"></div>
+  </div>
+
+  <div class="ts-card">
+    <p class="ts-card-label">What this does, and what it deliberately doesn't</p>
+    <div class="ts-callout">
+      <strong>It reads schema definitions, not live databases.</strong> Paste a
+      <code>CREATE TABLE</code> dump (<code>mysqldump --no-data</code>, <code>pg_dump --schema-only</code>,
+      or your migration files) and it draws the structure. It understands MySQL/MariaDB,
+      PostgreSQL (including <code>pgvector</code> columns), SQLite, SQL Server and Oracle
+      syntax — quoting styles, inline and table-level constraints, composite keys, and
+      foreign keys added later by <code>ALTER TABLE</code>.
+    </div>
+    <div class="ts-callout">
+      <strong>It cannot connect to your database, and that's on purpose.</strong> Browsers
+      have no raw TCP socket API — only HTTP and WebSocket — while MySQL and Postgres speak
+      binary TCP protocols. Any browser tool that claims a live connection is routing your
+      credentials and query results through someone else's server. There is no server here
+      at all, so that isn't an option we're willing to offer.
+    </div>
+    <div class="ts-callout">
+      <strong>Missing foreign keys are inferred, and marked as such.</strong> Plenty of real
+      schemas never declare FKs. When a column like <code>user_id</code> matches another
+      table's name, the link is drawn <strong>dashed</strong> — a guess, clearly separated
+      from the solid lines that come from real declared constraints.
+    </div>
+  </div>
+</main>
+<footer class="ts-footer">
+  <span>Built by <a href="https://tapdot.org">tapdot</a></span><span class="ts-footer-dot">·</span>
+  <a href="/privacy.html">Privacy</a><span class="ts-footer-dot">·</span><span>All processing happens in your browser</span>
+</footer>
+<script src="/shared/shared.js"></script>
+<script src="/data/libs/ddl-parser.js"></script>
+<script src="schema.js" defer></script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "YOUR_CLOUDFLARE_TOKEN"}'></script>
+</body>
+</html>

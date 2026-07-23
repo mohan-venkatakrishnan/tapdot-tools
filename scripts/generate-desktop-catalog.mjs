@@ -27,24 +27,35 @@ while ((m = entryRe.exec(registryBody))) {
 }
 
 // Skip hub/utility pages — the desktop sidebar lists individual tools only.
-const SKIP_URLS = new Set([
-  '/', '/study/', '/write/', '/dev/', '/marketing/', '/finance/', '/legal/',
-  '/hr/', '/health/', '/design/', '/productivity/', '/ai/',
-  '/browse/', '/graph/', '/privacy.html',
-]);
-const tools = all.filter((t) => !SKIP_URLS.has(t.url));
+// This is decided STRUCTURALLY rather than from a hardcoded URL list: a tool
+// always lives at /<collection>/<slug>/, so anything with fewer than two path
+// segments is a hub, and anything ending in .html is a standalone page. A list
+// would need editing for every new collection, and silently mislabels the ones
+// nobody remembers to add.
+const isToolUrl = (url) => !url.endsWith('.html') && url.split('/').filter(Boolean).length >= 2;
+const tools = all.filter((t) => isToolUrl(t.url));
 
 const labelRe = /(\w+):\s*'([^']+)'/g;
 const labels = {};
 let lm;
 while ((lm = labelRe.exec(labelsBody))) labels[lm[1]] = lm[2];
 
-const COLLECTION_ORDER = ['study', 'write', 'dev', 'marketing', 'finance', 'legal', 'hr', 'health', 'design', 'productivity', 'ai'];
+// Preferred sidebar order. This list only controls ORDER — any collection that
+// isn't named here is appended rather than dropped. It used to filter, which
+// meant adding a collection to the site silently removed it from the desktop
+// app until someone remembered to edit this line (the 'data' collection hit
+// exactly that on the way in).
+const COLLECTION_ORDER = ['study', 'write', 'dev', 'data', 'marketing', 'finance', 'legal', 'hr', 'health', 'design', 'productivity', 'ai'];
 
 const byCollection = {};
 tools.forEach((t) => (byCollection[t.collection] ||= []).push(t));
 
-const collections = COLLECTION_ORDER.filter((c) => byCollection[c]).map((c) => ({
+const present = Object.keys(byCollection);
+const unlisted = present.filter((c) => !COLLECTION_ORDER.includes(c)).sort();
+if (unlisted.length) console.warn(`  note: ${unlisted.join(', ')} not in COLLECTION_ORDER — appended at the end`);
+const ordered = [...COLLECTION_ORDER.filter((c) => byCollection[c]), ...unlisted];
+
+const collections = ordered.map((c) => ({
   id: c,
   label: labels[c] || c,
   tools: byCollection[c].map((t) => {
