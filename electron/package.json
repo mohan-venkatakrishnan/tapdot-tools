@@ -1,7 +1,7 @@
 {
   "name": "tapdot-desktop",
   "productName": "tapdot",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "90+ privacy-first tools, fully offline — the native desktop app",
   "homepage": "https://tools.tapdot.org/desktop/",
   "main": "src/main.js",
