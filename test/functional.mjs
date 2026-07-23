@@ -1548,6 +1548,171 @@ const check = (name, ok) => { console.log((ok ? 'PASS' : 'FAIL') + '  ' + name);
   await page.close();
 }
 
+// ── CronLab: full-spec parsing (v29). The three cases below were each WRONG
+// before the engine rewrite — step-on-range matched nothing, named ranges were
+// rejected outright, and day-of-month/day-of-week were AND-ed instead of OR-ed.
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/dev/cron/', { waitUntil: 'networkidle' });
+
+  const setExpr = async (v) => {
+    await page.fill('#expr', v);
+    await page.waitForTimeout(220);
+  };
+  const english = () => page.$eval('#english', el => el.textContent);
+  const runHours = () => page.$$eval('#runs tbody tr td:nth-child(2)', tds => tds.map(t => t.textContent.trim()));
+
+  await setExpr('0 9-17/2 * * *');
+  check('CronLab explains a step-on-range like crontab.guru',
+    (await english()) === 'At minute 0 past every 2nd hour from 9 through 17.');
+  const hrs = [...new Set((await runHours()).map(s => s.split(', ')[1]?.slice(0, 2)).filter(Boolean))].sort();
+  check('CronLab schedules 9-17/2 on odd hours 09-17 (was matching nothing)',
+    hrs.length > 0 && hrs.every(h => ['09', '11', '13', '15', '17'].includes(h)));
+
+  await setExpr('0 22 * * MON-FRI');
+  check('CronLab accepts named day ranges (MON-FRI)',
+    (await english()) === 'At 22:00 on Monday through Friday.' && (await page.$eval('#err', e => e.textContent)) === '');
+
+  await setExpr('0 0 1 * MON');
+  check('CronLab applies the day-of-month OR day-of-week rule',
+    (await english()) === 'At 00:00 on day-of-month 1 and on Monday.');
+  const dows = await page.$$eval('#runs tbody tr td:nth-child(2)', tds => tds.map(t => t.textContent));
+  check('CronLab lists both 1st-of-month and weekday runs for a DOM+DOW expression', dows.length >= 5);
+
+  await setExpr('@daily');
+  check('CronLab expands the @daily nickname', (await english()) === 'At 00:00.');
+  await setExpr('@reboot');
+  check('CronLab handles @reboot as a special, clockless schedule',
+    (await english()).includes('startup'));
+
+  await setExpr('0 9 * * 1-5');
+  const bd = await page.$$eval('.cron-bd-row', rows => rows.length);
+  check('CronLab shows a per-field breakdown row for each of the 5 fields', bd === 5);
+  check('no JS errors on CronLab', errs.length === 0);
+  await page.close();
+}
+
+// ── RegexLab: explanation + railroad diagram (v29).
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/dev/regex/', { waitUntil: 'networkidle' });
+  await page.waitForTimeout(250);
+
+  const rows = await page.$$eval('.rx-ex-row .rx-ex-text', els => els.map(e => e.textContent));
+  check('RegexLab explains the default pattern token by token', rows.length >= 3);
+  check('RegexLab names capture groups in the explanation',
+    rows.some(r => r.includes('Capture group 1')));
+  check('RegexLab renders a railroad diagram', await page.isVisible('.rx-diagram-wrap .rr-svg'));
+
+  await page.fill('#pattern', '(?<year>\\d{4})-(?<month>\\d{2})');
+  await page.fill('#test', 'Released 2026-07 and 2025-12.');
+  await page.waitForTimeout(250);
+  const named = await page.$$eval('.rx-ex-row .rx-ex-text', els => els.map(e => e.textContent));
+  check('RegexLab describes named capture groups',
+    named.some(r => r.includes('"year"')) && named.some(r => r.includes('"month"')));
+  const gvals = await page.$$eval('.rx-match-table .rx-g-val', els => els.map(e => e.textContent));
+  check('RegexLab breaks every capture group out in the match table', gvals.includes('2026') && gvals.includes('07'));
+
+  await page.fill('#pattern', '(a+)+b');
+  await page.waitForTimeout(250);
+  check('RegexLab warns about a nested quantifier (catastrophic backtracking)',
+    (await page.$eval('#warn', el => el.textContent)).includes('Nested quantifier'));
+
+  await page.fill('#pattern', '[a-z');
+  await page.waitForTimeout(250);
+  check('RegexLab surfaces an invalid pattern without blanking the page',
+    (await page.$eval('#err', el => el.textContent)).length > 0);
+  check('no JS errors on RegexLab', errs.length === 0);
+  await page.close();
+}
+
+// ── CodePlay: editor behaviour, layouts, sharing, export (v29).
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/dev/play/', { waitUntil: 'networkidle' });
+  await page.waitForTimeout(600);
+
+  const gutterLines = await page.$$eval('#gut-html span', els => els.length);
+  const htmlLines = await page.$eval('#html', el => el.value.split('\n').length);
+  check('CodePlay line-number gutter matches the editor line count', gutterLines === htmlLines);
+
+  // Tab must indent inside the editor, not move focus to the next control.
+  await page.click('#css');
+  await page.evaluate(() => { const t = document.getElementById('css'); t.setSelectionRange(0, 0); });
+  await page.keyboard.press('Tab');
+  await page.waitForTimeout(80);
+  check('CodePlay Tab indents instead of leaving the editor',
+    (await page.$eval('#css', el => el.value)).startsWith('  ') &&
+    (await page.evaluate(() => document.activeElement.id)) === 'css');
+
+  await page.click('[data-layout="cols"]');
+  check('CodePlay switches to the columns layout',
+    (await page.$eval('#playWrap', el => el.dataset.layout)) === 'cols');
+  await page.click('[data-layout="preview"]');
+  check('CodePlay preview-only layout hides the editors', !(await page.isVisible('.play-grid')));
+  await page.click('[data-layout="rows"]');
+
+  await page.click('#shareBtn');
+  await page.waitForTimeout(150);
+  check('CodePlay share button writes the code into the URL hash',
+    (await page.evaluate(() => location.hash)).startsWith('#code='));
+
+  // A shared link must reproduce the shared code, not the local autosave.
+  const shared = await page.evaluate(() => location.href);
+  const p2 = await browser.newPage();
+  await p2.goto(shared, { waitUntil: 'networkidle' });
+  await p2.waitForTimeout(400);
+  check('CodePlay restores code from a shared link',
+    (await p2.$eval('#html', el => el.value)).includes('Hello, CodePlay'));
+  await p2.close();
+
+  await page.selectOption('#template', 'grid');
+  await page.waitForTimeout(700);
+  check('CodePlay loads a starter template', (await page.$eval('#css', el => el.value)).includes('grid-template-columns'));
+  check('no JS errors on CodePlay editor features', errs.length === 0);
+  await page.close();
+}
+
+// ── JWTStudio: RS/ES verification with a PUBLIC key (v29).
+{
+  const page = await browser.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto('http://localhost:8140/dev/jwt/', { waitUntil: 'networkidle' });
+
+  // Generate a real ES256 keypair, sign a token with it, then verify the token
+  // in the decode tab using only the public key.
+  await page.click('[data-jm="encode"]');
+  await page.selectOption('#encAlg', 'ES256');
+  await page.waitForTimeout(150);
+  await page.click('#genKeyBtn');
+  await page.waitForTimeout(1200);
+  const token = (await page.$eval('#encOut', el => el.textContent)).trim();
+  const pub = await page.$eval('#pubOut', el => el.textContent);
+  const pubPem = pub.slice(pub.indexOf('-----BEGIN PUBLIC KEY-----'));
+  check('JWTStudio signs an ES256 token', token.split('.').length === 3);
+
+  await page.click('[data-jm="decode"]');
+  await page.fill('#token', token);
+  await page.waitForTimeout(250);
+  check('JWTStudio asks for a public key on an ES256 token', await page.isVisible('#pubKey'));
+  await page.fill('#pubKey', pubPem);
+  await page.waitForTimeout(500);
+  check('JWTStudio verifies an ES256 signature with the public key',
+    (await page.$eval('#verifyStatus', el => el.textContent)).includes('verified'));
+
+  // A tampered payload must fail.
+  const parts = token.split('.');
+  await page.fill('#token', parts[0] + '.' + parts[1].slice(0, -2) + 'AA.' + parts[2]);
+  await page.waitForTimeout(500);
+  check('JWTStudio rejects a tampered ES256 token',
+    (await page.$eval('#verifyStatus', el => el.textContent)).includes('Invalid'));
+  check('no JS errors on JWTStudio verification', errs.length === 0);
+  await page.close();
+}
+
 await browser.close(); srv.close();
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

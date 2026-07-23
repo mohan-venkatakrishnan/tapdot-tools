@@ -101,12 +101,15 @@
       <p class="ts-card-label jwt-part-s">Signature</p>
       <div class="ts-code-output" id="sig" style="white-space:pre-wrap;word-break:break-all"></div>
       <div class="ts-mt-md" id="verifyWrap">
-        <p class="ts-card-label">Verify HMAC signature (HS256 / HS384 / HS512)</p>
-        <div class="biz-row" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;min-width:0">
+        <p class="ts-card-label">Verify signature <span class="dev-muted" id="verifyAlgHint"></span></p>
+        <div class="biz-row" id="secretWrap" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;min-width:0">
           <input class="ts-input" id="secret" placeholder="Paste the shared secret…" style="flex:1;min-width:0" />
           <span class="dev-badge" id="verifyStatus"></span>
         </div>
-        <p class="dev-muted ts-mt-sm">Verified locally with WebCrypto — the secret never leaves this page (like everything else here). RSA/ECDSA tokens show the signature for inspection only; never paste private keys into any web tool.</p>
+        <div id="pubWrap" class="ts-hidden">
+          <textarea class="ts-textarea ts-code-input" id="pubKey" rows="5" spellcheck="false" placeholder="-----BEGIN PUBLIC KEY-----&#10;…SPKI public key in PEM form…&#10;-----END PUBLIC KEY-----"></textarea>
+        </div>
+        <p class="dev-muted ts-mt-sm">Verified locally with WebCrypto — the secret or public key never leaves this page. RSA and ECDSA tokens verify with the <strong>public</strong> key, which is safe to paste anywhere; a private key never is, in this tool or any other.</p>
       </div>
     </div>
   </div>

@@ -118,37 +118,75 @@ function b64urlToBytes(str) {
   return Uint8Array.from(bin, c => c.charCodeAt(0));
 }
 
-async function verifyHmac() {
+// Verification covers every algorithm this tool can produce: HMAC with the
+// shared secret, RSA/ECDSA with the PUBLIC key. Which input is shown follows
+// the token's own `alg` header, so the page never asks for the wrong material.
+async function verifySignature() {
   const badge = $('verifyStatus');
   const token = $('token').value.trim();
-  const secret = $('secret').value;
   const parts = token.split('.');
-  if (!token || parts.length !== 3 || !secret) { badge.textContent = ''; badge.className = 'dev-badge'; return; }
 
-  let alg;
-  try { alg = decodeJWT(token).algorithm; } catch { badge.textContent = ''; badge.className = 'dev-badge'; return; }
-  if (!HMAC_ALGS[alg]) {
-    badge.textContent = `${alg || 'unknown'} — not an HMAC token`;
-    badge.className = 'dev-badge';
+  // Read `alg` from the HEADER alone. Going through decodeJWT() would throw on
+  // a token whose payload is corrupt — which is exactly the tampered-token case
+  // where the user most needs to see "invalid signature" rather than nothing.
+  let alg = null;
+  try { alg = JSON.parse(new TextDecoder().decode(b64urlToBytes(parts[0]))).alg; } catch { /* not a JWT header */ }
+
+  const isHmac = !!HMAC_ALGS[alg];
+  const isAsym = !!ASYM_ALGS[alg];
+  $('secretWrap').classList.toggle('ts-hidden', !isHmac && isAsym);
+  $('pubWrap').classList.toggle('ts-hidden', !isAsym);
+  $('verifyAlgHint').textContent = alg
+    ? (isHmac ? `— ${alg}, needs the shared secret`
+      : isAsym ? `— ${alg}, needs the public key`
+      : `— ${alg} is not supported here`)
+    : '';
+
+  const clear = () => { badge.textContent = ''; badge.className = 'dev-badge'; };
+  if (!token || parts.length !== 3) return clear();
+
+  // `alg: none` is an unsigned token — historically the source of real auth
+  // bypasses, so it gets called out rather than quietly showing "no signature".
+  if (alg && alg.toLowerCase() === 'none') {
+    badge.textContent = 'alg: none — unsigned, do not trust ⚠';
+    badge.className = 'dev-badge bad';
     return;
   }
+
   try {
-    const key = await crypto.subtle.importKey(
-      'raw', new TextEncoder().encode(secret),
-      { name: 'HMAC', hash: HMAC_ALGS[alg] }, false, ['verify']);
+    let key, verifyAlg;
+    if (isHmac) {
+      const secret = $('secret').value;
+      if (!secret) return clear();
+      key = await crypto.subtle.importKey('raw', new TextEncoder().encode(secret),
+        { name: 'HMAC', hash: HMAC_ALGS[alg] }, false, ['verify']);
+      verifyAlg = 'HMAC';
+    } else if (isAsym) {
+      const pem = $('pubKey').value.trim();
+      if (!pem) return clear();
+      const spec = ASYM_ALGS[alg];
+      key = await crypto.subtle.importKey('spki', pemToSpki(pem), spec.import, false, ['verify']);
+      verifyAlg = spec.sign;
+    } else {
+      badge.textContent = `${alg || 'unknown'} — unsupported algorithm`;
+      badge.className = 'dev-badge';
+      return;
+    }
+
     const valid = await crypto.subtle.verify(
-      'HMAC', key, b64urlToBytes(parts[2]),
+      verifyAlg, key, b64urlToBytes(parts[2]),
       new TextEncoder().encode(parts[0] + '.' + parts[1]));
     badge.textContent = valid ? 'Signature verified ✓' : 'Invalid signature ✗';
     badge.className = 'dev-badge ' + (valid ? 'ok' : 'bad');
   } catch (e) {
-    badge.textContent = 'Could not verify';
+    badge.textContent = isAsym ? 'Could not read that public key' : 'Could not verify';
     badge.className = 'dev-badge bad';
   }
 }
 
-$('secret').addEventListener('input', verifyHmac);
-$('token').addEventListener('input', () => { render(); verifyHmac(); });
+$('secret').addEventListener('input', verifySignature);
+$('pubKey').addEventListener('input', verifySignature);
+$('token').addEventListener('input', () => { render(); verifySignature(); });
 
 // ── Encode & sign (WebCrypto HMAC) ──────────────────────────────────────────
 function b64url(bytes) {
@@ -173,6 +211,10 @@ const ASYM_ALGS = {
 
 function pemToPkcs8(pem) {
   const b64 = pem.replace(/-----(BEGIN|END) PRIVATE KEY-----/g, '').replace(/\s+/g, '');
+  return Uint8Array.from(atob(b64), c => c.charCodeAt(0)).buffer;
+}
+function pemToSpki(pem) {
+  const b64 = pem.replace(/-----(BEGIN|END) PUBLIC KEY-----/g, '').replace(/\s+/g, '');
   return Uint8Array.from(atob(b64), c => c.charCodeAt(0)).buffer;
 }
 function derToPem(buf, label) {
@@ -257,3 +299,6 @@ $('jwtModeTabs').addEventListener('click', (e) => {
   $('encodePane').classList.toggle('ts-hidden', !enc);
   if (enc) encodeJwt();
 });
+
+// Show the right key input (and the alg hint) for whatever token is prefilled.
+verifySignature();

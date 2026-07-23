@@ -39,8 +39,14 @@
     <input class="ts-input ts-mt-sm" id="expr" value="0 9 * * 1-5" style="font-family:var(--font-mono);font-size:16px" />
     <div class="ts-field-row" id="fields"></div>
     <p class="ts-mt-sm" id="english" style="font-weight:500"></p>
+    <p class="dev-muted" id="nick"></p>
     <p class="ts-err-msg" id="err"></p>
     <div class="dev-row ts-mt-sm" id="presets"></div>
+  </div>
+
+  <div class="ts-card">
+    <p class="ts-card-label">Field by field</p>
+    <div id="breakdown"></div>
   </div>
 
   <div class="ts-workbench">
@@ -75,6 +81,31 @@
     </div>
     <p class="ts-mt-sm" id="nlOut"></p>
     <p class="dev-muted" id="nlStatus"></p>
+  </div>
+
+  <div class="ts-card">
+    <p class="ts-card-label">Cron syntax reference</p>
+    <div class="cron-ref-grid">
+      <div class="cron-ref-item"><code>*</code><span>any value — the field never restricts a run</span></div>
+      <div class="cron-ref-item"><code>5</code><span>one exact value</span></div>
+      <div class="cron-ref-item"><code>1,15,30</code><span>a list of values</span></div>
+      <div class="cron-ref-item"><code>9-17</code><span>an inclusive range</span></div>
+      <div class="cron-ref-item"><code>*/15</code><span>a step — every 15th value from the start of the field</span></div>
+      <div class="cron-ref-item"><code>9-17/2</code><span>a step within a range — 9, 11, 13, 15, 17</span></div>
+      <div class="cron-ref-item"><code>5/10</code><span>a step from a value to the end of the field</span></div>
+      <div class="cron-ref-item"><code>MON-FRI</code><span>named days — SUN MON TUE WED THU FRI SAT</span></div>
+      <div class="cron-ref-item"><code>JAN,JUL</code><span>named months — JAN…DEC</span></div>
+      <div class="cron-ref-item"><code>@daily</code><span>nickname — also @hourly @weekly @monthly @yearly</span></div>
+      <div class="cron-ref-item"><code>@reboot</code><span>runs once at startup, on no clock schedule</span></div>
+      <div class="cron-ref-item"><code>0 and 7</code><span>both mean Sunday in the day-of-week field</span></div>
+    </div>
+    <div class="ts-callout ts-mt-sm">
+      <strong>The day-of-month / day-of-week rule that trips everyone up:</strong> when
+      <em>both</em> are restricted, cron runs when <em>either</em> matches — not both. So
+      <code>0 0 1 * MON</code> fires on the 1st of the month <em>and</em> on every Monday,
+      not just on Mondays that fall on the 1st. If only one of the two is restricted, it
+      alone decides.
+    </div>
   </div>
 </main>
 <footer class="ts-footer">

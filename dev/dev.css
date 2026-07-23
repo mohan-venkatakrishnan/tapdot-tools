@@ -87,6 +87,61 @@ textarea.ts-code-input {
 .play-editor .ts-textarea { min-height: 220px; font-size: 12.5px; }
 .play-preview { width: 100%; height: 340px; border: 0.5px solid var(--color-border); border-radius: var(--radius-md); background: #fff; }
 
+/* ── CodePlay: toolbar, layouts, gutter, console ────────────────────────── */
+.play-toolbar { display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; align-items: center; }
+.play-auto { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--color-muted); white-space: nowrap; }
+
+.play-wrap { display: block; min-width: 0; }
+/* Columns mode puts the three editors in one narrow stack beside the preview —
+   each pane is its own grid/flex child, so every level needs min-width:0 or the
+   code text refuses to shrink and the row overflows (the v7 gotcha). */
+.play-wrap[data-layout="cols"] { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+.play-wrap[data-layout="cols"] > * { min-width: 0; }
+.play-wrap[data-layout="cols"] .play-grid { grid-template-columns: 1fr; margin-bottom: 0; }
+.play-result { min-width: 0; }
+.play-wrap[data-layout="preview"] .play-grid { display: none; }
+.play-wrap[data-layout="preview"] .play-preview { height: 560px; }
+@media (max-width: 900px) {
+  .play-wrap[data-layout="cols"] { grid-template-columns: 1fr; }
+}
+
+/* Editor shell: fixed-width gutter + the textarea, sharing one line-height so
+   the numbers stay aligned with the code. */
+.play-edit-shell { display: flex; min-width: 0; border: 0.5px solid var(--color-border); border-radius: var(--radius-md); overflow: hidden; background: var(--color-bg-soft); }
+.play-gutter {
+  flex: 0 0 auto;
+  padding: 10px 6px 10px 8px;
+  overflow: hidden;
+  text-align: right;
+  user-select: none;
+  background: var(--color-bg);
+  border-right: 0.5px solid var(--color-border);
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  line-height: 1.65;
+  color: var(--color-muted);
+  opacity: 0.65;
+}
+.play-gutter span { display: block; }
+.play-editor .play-code {
+  flex: 1 1 auto;
+  min-width: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  padding: 10px 10px;
+  font-size: 12.5px;
+  line-height: 1.65;
+  tab-size: 2;
+  resize: vertical;
+}
+
+.play-console { max-height: 170px; overflow-y: auto; min-width: 0; }
+.play-con-line { padding: 2px 0; border-bottom: 0.5px solid var(--color-border); font-family: var(--font-mono); font-size: 12px; white-space: pre-wrap; overflow-wrap: anywhere; }
+.play-con-line:last-child { border-bottom: 0; }
+.play-con-error { color: var(--color-danger, #C0392B); }
+.play-con-warn { color: var(--color-warn, #B4763A); }
+
 /* RegexLab cheat sheet */
 .rx-cheat { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; font-size: 12px; color: var(--color-muted); }
 .rx-cheat code { font-family: var(--font-mono); color: var(--color-accent); background: var(--color-bg-soft); padding: 1px 5px; border-radius: 4px; margin-right: 4px; }
@@ -178,6 +233,71 @@ textarea.ts-code-input {
 .rx-flag.on { background: var(--color-accent-soft); color: var(--color-accent); border-color: var(--color-accent); }
 .rx-test { white-space: pre-wrap; word-break: break-word; font-family: var(--font-mono); font-size: 13px; line-height: 1.7; }
 
+/* ── RegexLab: explanation tree ─────────────────────────────────────────── */
+.rx-explain { display: flex; flex-direction: column; gap: 2px; }
+.rx-ex-row {
+  display: grid;
+  grid-template-columns: minmax(0, auto) minmax(0, 1fr);
+  gap: 10px;
+  align-items: baseline;
+  padding: 5px 8px;
+  /* Indentation carries the nesting; a left rule makes the depth scannable. */
+  margin-left: calc(var(--d, 0) * 16px);
+  border-left: 2px solid var(--color-border);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  background: var(--color-bg-soft);
+  min-width: 0;
+}
+.rx-ex-row[style*="--d:0"] { border-left-color: var(--color-accent); }
+.rx-ex-code {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--color-accent);
+  background: var(--color-accent-soft);
+  border-radius: 4px;
+  padding: 2px 6px;
+  white-space: pre;
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.rx-ex-text { font-size: 13px; color: var(--color-text); min-width: 0; overflow-wrap: anywhere; }
+
+.rx-warn { color: var(--color-warn, #B4763A); font-size: 12.5px; line-height: 1.6; margin-top: 8px; }
+
+/* ── RegexLab: railroad diagram ─────────────────────────────────────────── */
+/* The SVG can be far wider than the card — it scrolls rather than shrinking to
+   illegibility, and never widens the page (the v7 min-width:0 rule). */
+.rx-diagram-wrap {
+  min-width: 0;
+  overflow-x: auto;
+  padding: 4px;
+  border: 0.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-soft);
+}
+.rr-svg { display: block; font-family: var(--font-mono); }
+.rr-rail { fill: none; stroke: var(--color-border-strong, var(--color-muted)); stroke-width: 1.5; }
+.rr-loop { stroke-dasharray: 3 3; opacity: 0.8; }
+.rr-cap { fill: var(--color-accent); }
+.rr-node rect { stroke-width: 1; }
+.rr-node text { font-size: 12px; text-anchor: middle; fill: var(--color-text); }
+.rr-literal rect { fill: var(--color-accent-soft); stroke: var(--color-accent); }
+.rr-class rect { fill: color-mix(in srgb, var(--color-accent) 10%, var(--color-bg)); stroke: var(--color-muted); }
+.rr-escape rect { fill: var(--color-bg); stroke: var(--color-accent); stroke-dasharray: 3 2; }
+.rr-anchor rect { fill: transparent; stroke: var(--color-muted); stroke-dasharray: 2 3; }
+.rr-group rect { fill: none; stroke: var(--color-muted); stroke-dasharray: 4 3; opacity: 0.75; }
+.rr-group-look rect { stroke: var(--color-accent); }
+.rr-group-title { font-size: 10px; fill: var(--color-muted); }
+.rr-label { font-size: 10px; text-anchor: middle; fill: var(--color-muted); }
+
+/* ── RegexLab: match table ──────────────────────────────────────────────── */
+.rx-match-table td { vertical-align: top; font-size: 13px; }
+.rx-groups { display: flex; flex-wrap: wrap; gap: 6px; min-width: 0; }
+.rx-g { display: inline-flex; align-items: baseline; gap: 5px; background: var(--color-bg-soft); border-radius: var(--radius-sm); padding: 2px 7px; min-width: 0; }
+.rx-g-name { font-size: 11px; color: var(--color-accent); font-family: var(--font-mono); }
+.rx-g-val { font-family: var(--font-mono); font-size: 12px; overflow-wrap: anywhere; }
+
 /* Toolbar (markdown) */
 .dev-toolbar { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 8px; }
 .dev-toolbar button { font-size: 12px; padding: 5px 9px; border: 0.5px solid var(--color-border);
@@ -188,6 +308,46 @@ textarea.ts-code-input {
 .cron-builder-row { display: grid; grid-template-columns: 90px minmax(0, 1fr); gap: 8px; align-items: center; margin-bottom: 8px; }
 .cron-builder-row label { font-size: 13px; color: var(--color-muted); }
 .cron-builder-row > .dev-row { min-width: 0; }
+
+/* Per-field breakdown — the crontab.guru-style "what each field actually says" panel. */
+.cron-bd-row {
+  display: grid;
+  grid-template-columns: 68px minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+  padding: 9px 0;
+  border-bottom: 0.5px solid var(--color-border);
+}
+.cron-bd-row:last-child { border-bottom: 0; }
+.cron-bd-field {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--color-accent);
+  background: var(--color-accent-soft);
+  border-radius: var(--radius-sm);
+  padding: 3px 7px;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+.cron-bd-body { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.cron-bd-name { font-size: 12px; color: var(--color-muted); }
+.cron-bd-desc { font-size: 14px; color: var(--color-text); overflow-wrap: anywhere; }
+.cron-bd-values { font-family: var(--font-mono); font-size: 11.5px; color: var(--color-muted); overflow-wrap: anywhere; }
+
+/* Syntax reference grid */
+.cron-ref-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 8px 18px; }
+.cron-ref-item { display: grid; grid-template-columns: 84px minmax(0, 1fr); gap: 10px; align-items: baseline; font-size: 13px; }
+.cron-ref-item code {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--color-accent);
+  background: var(--color-accent-soft);
+  border-radius: var(--radius-sm);
+  padding: 2px 6px;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+.cron-ref-item span { color: var(--color-muted); min-width: 0; }
 
 .dev-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; min-width: 0; }
 .dev-muted { color: var(--color-muted); font-size: 12px; }

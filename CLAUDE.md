@@ -768,3 +768,72 @@ project's actual architecture — never remove it.
     the plan's separate `softprops/action-gh-release` upload step, since
     electron-builder already knows how to talk to GitHub Releases once
     `build.publish` is configured in `package.json`).
+- v29: **Competitor-parity pass on the four flagship dev tools + the macOS
+  install fix.** Driven by user feedback naming specific competitors:
+  crontab.guru, jwt.io, regexr/regex101/regexper, and codepen.io.
+  - **macOS "damaged and can't be opened" was a REAL bug, not the usual
+    unsigned-app warning.** The v1.0.0 release build logged
+    `skipped macOS application code signing … 0 identities found`, i.e. the app
+    shipped with *no signature at all*. Intel Macs tolerate that; Apple Silicon
+    does not — arm64 macOS refuses to load an unsigned binary, and Finder
+    reports the load failure as "tapdot is damaged and can't be opened",
+    which (unlike "unidentified developer") **cannot be bypassed with
+    right-click → Open**. Fixed with `electron/scripts/adhoc-sign.mjs`, an
+    `afterPack` hook that runs `codesign --force --deep --sign -` (ad-hoc — no
+    certificate needed) and then **hard-fails the build if `codesign --verify`
+    doesn't pass**, so a silently unsigned build can never ship again. Also set
+    `mac.identity: null` and `hardenedRuntime: false` (hardened runtime is
+    meaningless without notarization and interferes with Electron's JIT under
+    an ad-hoc signature). `/desktop/` gained the `xattr -dr
+    com.apple.quarantine` recovery command for anyone already holding the
+    broken v1.0.0 download. **Ad-hoc signing does not remove the Gatekeeper
+    prompt** — it downgrades a hard failure to the normal bypassable one.
+  - **CronLab → crontab.guru parity.** The rewrite fixed three genuine
+    correctness bugs, all of which produced *wrong answers rather than errors*:
+    (1) step-on-range (`9-17/2`) parsed without complaint but matched
+    **nothing**, because the range splitter did `Number("17/2")` → NaN;
+    (2) named ranges (`MON-FRI`) were rejected as invalid; (3) day-of-month and
+    day-of-week were **AND-ed**, but cron spec says a run happens when *either*
+    matches if both are restricted — so `0 0 1 * MON` was silently missing most
+    of its runs. Each field now parses into both structural *terms* (for the
+    English sentence) and a value *Set* (for scheduling). English output was
+    verified string-for-string against crontab.guru ("At minute 0 past every
+    2nd hour from 9 through 17."). Added `@daily`-style nicknames + `@reboot`,
+    a per-field breakdown panel, a syntax-reference card that calls out the
+    DOM/DOW rule explicitly, and a 🎲 random button.
+  - **RegexLab → regex101 + regexper parity.** New `dev/libs/regex-ast.js`: a
+    hand-written recursive-descent regex parser (no dependency, `rx`-prefixed
+    globals per the v13 collision rule) feeding two renderers — `rxExplain`
+    (token-by-token nested explanation, the regex101 panel) and `rxRailroad`
+    (an SVG railroad diagram laid out bottom-up via `{w, h, ascent}` measuring,
+    the regexper view). Also: a match-information table with every capture
+    group broken out, match timing in ms, a **catastrophic-backtracking warning**
+    for nested quantifiers like `(a+)+`, and 6 more presets. The parser is
+    deliberately tolerant — it describes a pattern rather than re-validating
+    it, and both panels fail soft so a parser hiccup can never blank the
+    working tester.
+  - **CodePlay → CodePen parity.** Tab indents / Shift+Tab outdents (block-aware
+    across a multi-line selection) instead of tabbing out of the editor,
+    auto-indent on Enter, a line-number gutter scroll-synced to each textarea,
+    three layout modes (rows / columns / preview-only, persisted), Ctrl+Enter
+    to run, an auto-run toggle, 5 starter templates, **share links that encode
+    the code into the URL hash** (same local-only trick as MeetingTimer — a
+    shared link always wins over localStorage, or opening someone's link would
+    show your own code), single-file `.html` export with the console bridge
+    stripped, and a real console panel with counts, clear, and unhandled-
+    rejection capture.
+  - **JWTStudio → jwt.io parity.** Verification previously covered HMAC only,
+    while the encode tab could already *sign* RS/ES — so tokens this very tool
+    produced couldn't be verified in it. Added RSA/ECDSA verification via SPKI
+    **public** key (safe to paste, unlike a private key — the UI now asks for
+    the right material based on the token's own `alg` header), plus an explicit
+    `alg: none` warning, since that's a real historical auth-bypass.
+  - Found while writing the tests: a tampered token blanked the verify badge
+    instead of reporting an invalid signature, because `alg` was read via
+    `decodeJWT()`, which throws when the payload is corrupt — precisely the
+    case that matters. `alg` now comes from the header alone.
+  - Suites: 324 layout / 299 functional / css-audit clean. The css-audit
+    IGNORE list gained `gallery`/`bad` (CodePlay template code that runs in the
+    sandbox iframe, styled by the user's own CSS pane) and `lead` (markup
+    inside a RegexLab *test string* — data for the pattern to match, not markup
+    this site renders).

@@ -153,6 +153,16 @@
         <li><span class="desk-step-num">3</span><span><strong>Right-click</strong> (or Control-click) the app in Finder or Launchpad, then choose <strong>Open</strong>.</span></li>
         <li><span class="desk-step-num">4</span><span>Click <strong>Open</strong> again in the dialog that appears. One-time step — it launches normally after that.</span></li>
       </ul>
+      <div class="ts-callout">
+        <strong>If macOS says tapdot is "damaged and can't be opened"</strong> — it isn't. That
+        message appears when macOS strips the quarantine check on a downloaded app it can't
+        verify, and unlike the "unidentified developer" prompt, right-click → Open won't get past
+        it. Clear the quarantine flag once in Terminal and it opens normally:
+        <div class="desk-cmd">xattr -dr com.apple.quarantine /Applications/tapdot.app</div>
+        This affects the <strong>v1.0.0</strong> download on Apple Silicon Macs. Builds after
+        v1.0.0 are ad-hoc signed, so they show the ordinary "unidentified developer" prompt
+        instead and need only the right-click → Open above.
+      </div>
     </div>
 
     <div class="desk-warning-card">

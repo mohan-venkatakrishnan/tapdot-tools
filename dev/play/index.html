@@ -28,23 +28,65 @@
   </div>
   <div class="ts-privacy-strip"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Your code autosaves to this browser only — no account, no cloud, no sharing servers</div>
 
-  <div class="play-grid">
-    <div class="ts-card play-editor"><p class="ts-card-label">HTML</p><textarea class="ts-textarea ts-code-input" id="html" spellcheck="false"></textarea></div>
-    <div class="ts-card play-editor"><p class="ts-card-label">CSS</p><textarea class="ts-textarea ts-code-input" id="css" spellcheck="false"></textarea></div>
-    <div class="ts-card play-editor"><p class="ts-card-label">JavaScript</p><textarea class="ts-textarea ts-code-input" id="js" spellcheck="false"></textarea></div>
-  </div>
-  <div class="ts-card">
-    <div class="dev-row" style="justify-content:space-between">
-      <p class="ts-card-label" style="margin-bottom:0">Preview</p>
-      <div class="dev-row">
-        <span class="dev-muted" id="saveState"></span>
-        <button class="ts-btn ts-btn-ghost" id="resetPlay">Reset</button>
+  <div class="ts-card play-toolbar">
+    <div class="dev-row">
+      <select class="ts-select" id="template" style="height:32px;min-width:170px">
+        <option value="">Starter templates…</option>
+        <option value="counter">Button + counter</option>
+        <option value="grid">CSS grid gallery</option>
+        <option value="canvas">Canvas animation</option>
+        <option value="form">Form validation</option>
+        <option value="blank">Blank</option>
+      </select>
+      <div class="ts-pill-tabs" id="layoutPills">
+        <button class="ts-pill-tab active" data-layout="rows">Rows</button>
+        <button class="ts-pill-tab" data-layout="cols">Columns</button>
+        <button class="ts-pill-tab" data-layout="preview">Preview only</button>
       </div>
     </div>
-    <iframe id="preview" class="play-preview" sandbox="allow-scripts" title="Live preview"></iframe>
-    <p class="ts-card-label ts-mt-md">Console</p>
-    <div class="ts-code-output" id="playConsole" style="max-height:160px;overflow-y:auto"></div>
+    <div class="dev-row">
+      <label class="play-auto"><input type="checkbox" id="autorun" checked /> Auto-run</label>
+      <button class="ts-btn ts-btn-primary" id="runBtn" style="height:32px">Run ▸</button>
+      <button class="ts-btn ts-btn-secondary" id="shareBtn" style="height:32px">Copy share link</button>
+      <button class="ts-btn ts-btn-ghost" id="downloadBtn" style="height:32px">Download .html</button>
+      <button class="ts-btn ts-btn-ghost" id="resetPlay" style="height:32px">Reset</button>
+    </div>
   </div>
+
+  <div class="play-wrap" id="playWrap" data-layout="rows">
+    <div class="play-grid">
+      <div class="ts-card play-editor" data-lang="html">
+        <p class="ts-card-label">HTML</p>
+        <div class="play-edit-shell"><div class="play-gutter" id="gut-html" aria-hidden="true"></div><textarea class="ts-textarea ts-code-input play-code" id="html" spellcheck="false"></textarea></div>
+      </div>
+      <div class="ts-card play-editor" data-lang="css">
+        <p class="ts-card-label">CSS</p>
+        <div class="play-edit-shell"><div class="play-gutter" id="gut-css" aria-hidden="true"></div><textarea class="ts-textarea ts-code-input play-code" id="css" spellcheck="false"></textarea></div>
+      </div>
+      <div class="ts-card play-editor" data-lang="js">
+        <p class="ts-card-label">JavaScript</p>
+        <div class="play-edit-shell"><div class="play-gutter" id="gut-js" aria-hidden="true"></div><textarea class="ts-textarea ts-code-input play-code" id="js" spellcheck="false"></textarea></div>
+      </div>
+    </div>
+
+    <div class="ts-card play-result">
+      <div class="dev-row" style="justify-content:space-between">
+        <p class="ts-card-label" style="margin-bottom:0">Preview</p>
+        <span class="dev-muted" id="saveState"></span>
+      </div>
+      <iframe id="preview" class="play-preview" sandbox="allow-scripts" title="Live preview"></iframe>
+      <div class="dev-row ts-mt-md" style="justify-content:space-between">
+        <p class="ts-card-label" style="margin-bottom:0">Console <span class="dev-badge" id="conCount">0</span></p>
+        <button class="ts-btn ts-btn-ghost" id="clearCon" style="height:26px;padding:0 10px">Clear</button>
+      </div>
+      <div class="ts-code-output play-console" id="playConsole"></div>
+    </div>
+  </div>
+
+  <p class="dev-muted ts-mt-sm">
+    <strong>Ctrl/Cmd + Enter</strong> runs · <strong>Tab</strong> indents, <strong>Shift + Tab</strong> outdents ·
+    the share link carries your code inside the URL itself, so nothing is uploaded to any server.
+  </p>
 </main>
 <footer class="ts-footer">
   <span>Built by <a href="https://tapdot.org">tapdot</a></span><span class="ts-footer-dot">·</span>

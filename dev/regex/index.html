@@ -31,7 +31,10 @@
   <div class="ts-card">
     <div class="dev-row" style="justify-content:space-between">
       <p class="ts-card-label" style="margin-bottom:0">Expression</p>
-      <span class="dev-badge" id="count">0 matches</span>
+      <div class="dev-row" style="gap:8px">
+        <span class="dev-muted" id="timing"></span>
+        <span class="dev-badge" id="count">0 matches</span>
+      </div>
     </div>
     <div class="dev-row ts-mt-sm" style="flex-wrap:nowrap">
       <span class="dev-muted">/</span>
@@ -55,9 +58,30 @@
         <option value="phone">Phone (intl-ish)</option>
         <option value="slug">URL slug</option>
         <option value="semver">Semver version</option>
+        <option value="htmltag">HTML tag</option>
+        <option value="querystring">Query-string parameter</option>
+        <option value="mdlink">Markdown link</option>
+        <option value="dupword">Duplicated word</option>
+        <option value="logline">Log line (level + message)</option>
+        <option value="password">Password strength (lookaheads)</option>
       </select>
     </div>
     <p class="ts-err-msg ts-mt-sm" id="err"></p>
+    <p class="rx-warn" id="warn"></p>
+  </div>
+
+  <div class="ts-card">
+    <p class="ts-card-label">Railroad diagram</p>
+    <p class="dev-muted">Read left to right along the line. Branches are alternatives; a loop back means the part repeats.</p>
+    <div class="rx-diagram-wrap ts-mt-sm" id="diagram"></div>
+  </div>
+
+  <div class="ts-card">
+    <div class="dev-row" style="justify-content:space-between">
+      <p class="ts-card-label" style="margin-bottom:0">Explanation</p>
+      <span class="dev-muted" id="exMeta"></span>
+    </div>
+    <div class="rx-explain ts-mt-sm" id="explain"></div>
   </div>
 
   <div class="ts-card">
@@ -93,6 +117,7 @@
   <a href="/privacy.html">Privacy</a><span class="ts-footer-dot">·</span><span>All processing happens in your browser</span>
 </footer>
 <script src="/shared/shared.js"></script>
+<script src="/dev/libs/regex-ast.js"></script>
 <script src="regex.js" defer></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "YOUR_CLOUDFLARE_TOKEN"}'></script>
 </body>
