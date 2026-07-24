@@ -432,6 +432,28 @@ $('exportDbml').addEventListener('click', (e) => {
   copyText(dbml, e.target);
 });
 
+/* ── Fullscreen ───────────────────────────────────────────────────────────── */
+
+// Self-contained (rather than pulling in the world-map helper) — toggles the
+// browser Fullscreen API on a card and, for the diagram, re-fits once the
+// element has resized so the whole schema uses the extra space.
+function initFullscreen(button, card, onEnter) {
+  if (!button) return;
+  if (!card || !card.requestFullscreen) { button.style.display = 'none'; return; }
+  button.dataset.label = button.textContent;
+  button.addEventListener('click', () => {
+    if (document.fullscreenElement === card) document.exitFullscreen();
+    else card.requestFullscreen().catch(() => {});
+  });
+  document.addEventListener('fullscreenchange', () => {
+    const on = document.fullscreenElement === card;
+    button.textContent = on ? '⛶ Exit' : button.dataset.label;
+    if (on && onEnter) requestAnimationFrame(onEnter);
+  });
+}
+initFullscreen($('fsBtn'), document.querySelector('.sv-canvas-card'), fitView);
+initFullscreen($('editFsBtn'), $('inputCard'), () => $('sql').focus());
+
 $('fitBtn').addEventListener('click', fitView);
 $('relayoutBtn').addEventListener('click', () => {
   positions = autoLayout(parsed);

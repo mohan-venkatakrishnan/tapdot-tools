@@ -3,13 +3,23 @@
 
 /* ── SchemaViz ───────────────────────────────────────────────────────────── */
 
-.sv-layout { display: grid; grid-template-columns: minmax(0, 360px) minmax(0, 1fr); gap: 16px; align-items: start; }
+.sv-layout { display: grid; grid-template-columns: minmax(0, 440px) minmax(0, 1fr); gap: 16px; align-items: start; }
 .sv-layout > * { min-width: 0; }
 @media (max-width: 900px) { .sv-layout { grid-template-columns: 1fr; } }
 
 .sv-input { min-width: 0; }
-.sv-sql { min-height: 300px; font-size: 12px; }
+/* Taller by default, and hand-resizable — a real schema dump needs room. */
+.sv-sql { min-height: 420px; height: 460px; max-height: 80vh; resize: vertical; font-size: 12.5px; line-height: 1.6; white-space: pre; overflow: auto; }
+.sv-drag-hint { margin-top: 6px; }
 .sv-mini { height: 30px; padding: 0 11px; font-size: 12px; white-space: nowrap; }
+
+/* Editor fullscreen — the "Expand" button opens the DDL box edge to edge so a
+   big schema can be pasted and edited comfortably. */
+.sv-input:fullscreen {
+  display: flex; flex-direction: column; padding: 18px 20px; background: var(--color-bg);
+}
+.sv-input:fullscreen .sv-sql { flex: 1 1 auto; height: auto; max-height: none; min-height: 0; }
+.sv-input:fullscreen .sv-table-list, .sv-input:fullscreen .sv-drag-hint { display: none; }
 
 .sv-table-list { display: flex; flex-direction: column; gap: 4px; max-height: 260px; overflow-y: auto; min-width: 0; }
 .sv-table-item {
@@ -34,6 +44,14 @@
 .sv-svg { display: block; width: 100%; height: 100%; cursor: grab; }
 .sv-svg:active { cursor: grabbing; }
 @media (max-width: 900px) { .sv-canvas { height: 420px; } }
+
+/* Diagram fullscreen — the whole card fills the screen, toolbar included, and
+   the canvas takes all the height that's left. */
+.sv-canvas-card:fullscreen {
+  display: flex; flex-direction: column; padding: 14px 18px; background: var(--color-bg);
+}
+.sv-canvas-card:fullscreen .sv-canvas { flex: 1 1 auto; height: auto; margin-top: 10px; }
+.sv-canvas-card:fullscreen > .dev-muted { display: none; }
 
 /* ER diagram nodes */
 .erd-table { cursor: move; }

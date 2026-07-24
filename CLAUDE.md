@@ -768,6 +768,25 @@ project's actual architecture — never remove it.
     the plan's separate `softprops/action-gh-release` upload step, since
     electron-builder already knows how to talk to GitHub Releases once
     `build.publish` is configured in `package.json`).
+- v31: **SchemaViz roomier editing + desktop v1.0.2.** User feedback: the SQL DDL
+  box was too small and they wanted a full-screen diagram.
+  - **Fullscreen diagram** — the diagram card's ⛶ Fullscreen button uses the
+    browser Fullscreen API (self-contained `initFullscreen()` in schema.js
+    rather than pulling in the world-map helper; falls back by hiding the button
+    where unsupported). On entering fullscreen it re-fits the view so the whole
+    schema uses the extra space; the toolbar (Fit/Re-layout/exports) stays
+    available inside fullscreen via `:fullscreen` CSS.
+  - **Bigger DDL editor** — default height 460px (was a 300px minimum),
+    hand-resizable (`resize: vertical`, up to 80vh), no-wrap with horizontal
+    scroll like a real code editor, and the input column widened 360→440px.
+    An ⛶ Expand button also opens the editor itself fullscreen for pasting a
+    large dump, hiding the table list while expanded.
+  - Desktop **v1.0.2** cut so these (and the whole v30 Data & AI collection)
+    reach desktop users: `electron/package.json` bumped and the four
+    `/desktop/` download links repointed to the v1.0.2 tag. copy-tools.mjs picks
+    up `data/` automatically; all data tools are local so the renderer CSP is
+    unchanged.
+  - Suites: 339 layout / 350 functional / css-audit clean.
 - v30: **Data & AI collection** (`data/`, 12th collection, amber theme) — 4 tools,
   site now 96. Built from a user request for "a db visualizer that supports
   mysql, postgres, vector and all popular databases" plus tools for AI

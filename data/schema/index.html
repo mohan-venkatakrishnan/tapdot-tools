@@ -31,17 +31,21 @@
   <div class="ts-stats-grid" id="stats"></div>
 
   <div class="sv-layout">
-    <div class="ts-card sv-input">
+    <div class="ts-card sv-input" id="inputCard">
       <div class="dev-row" style="justify-content:space-between">
         <p class="ts-card-label" style="margin-bottom:0">SQL DDL</p>
-        <select class="ts-select" id="example" style="height:30px;min-width:150px">
-          <option value="">Load an example…</option>
-          <option value="shop">E-commerce (MySQL)</option>
-          <option value="saas">Multi-tenant SaaS (Postgres)</option>
-          <option value="rag">Vector / RAG (pgvector)</option>
-        </select>
+        <div class="dev-row" style="gap:6px">
+          <select class="ts-select" id="example" style="height:30px;min-width:150px">
+            <option value="">Load an example…</option>
+            <option value="shop">E-commerce (MySQL)</option>
+            <option value="saas">Multi-tenant SaaS (Postgres)</option>
+            <option value="rag">Vector / RAG (pgvector)</option>
+          </select>
+          <button class="ts-btn ts-btn-ghost sv-mini" id="editFsBtn" title="Edit the schema full screen">⛶ Expand</button>
+        </div>
       </div>
       <textarea class="ts-textarea ts-code-input sv-sql" id="sql" spellcheck="false" placeholder="CREATE TABLE users (&#10;  id INT PRIMARY KEY,&#10;  email VARCHAR(255) NOT NULL&#10;);"></textarea>
+      <p class="dev-muted sv-drag-hint">Drag the bottom-right corner to resize this box.</p>
       <p class="ts-err-msg" id="err"></p>
 
       <p class="ts-card-label ts-mt-md">Tables</p>
@@ -57,6 +61,7 @@
           <button class="ts-btn ts-btn-secondary sv-mini" id="exportSvg">SVG</button>
           <button class="ts-btn ts-btn-secondary sv-mini" id="exportPng">PNG</button>
           <button class="ts-btn ts-btn-secondary sv-mini" id="exportDbml">DBML</button>
+          <button class="ts-btn ts-btn-primary sv-mini" id="fsBtn">⛶ Fullscreen</button>
         </div>
       </div>
       <div class="sv-canvas">

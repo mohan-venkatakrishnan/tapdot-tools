@@ -1762,6 +1762,19 @@ const check = (name, ok) => { console.log((ok ? 'PASS' : 'FAIL') + '  ' + name);
   check('SchemaViz isolates a table\'s relationships on click',
     (await page.$$eval('.erd-table.erd-selected', els => els.length)) === 1);
 
+  // Fullscreen controls for the diagram and the editor, plus a resizable box.
+  check('SchemaViz has a fullscreen button for the diagram', await page.isVisible('#fsBtn'));
+  check('SchemaViz has an expand button for the DDL editor', await page.isVisible('#editFsBtn'));
+  check('SchemaViz DDL box is vertically resizable',
+    (await page.$eval('#sql', el => getComputedStyle(el).resize)) === 'vertical');
+  check('SchemaViz DDL box is taller than the old 300px minimum',
+    (await page.$eval('#sql', el => el.getBoundingClientRect().height)) >= 400);
+  // The buttons must be wired without throwing even where headless can't grant
+  // real fullscreen (requestFullscreen rejects; the handler swallows it).
+  await page.click('#fsBtn').catch(() => {});
+  await page.waitForTimeout(80);
+  check('SchemaViz fullscreen click does not error', errs.length === 0);
+
   check('no JS errors on SchemaViz', errs.length === 0);
   await page.close();
 }
